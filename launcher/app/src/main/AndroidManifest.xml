@@ -9,6 +9,14 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- bt_autoconnect: reconnect a paired speaker (BluetoothReconnect). -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <!-- Lets the Wallpapers screen pick the TV's screensaver itself. Only adb can grant it
+         (`pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS`); without it the screen opens the
+         TV's screensaver settings instead. -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
     <!-- Needed since Android 10 to read the Wi-Fi network name for the network pill. Never requested at
          runtime: build-and-install grants it with pm grant, so lint's Android 12 "ask for COARSE with
          FINE" rule does not apply here. -->
@@ -119,6 +127,35 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
+
+        <!-- Screensaver of the wallpaper collection (WallpaperDream); chosen on the Wallpapers screen. -->
+        <service
+            android:name=".WallpaperDream"
+            android:label="@string/dream_wallpapers_name"
+            android:exported="true"
+            android:permission="android.permission.BIND_DREAM_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.dreams.DreamService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <!-- The Wallpapers screen. Its LEANBACK_LAUNCHER entry is the one tile of ours in the app grid
+             (AppAdapter lets it through), and the TV's own app list shows it too. Its own task: in Home's
+             task a tile launch (NEW_TASK) would only bring Home back to the front. -->
+        <activity
+            android:name=".WallpaperActivity"
+            android:taskAffinity="com.gathin.tvhome.wallpapers"
+            android:label="@string/wallpaper_manage_title"
+            android:banner="@drawable/banner_wallpapers"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!-- tools/theme.sh writes the theme through this where the shell can't reach Android/data;
              see ThemeProvider. WRITE_SECURE_SETTINGS: the adb shell has it, ordinary apps don't. -->

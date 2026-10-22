@@ -1,0 +1,30 @@
+# Xiaomi Mi TV Stick 4K MiTV-AYFR0 (codename soul, Amlogic), Android TV 11 (SDK 30), build RTT0.211222.001.1546.
+# Stock launcher: com.google.android.tvlauncher.
+#
+# Apply:   tools\disable.ps1 -TvHost <tv ip> examples\xiaomi-mitv-ayfr0\debloat.txt
+# Undo:    tools\restore.ps1 -TvHost <tv ip> examples\xiaomi-mitv-ayfr0\debloat.txt
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Kept on this set: voice assistant (katniss), Chromecast (mediashell), YouTube, YouTube Music,
+# Netflix, Prime Video, remote pairing (com.xiaomi.android.tvsetup.partnercustomizer holds the
+# BLE/IR remote pairing screens), com.mi.bluetooth, mitv.service.
+# With the launcher's wallpaper screensaver chosen, Google's photo screensaver (com.google.android.backdrop) has
+# nothing left to do and can be disabled by hand too; it is not in this list because it is the stock screensaver.
+
+# Xiaomi + Google telemetry
+com.miui.tv.analytics
+com.xiaomi.statistic
+com.google.android.feedback
+
+# PatchWall, content rows, sponsored rows
+com.mitv.tvhome.atv
+com.mitv.tvhome.michannel
+com.mitv.tvhome.mitvplus                    # Mi TV+ free channels
+com.xm.webcontent
+com.google.android.tvrecommendations
+android.autoinstalls.config.xioami.mibox3   # Play auto-install of partner apps (sic, "xioami")
+
+# Features the owner does not use
+com.xiaomi.mitv.smartshare                  # Miracast / MiPlay screen mirroring
+com.xiaomi.wfdsinkhelperservice             # Wi-Fi Display helper for the above
+com.xiaomi.mitv.updateservice               # Xiaomi firmware updates

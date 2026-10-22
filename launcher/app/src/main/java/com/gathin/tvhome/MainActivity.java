@@ -91,6 +91,8 @@ import java.util.Set;
 public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     private static final int LAUNCHER_SETTINGS_REQUEST = 42;
+    /** Config.wallpaperGeneration when this Home was built. */
+    private int wallpaperGeneration;
     /** Sent by QuickSettingsActivity: open Launcher settings from here so Home rebuilds when they close. */
     static final String ACTION_LAUNCHER_SETTINGS = "com.gathin.tvhome.action.LAUNCHER_SETTINGS";
     /** Tiles per row and dock slots (res/values/config.xml, columns). Set in onCreate. */
@@ -304,7 +306,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         setContentView(R.layout.activity_main);
         density = getResources().getDisplayMetrics().density;
         // config.xml, overlaid by config.json from a pushed theme (see Config and tools/theme.sh).
+        wallpaperGeneration = Config.wallpaperGeneration;
         Config cfg = Config.load(this);
+        if (getResources().getBoolean(R.bool.bt_autoconnect)) BluetoothReconnect.start(this);
         settingsKeycodes = cfg.settingsKeycodes;
         settingsKeyPanel = cfg.settingsKeyPanel;
         COLUMNS = cfg.columns;
@@ -643,8 +647,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onResume() {
         super.onResume();
-        // A festival that started or ended while Home was in the background: rebuild with or without it.
-        if (festive != festival.active(LocalDate.now())) {
+        // A festival that started or ended while Home was in the background, or wallpapers changed on the
+        // Wallpapers screen or from a phone: rebuild.
+        if (festive != festival.active(LocalDate.now()) || wallpaperGeneration != Config.wallpaperGeneration) {
             recreate();
             return;
         }

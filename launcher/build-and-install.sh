@@ -41,7 +41,10 @@ export ANDROID_HOME="${ANDROID_HOME:-$(for d in ~/Library/Android/sdk ~/Android/
 export ANDROID_HOME="${ANDROID_HOME:-/opt/homebrew/share/android-commandlinetools}"
 export PATH="$JAVA_HOME/bin:$PATH"
 [ -f local.properties ] || echo "sdk.dir=$ANDROID_HOME" > local.properties
-./gradlew assembleRelease -q --console=plain
+# PHONE_UPLOAD=1: "Add from phone" in the Wallpapers dialog, the one feature that needs the network permission.
+PHONE_UPLOAD_FLAG=false
+if [ "${PHONE_UPLOAD:-0}" = 1 ]; then PHONE_UPLOAD_FLAG=true; fi
+./gradlew assembleRelease -q --console=plain -PphoneUpload=$PHONE_UPLOAD_FLAG
 # Which app owns Home differs by build (com.google.android.tvlauncher on Android TV,
 # com.google.android.apps.tv.launcherx on newer Google TV), so ask the TV instead of guessing.
 # Only a launcher we recognise is accepted: the answer can also be Android's chooser ("android"),

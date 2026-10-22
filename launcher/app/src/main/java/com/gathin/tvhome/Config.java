@@ -39,6 +39,17 @@ final class Config {
     static final String SETTINGS_NAME = "launcher_settings";
     static final String ROWS_BELOW_DOCK_KEY = "rows_below_dock";
     static final String WALLPAPER_CHOICE_KEY = "wallpaper_choice";
+    /** Collection filenames left out of the rotation from the TV. Kept across theme pushes: it names files,
+     *  and a name the new theme does not ship simply matches nothing. */
+    static final String WALLPAPER_HIDDEN_KEY = "wallpaper_hidden";
+    /** On-TV rotation choices from the Wallpapers dialog; a theme push clears them like the other choices. */
+    static final String WALLPAPER_ORDER_KEY = "wallpaper_order";
+    static final String WALLPAPER_MINUTES_KEY = "wallpaper_minutes";
+    static final String WALLPAPER_DIM_KEY = "wallpaper_dim";
+    static final String WALLPAPER_DIM_AUTO_KEY = "wallpaper_dim_auto";
+    static final String WALLPAPER_MOTION_KEY = "wallpaper_motion";
+    /** Rotation interval when the order is chosen on the TV and the theme does not rotate. */
+    static final int DEFAULT_ROTATION_MINUTES = 30;
     private static final String THEME_REVISION_NAME = "theme_revision";
     private static final String THEME_SIGNATURE_KEY = "theme_signature";
 
@@ -128,6 +139,10 @@ final class Config {
     final boolean ambientGlow;
     /** Minutes Home may sit untouched before the clock screensaver (config.xml, home_idle_clock_minutes); 0 is off. */
     final int homeIdleClockMinutes;
+    /** Dim each wallpaper by its own brightness (WallpaperLight.autoDim) instead of wallpaperDim. */
+    final boolean wallpaperDimAuto;
+    /** Slow pan and zoom of the wallpaper while Home is visible (wallpaper_motion). */
+    final boolean wallpaperMotion;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
                    String liveTvAction, Map<String, String> launchActions, Map<String, String> appLabels,
@@ -138,7 +153,10 @@ final class Config {
                    int[] settingsKeycodes, boolean settingsKeyPanel, boolean wallpaperEnabled, File wallpaper, List<File> wallpapers,
                    int wallpaperRotationMinutes, int wallpaperDim, String wallpaperOrder, boolean overlayApplied,
                    Festival festival, int[] inputKeycodes, List<String> appKeys,
-                   List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, int homeIdleClockMinutes) {
+                   List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, int homeIdleClockMinutes,
+                   boolean wallpaperDimAuto, boolean wallpaperMotion) {
+        this.wallpaperDimAuto = wallpaperDimAuto;
+        this.wallpaperMotion = wallpaperMotion;
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.dockApps = Collections.unmodifiableList(dockApps);
@@ -311,9 +329,25 @@ final class Config {
                 : string(json, "wallpaper_order", WallpaperRotation.ORDER_SHUFFLE);
         // An unknown order must not silently change how an existing collection rotates.
         if (!WallpaperRotation.validOrder(wallpaperOrder)) wallpaperOrder = WallpaperRotation.ORDER_SHUFFLE;
+        // On-TV choices from the Wallpapers dialog override the theme's rotation, order and dim.
+        String chosenOrder = choices.getString(WALLPAPER_ORDER_KEY, null);
+        if (WallpaperRotation.validOrder(chosenOrder)) {
+            wallpaperOrder = chosenOrder;
+            if (rotationMinutes == 0) rotationMinutes = DEFAULT_ROTATION_MINUTES;
+        }
+        int chosenMinutes = choices.getInt(WALLPAPER_MINUTES_KEY, -1);
+        if (chosenMinutes >= 1 && chosenMinutes <= 1440) rotationMinutes = chosenMinutes;
+        int chosenDim = choices.getInt(WALLPAPER_DIM_KEY, -1);
+        if (chosenDim >= 0 && chosenDim <= 90) wallpaperDim = chosenDim;
+        // "wallpaper_dim": "auto" in a theme, or Auto on the TV: each picture dimmed by its own brightness.
+        boolean dimAuto = json != null && "auto".equals(string(json, "wallpaper_dim", ""));
+        if (choices.contains(WALLPAPER_DIM_AUTO_KEY)) dimAuto = choices.getBoolean(WALLPAPER_DIM_AUTO_KEY, false);
+        boolean motion = json != null && bool(json, "wallpaper_motion", false);
+        motion = choices.getBoolean(WALLPAPER_MOTION_KEY, motion);
         List<File> wallpapers = new ArrayList<>();
         if (rotationMinutes > 0 && dir != null && wallpaperEnabled) {
-            wallpapers.addAll(WallpaperRotation.images(new File(dir, "wallpapers")));
+            wallpapers.addAll(WallpaperRotation.visible(WallpaperRotation.images(new File(dir, "wallpapers")),
+                    choices.getStringSet(WALLPAPER_HIDDEN_KEY, java.util.Collections.emptySet())));
         }
         if (wallpapers.isEmpty() && wallpaper != null) wallpapers.add(wallpaper);
         // An on-TV wallpaper pick overrides the theme: a filename from the wallpapers/
@@ -347,7 +381,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow,
-                Math.max(0, idleClockMinutes));
+                Math.max(0, idleClockMinutes), dimAuto, motion);
     }
 
     /**
@@ -389,14 +423,37 @@ final class Config {
             // Existing preferences survive an app upgrade, unless the first launch follows an
             // explicit theme push or reset by the updated tools.
             SharedPreferences.Editor editor = choices.edit();
-            if (!"absent".equals(token)) editor.remove("columns").remove("animations")
-                    .remove("advanced_effects").remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY);
+            if (!"absent".equals(token)) clearOnTvChoices(editor);
             editor.putString(THEME_SIGNATURE_KEY, signature).commit();
         } else if (!seen.equals(signature)) {
-            choices.edit().remove("columns").remove("animations").remove("advanced_effects")
-                    .remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY)
-                    .putString(THEME_SIGNATURE_KEY, signature).commit();
+            clearOnTvChoices(choices.edit()).putString(THEME_SIGNATURE_KEY, signature).commit();
         }
+    }
+
+    /**
+     * Bumped whenever the wallpaper collection or its on-TV choices change outside Home (the Wallpapers screen,
+     * the phone page); Home compares it on resume and rebuilds itself.
+     */
+    static volatile int wallpaperGeneration;
+
+    static void wallpaperChanged() {
+        wallpaperGeneration++;
+    }
+
+    /** Layout, motion and wallpaper choices made on the TV, which a theme push or "Follow theme" resets. */
+    static SharedPreferences.Editor clearOnTvChoices(SharedPreferences.Editor editor) {
+        return editor.remove("columns").remove("animations").remove("advanced_effects")
+                .remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY).remove(WALLPAPER_ORDER_KEY)
+                .remove(WALLPAPER_MINUTES_KEY).remove(WALLPAPER_DIM_KEY).remove(WALLPAPER_DIM_AUTO_KEY)
+                .remove(WALLPAPER_MOTION_KEY);
+    }
+
+    static boolean hasOnTvChoices(SharedPreferences choices) {
+        return choices.contains("columns") || choices.contains(ROWS_BELOW_DOCK_KEY)
+                || choices.contains("animations") || choices.contains("advanced_effects")
+                || choices.contains(WALLPAPER_CHOICE_KEY) || choices.contains(WALLPAPER_ORDER_KEY)
+                || choices.contains(WALLPAPER_MINUTES_KEY) || choices.contains(WALLPAPER_DIM_KEY)
+                || choices.contains(WALLPAPER_DIM_AUTO_KEY) || choices.contains(WALLPAPER_MOTION_KEY);
     }
 
     private static String fileStamp(File file) {

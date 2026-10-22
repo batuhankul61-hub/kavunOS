@@ -28,6 +28,16 @@ public class WallpaperRotationTest {
     }
 
     @Test
+    public void visibleDropsHiddenPicturesButNeverEmptiesTheCollection() {
+        List<File> images = Arrays.asList(new File("a.jpg"), new File("b.jpg"), new File("c.jpg"));
+        assertEquals(Arrays.asList("a.jpg", "c.jpg"),
+                names(WallpaperRotation.visible(images, Collections.singleton("b.jpg"))));
+        assertEquals(images, WallpaperRotation.visible(images, Collections.emptySet()));
+        assertEquals(images, WallpaperRotation.visible(images,
+                new java.util.HashSet<>(Arrays.asList("a.jpg", "b.jpg", "c.jpg"))));
+    }
+
+    @Test
     public void imagesKeepsPicturesOnlySortedByName() throws IOException {
         File dir = Files.createTempDirectory("walls").toFile();
         touch(dir, "b.JPG", 10);

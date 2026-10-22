@@ -61,8 +61,10 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `sky_intensity` | 0 to 100 | Time-of-day backdrop: a dark gradient that follows the clock, 0 hides it (default) |
 | `wallpaper` | bool | Show `wallpaper.jpg` from the theme folder (`true`), or ignore it (`false`) |
 | `wallpaper_rotation_minutes` | 0 to 1440 | Rotate images in the theme's `wallpapers/` folder at this interval; 0 keeps the single-image behaviour. A negative or non-numeric value is ignored, and 0 means "no rotation", not "every minute" |
-| `wallpaper_order` | `shuffle` or `sequential` | How a collection advances. `shuffle` (the default, and what launchers did before this key existed) avoids repeating the current picture; `sequential` walks the folder in filename order and wraps at the end. An unknown value falls back to `shuffle` |
+| `wallpaper_order` | `shuffle`, `sequential` or `daylight` | How a collection advances. `shuffle` (the default, and what launchers did before this key existed) avoids repeating the current picture; `sequential` walks the folder in filename order and wraps at the end; `daylight` measures each picture's brightness and shows the darkest third at night, the middle third around sunrise and sunset (`latitude`/`longitude` in config.xml, else 07:00 and 19:00) and the brightest third by day. An unknown value falls back to `shuffle` |
 | `wallpaper_dim` | 0 to 90 | Black overlay over wallpaper images, in percent; 0 by default and no shade view at all |
+| `wallpaper_dim` | `"auto"` | Dim each picture by its own brightness: just enough for the clock and the dock to read, at most 60 % |
+| `wallpaper_motion` | bool | A slow push-in and sideways drift of the wallpaper, about a minute each way, while Home is visible (`false` by default); its hardware layer is let go while an app is in front |
 | `festival` | string | Turns on a festive skin: the network pill becomes a diya whose flame follows the connection, Inputs a temple bell, Settings a marigold, and the first Home of the day gets a petal shower. `dussehra` and `diwali` have built-in greetings |
 | `festival_until` | `YYYY-MM-DD` | Last day the festive skin shows; it switches itself off after that. A malformed date turns it off |
 | `greeting` | string | Replaces the time-of-day greeting while the festive skin is on |
@@ -106,12 +108,25 @@ An empty collection falls back to `wallpaper.jpg`, or the background colour if n
 Selection is random without an immediate repeat when alternatives exist. The current image and its
 change time survive app/process restarts. Rotation runs only while Home is visible; on return from
 another app, an overdue background changes then. Images are decoded on a worker thread and bounded
-to the screen size. There is no download service, Internet permission or computer-side scheduler.
-The original system idle screensaver is left unchanged.
+to the screen size. There is no download service or computer-side scheduler.
 
-On the TV, Launcher settings has a Wallpaper row: pick one picture from the collection (or the theme's
-`wallpaper.jpg`), or None. A pick shows that one picture and stops the rotation until you choose Theme
-default, press Follow theme, or push a theme again.
+On the TV, the Wallpapers screen (Launcher settings > Wallpaper, or the Wallpapers tile in the app grid)
+shows the collection as thumbnails, without file names. OK on a picture offers a full-screen preview,
+Show only this one (the Fixed order), Leave out of the rotation and Delete. Pictures left out stay on
+the TV and keep being left out across theme pushes. The settings on the left override the theme's
+order, interval, dim and motion until you choose Back to theme settings, press Follow theme, or push a
+theme again.
+
+The Screensaver row picks the TV's screensaver: the wallpaper screensaver (the collection, honouring
+what is left out and the daylight order, with a slow push-in and a corner clock) or the clock. Setting
+it from the launcher needs `adb shell pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS`
+once; without it the row opens the TV's own screensaver settings.
+
+Built with phone upload (`launcheruild-and-install.ps1 -PhoneUpload`, `PHONE_UPLOAD=1` for the shell
+script), the screen also has Add from phone: a QR code for a page on the TV's address, guarded by a
+random token and served only while that panel is open. The page adds photos (each shrunk on the phone,
+then re-encoded by the TV to cover 1920x1080) and shows the collection to leave out or delete. This is
+the only part of the launcher that needs the network permission, so the default build leaves it out.
 
 ## Reduced motion
 

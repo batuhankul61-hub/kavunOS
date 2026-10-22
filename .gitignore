@@ -14,3 +14,8 @@ backup/
 *.aab
 launcher/hs_err_pid*.log
 launcher/replay_pid*.log
+
+# Local only: personal themes (may hold copyrighted images), TV backups, downloaded APKs
+themes-local/
+backup/
+downloads/

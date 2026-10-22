@@ -1,5 +1,8 @@
 package com.gathin.tvhome;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -32,6 +35,12 @@ final class WallpaperPlayer {
     /** config wallpaper_true_color: ARGB_8888 instead of RGB_565. */
     private final Bitmap.Config bitmapConfig;
     private final int height;
+    private final Context context;
+    private final int fixedDim;
+    private final boolean dimAuto;
+    private final boolean motion;
+    private View shade;
+    private ObjectAnimator drift;
     private boolean active;
     private boolean closed;
     private boolean loading;
@@ -39,6 +48,10 @@ final class WallpaperPlayer {
 
     WallpaperPlayer(Context context, FrameLayout root, Config config) {
         this.root = root;
+        this.context = context.getApplicationContext();
+        fixedDim = config.wallpaperDim;
+        dimAuto = config.wallpaperDimAuto;
+        motion = config.wallpaperMotion;
         files = new ArrayList<>(config.wallpapers);
         interval = config.wallpaperRotationMinutes * 60_000L;
         bitmapConfig = config.wallpaperTrueColor ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
@@ -61,12 +74,16 @@ final class WallpaperPlayer {
             root.addView(image, 0, new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             // No shade layer at all when the theme doesn't dim: a full-screen view is overdraw on 1 GB TVs.
-            if (config.wallpaperDim > 0) {
-                View shade = new View(context);
-                shade.setBackgroundColor((config.wallpaperDim * 255 / 100) << 24);
+            if (config.wallpaperDim > 0 || dimAuto) {
+                shade = new View(context);
+                setDim(config.wallpaperDim);
                 shade.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
                 root.addView(shade, 1, new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            }
+            // Auto dim and the daylight order need each picture's brightness; measure what is missing.
+            if (dimAuto || WallpaperRotation.ORDER_DAYLIGHT.equals(order)) {
+                WallpaperStats.measureMissing(context, files, null);
             }
             showFirst();
         }
@@ -80,11 +97,12 @@ final class WallpaperPlayer {
     private void showFirst() {
         String previous = preferences.getString("image", "");
         File first = WallpaperRotation.find(files, previous);
-        if (first == null) first = WallpaperRotation.pick(files, previous, order, random);
+        if (first == null || phaseChanged()) first = choose(previous);
         while (first != null) {
             Bitmap bitmap = decode(first);
             if (bitmap != null) {
                 image.setImageBitmap(bitmap);
+                applyDim(first);
                 displayed = first.getName();
                 if (!displayed.equals(previous)) {
                     preferences.edit().putString("image", displayed)
@@ -93,22 +111,29 @@ final class WallpaperPlayer {
                 return;
             }
             files.remove(first);   // unreadable or over 4K: try another, or keep the plain colour
-            first = WallpaperRotation.pick(files, previous, order, random);
+            first = choose(previous);
         }
     }
 
     void start() {
         active = true;
         update();
+        startDrift();
     }
 
     void stop() {
         active = false;
+        if (drift != null) {
+            drift.pause();
+            // The drift's full-screen hardware layer (8 MB at 1080p) is not needed while an app is in front.
+            image.setLayerType(View.LAYER_TYPE_NONE, null);
+        }
     }
 
     void close() {
         active = false;
         closed = true;
+        if (drift != null) drift.cancel();
         decoder.shutdownNow();
     }
 
@@ -117,8 +142,8 @@ final class WallpaperPlayer {
         String previous = preferences.getString("image", "");
         File selected = WallpaperRotation.find(files, previous);
         long changed = preferences.getLong("changed", 0);
-        if (selected == null || WallpaperRotation.due(changed, System.currentTimeMillis(), interval)) {
-            selected = WallpaperRotation.pick(files, previous, order, random);
+        if (selected == null || WallpaperRotation.due(changed, System.currentTimeMillis(), interval) || phaseChanged()) {
+            selected = choose(previous);
         }
         if (selected == null || selected.getName().equals(displayed)) return;
         File next = selected;
@@ -138,6 +163,7 @@ final class WallpaperPlayer {
                     return;
                 }
                 image.setImageBitmap(bitmap);
+                applyDim(next);
                 displayed = next.getName();
                 if (!displayed.equals(previous) || changed == 0) {
                     preferences.edit().putString("image", displayed)
@@ -145,6 +171,70 @@ final class WallpaperPlayer {
                 }
             });
         });
+    }
+
+    /** The next picture for the order; the daylight order picks among the pictures that suit the hour. */
+    private File choose(String previous) {
+        if (!WallpaperRotation.ORDER_DAYLIGHT.equals(order)) return WallpaperRotation.pick(files, previous, order, random);
+        int phase = WallpaperStats.phaseNow(context);
+        preferences.edit().putInt("phase", phase).apply();
+        return WallpaperLight.pick(files, WallpaperStats.luma(context, files), phase, previous, random);
+    }
+
+    /** True when the daylight order has moved into another part of the day since the last pick. */
+    private boolean phaseChanged() {
+        return WallpaperRotation.ORDER_DAYLIGHT.equals(order)
+                && preferences.getInt("phase", -1) != WallpaperStats.phaseNow(context);
+    }
+
+    private void applyDim(File shown) {
+        if (shade == null) return;
+        int dim = dimAuto ? WallpaperStats.autoDim(context, shown) : fixedDim;
+        if (dim < 0) {
+            // Not measured yet: the theme's dim for now, the measured one from the next picture on.
+            dim = fixedDim;
+            WallpaperStats.measureMissing(context, java.util.Collections.singletonList(shown), null);
+        }
+        setDim(dim);
+    }
+
+    private void setDim(int percent) {
+        shade.setBackgroundColor((percent * 255 / 100) << 24);
+    }
+
+    /**
+     * wallpaper_motion: a slow push in and sideways drift, back and forth, about a minute each way. It runs on
+     * a hardware layer, so each frame only re-composites the picture instead of redrawing it.
+     */
+    private void startDrift() {
+        if (!motion || closed || files.isEmpty()) return;
+        if (drift == null) {
+            image.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            // At 1.06 the picture overhangs each edge by 3 %, so a 2.5 % sideways drift never shows a black edge.
+            drift = ObjectAnimator.ofPropertyValuesHolder(image,
+                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1.06f, 1.12f),
+                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.06f, 1.12f),
+                    PropertyValuesHolder.ofFloat(View.TRANSLATION_X, -width * 0.025f, width * 0.025f));
+            drift.setDuration(unscaled(context, 60_000));
+            drift.setRepeatMode(ValueAnimator.REVERSE);
+            drift.setRepeatCount(ValueAnimator.INFINITE);
+            drift.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+            drift.start();
+        } else if (drift.isPaused()) {
+            image.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            drift.resume();
+        }
+    }
+
+    /**
+     * A duration that stays in real time when the TV's animator duration scale is changed (e.g. 0.5x for
+     * snappier menus): the slow wallpaper and screensaver motion should not speed up with it.
+     */
+    static long unscaled(Context context, long ms) {
+        // ValueAnimator.getDurationScale() is API 33; the setting it mirrors is readable everywhere.
+        float scale = android.provider.Settings.Global.getFloat(context.getContentResolver(),
+                android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f);
+        return scale > 0f ? (long) (ms / scale) : ms;
     }
 
     /** Names plus sizes: enough to notice a different collection without hashing every image. */

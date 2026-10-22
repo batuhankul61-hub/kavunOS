@@ -7,14 +7,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Set;
 
 final class WallpaperRotation {
     /** Playback orders persisted in config.json (wallpaper_order). */
     static final String ORDER_SEQUENTIAL = "sequential";
     static final String ORDER_SHUFFLE = "shuffle";
+    /** Dark pictures at night, bright ones by day (WallpaperLight); WallpaperPlayer picks for it. */
+    static final String ORDER_DAYLIGHT = "daylight";
 
     static boolean validOrder(String order) {
-        return ORDER_SEQUENTIAL.equals(order) || ORDER_SHUFFLE.equals(order);
+        return ORDER_SEQUENTIAL.equals(order) || ORDER_SHUFFLE.equals(order) || ORDER_DAYLIGHT.equals(order);
     }
 
     static List<File> images(File directory) {
@@ -32,6 +35,13 @@ final class WallpaperRotation {
             }
         }
         return result;
+    }
+
+    /** The collection without the pictures left out on the TV; all of it when every picture is hidden. */
+    static List<File> visible(List<File> images, Set<String> hidden) {
+        List<File> result = new ArrayList<>(images);
+        result.removeIf(image -> hidden.contains(image.getName()));
+        return result.isEmpty() ? images : result;
     }
 
     static File find(List<File> images, String name) {

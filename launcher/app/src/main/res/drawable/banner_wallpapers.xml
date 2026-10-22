@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- App grid tile for the Wallpapers screen (WallpaperActivity): a dusk landscape, drawn, no bitmap. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="320dp" android:height="180dp"
+    android:viewportWidth="320" android:viewportHeight="180">
+    <path android:pathData="M0,0h320v180h-320z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="0" android:startY="0" android:endX="0" android:endY="180"
+                android:startColor="#FF1B2A4E" android:centerColor="#FF7A4A86" android:endColor="#FFF0A36B" />
+        </aapt:attr>
+    </path>
+    <path android:fillColor="#FFFFE2B8" android:pathData="M232,92m-22,0a22,22 0,1 1,44 0a22,22 0,1 1,-44 0" />
+    <path android:fillColor="#FF2A2340" android:pathData="M0,180L0,118L58,78L104,112L160,62L226,120L270,96L320,124L320,180Z" />
+    <path android:fillColor="#FF151226" android:pathData="M0,180L0,146L72,120L136,150L200,128L262,152L320,138L320,180Z" />
+</vector>

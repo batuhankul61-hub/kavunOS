@@ -7,11 +7,14 @@
 #        [-InputKeyService]   remote's Input button opens the input switcher (Google TV), plus config.xml
 #                             input_key_keycodes and app_keys; re-pass on every install
 #        [-HomeKeyService]    remotes whose Home button sends KEYCODE_ALL_APPS (Xiaomi sticks)
+#        [-PhoneUpload]       "Add from phone" in the Wallpapers dialog; the only feature that needs the
+#                             network permission, so it is left out unless asked for
 param(
     [string]$TvHost = $env:TV_HOST,
     [string]$StockLauncher = '',
     [switch]$InputKeyService,
-    [switch]$HomeKeyService
+    [switch]$HomeKeyService,
+    [switch]$PhoneUpload
 )
 $ErrorActionPreference = 'Stop'
 # Pipe plain UTF-8 to native commands; the default here prepends a BOM that corrupts the first command.
@@ -31,7 +34,7 @@ if (-not (Test-Path local.properties)) {
     "sdk.dir=$($sdk -replace '\\', '\\')" | Out-File -Encoding ascii local.properties
 }
 
-.\gradlew.bat assembleRelease -q --console=plain
+.\gradlew.bat assembleRelease -q --console=plain "-PphoneUpload=$($PhoneUpload.IsPresent.ToString().ToLower())"
 if ($LASTEXITCODE -ne 0) { throw 'Gradle build failed' }
 
 $py = '..\tools\venv\Scripts\python.exe'

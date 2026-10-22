@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Merged into release builds made with phoneUpload=true: "Add from phone" serves a page on the local network
+     while its screen is open (PhoneUploadServer). The default build has no network permission. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>

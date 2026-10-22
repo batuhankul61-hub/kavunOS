@@ -26,6 +26,12 @@ android {
         }
     }
 
+    // Opt-in "Add from phone" in the Wallpapers dialog (PHONE_UPLOAD=1 / -PhoneUpload in build-and-install). It is
+    // the only feature that needs the network permission, so the default build keeps none.
+    def phoneUpload = providers.gradleProperty('phoneUpload').getOrElse('false') == 'true'
+    buildTypes.each { it.resValue 'bool', 'phone_upload', phoneUpload.toString() }
+    if (phoneUpload) sourceSets.release.manifest.srcFile 'src/phoneUpload/AndroidManifest.xml'
+
     packagingOptions {
         resources {
             // Kotlin metadata pulled in by AndroidX's dependencies. This launcher is plain Java and never reads it;
@@ -43,6 +49,8 @@ android {
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
+    // QR code for "Add from phone"; R8 keeps only the encoder.
+    implementation 'com.google.zxing:core:3.5.3'
     // Test only (never in the APK): plain JVM tests for the module card validators, src/test.
     testImplementation 'junit:junit:4.13.2'
 }
