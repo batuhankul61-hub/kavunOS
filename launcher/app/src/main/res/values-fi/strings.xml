@@ -132,4 +132,5 @@
     <string name="dream_wallpapers_short">Taustakuvat</string>
     <string name="dream_other">Muu</string>
     <string name="phone_page_on_tv">Televisiossa</string>
+    <string name="home_settings_tile">Asetukset</string>
 </resources>

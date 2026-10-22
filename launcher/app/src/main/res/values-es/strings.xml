@@ -144,4 +144,5 @@
     <string name="dream_wallpapers_short">Fondos</string>
     <string name="dream_other">Otro</string>
     <string name="phone_page_on_tv">En la TV</string>
+    <string name="home_settings_tile">Ajustes</string>
 </resources>

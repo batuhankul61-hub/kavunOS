@@ -144,4 +144,5 @@
     <string name="dream_wallpapers_short">Bakgrunner</string>
     <string name="dream_other">Annen</string>
     <string name="phone_page_on_tv">På TV-en</string>
+    <string name="home_settings_tile">Innstillinger</string>
 </resources>

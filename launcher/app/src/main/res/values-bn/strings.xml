@@ -132,4 +132,5 @@
     <string name="dream_wallpapers_short">ওয়ালপেপার</string>
     <string name="dream_other">অন্য</string>
     <string name="phone_page_on_tv">টিভিতে</string>
+    <string name="home_settings_tile">সেটিংস</string>
 </resources>

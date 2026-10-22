@@ -101,4 +101,5 @@
     <string name="dream_wallpapers_short">วอลเปเปอร์</string>
     <string name="dream_other">อื่นๆ</string>
     <string name="phone_page_on_tv">บนทีวี</string>
+    <string name="home_settings_tile">การตั้งค่า</string>
 </resources>

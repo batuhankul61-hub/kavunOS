@@ -41,6 +41,7 @@ final class WallpaperPlayer {
     private final boolean motion;
     private View shade;
     private ObjectAnimator drift;
+    private boolean idle;
     private boolean active;
     private boolean closed;
     private boolean loading;
@@ -118,16 +119,29 @@ final class WallpaperPlayer {
     void start() {
         active = true;
         update();
-        startDrift();
+        if (idle) startDrift();
     }
 
     void stop() {
         active = false;
-        if (drift != null) {
-            drift.pause();
-            // The drift's full-screen hardware layer (8 MB at 1080p) is not needed while an app is in front.
-            image.setLayerType(View.LAYER_TYPE_NONE, null);
-        }
+        pauseDrift();
+    }
+
+    /**
+     * Home tells the player when the remote has been left alone. The drift redraws the screen every frame, which
+     * a slow TV feels while the focus moves, so it runs only while idle and stops on the first key.
+     */
+    void setIdle(boolean idle) {
+        this.idle = idle;
+        if (idle && active) startDrift();
+        else pauseDrift();
+    }
+
+    private void pauseDrift() {
+        if (drift == null || drift.isPaused()) return;
+        drift.pause();
+        // The drift's full-screen hardware layer (8 MB at 1080p) is not needed while it stands still.
+        image.setLayerType(View.LAYER_TYPE_NONE, null);
     }
 
     void close() {

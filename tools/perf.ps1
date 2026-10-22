@@ -38,8 +38,9 @@ $moves = ((1..6 | % { 'input keyevent KEYCODE_DPAD_RIGHT; sleep 0.25' }) + 'inpu
     (1..6 | % { 'input keyevent KEYCODE_DPAD_RIGHT; sleep 0.25' }) + 'input keyevent KEYCODE_DPAD_UP; sleep 0.4' +
     'input keyevent KEYCODE_DPAD_UP; sleep 0.4') -join '; '
 Tv "input keyevent KEYCODE_HOME; sleep 2; dumpsys gfxinfo $pkg reset >/dev/null; $moves; sleep 1" | Out-Null
-$gfx = Tv "dumpsys gfxinfo $pkg | grep -E 'Total frames rendered|Janky frames:|50th percentile|90th percentile|95th percentile|99th percentile' | head -6"
-$mem = Tv "dumpsys meminfo $pkg | grep -E 'TOTAL PSS|Graphics:'"
+# "Janky" counts shell-injected keys as late input; "Frame deadline missed" is the real dropped-frame count.
+$gfx = Tv "dumpsys gfxinfo $pkg | grep -E 'Total frames rendered|Janky frames:|50th percentile|90th percentile|99th percentile|Frame deadline missed|Slow issue draw' | head -7"
+$mem = Tv "dumpsys meminfo $pkg | grep -E 'PSS:|Graphics:'"
 $apk = Tv "ls -l `$(pm path $pkg | sed 's/package://')"
 
 "cold start ms   : median $(Median $cold)  ($($cold -join ', '))"

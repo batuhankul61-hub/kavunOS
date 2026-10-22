@@ -132,4 +132,5 @@
     <string name="dream_wallpapers_short">Duvar kâğıtları</string>
     <string name="dream_other">Başka</string>
     <string name="phone_page_on_tv">TV\'deki görseller</string>
+    <string name="home_settings_tile">Ayarlar</string>
 </resources>

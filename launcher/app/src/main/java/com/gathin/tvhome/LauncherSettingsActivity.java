@@ -60,12 +60,6 @@ public final class LauncherSettingsActivity extends Activity {
                 refresh();
             });
         }
-        // Keep the numeric choices increasing in the Hebrew reading direction. Reorder the
-        // actual views so D-pad focus follows their positions without changing the saved values.
-        if (getResources().getBoolean(R.bool.rtl_app_grid)) {
-            reverseRow(columnChoices);
-            reverseRow(rowChoices);
-        }
         wallpaperChoice = findViewById(R.id.wallpaperChoice);
         wallpaperChoice.setOnClickListener(v -> showWallpaperPicker());
         animationsChoice = findViewById(R.id.animationsChoice);
@@ -110,12 +104,6 @@ public final class LauncherSettingsActivity extends Activity {
                 open(new Intent(Settings.ACTION_SETTINGS)));
         refresh();
         columnChoices[Math.max(0, Math.min(columns - 4, 3))].requestFocus();
-    }
-
-    private void reverseRow(TextView[] views) {
-        LinearLayout row = (LinearLayout) views[0].getParent();
-        row.removeAllViews();
-        for (int i = views.length - 1; i >= 0; i--) row.addView(views[i]);
     }
 
     private void showWallpaperPicker() {

@@ -127,4 +127,5 @@
     <string name="dream_wallpapers_short">Fonds d\'écran</string>
     <string name="dream_other">Autre</string>
     <string name="phone_page_on_tv">Sur la TV</string>
+    <string name="home_settings_tile">Réglages</string>
 </resources>
