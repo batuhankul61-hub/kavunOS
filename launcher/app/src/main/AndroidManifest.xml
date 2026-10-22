@@ -73,6 +73,7 @@
 
         <activity
             android:name=".LauncherSettingsActivity"
+            android:theme="@style/Theme.TvHome.Page"
             android:exported="false"
             android:excludeFromRecents="true"
             android:screenOrientation="landscape" />
@@ -131,6 +132,7 @@
              task a tile launch (NEW_TASK) would only bring Home back to the front. -->
         <activity
             android:name=".WallpaperActivity"
+            android:theme="@style/Theme.TvHome.Page"
             android:taskAffinity="com.gathin.tvhome.wallpapers"
             android:label="@string/wallpaper_manage_title"
             android:banner="@drawable/banner_wallpapers"

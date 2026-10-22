@@ -150,4 +150,5 @@
     <string name="home_settings_tile">הגדרות</string>
     <string name="settings_section_home">מסך הבית</string>
     <string name="settings_section_system">מערכת</string>
+    <string name="top_shelf">מדף עליון</string>
 </resources>

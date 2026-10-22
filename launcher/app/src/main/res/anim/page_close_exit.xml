@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Back: the page leaves by shrinking a little and fading. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@interpolator/apple_ease" android:shareInterpolator="true" android:duration="380">
+    <alpha android:fromAlpha="1" android:toAlpha="0" />
+    <scale android:fromXScale="1" android:toXScale="0.94" android:fromYScale="1" android:toYScale="0.94"
+        android:pivotX="50%" android:pivotY="50%" />
+</set>

@@ -81,6 +81,12 @@ public final class LauncherSettingsActivity extends TvScreen {
         section(list, getString(R.string.settings_section_home));
         View first = row(list, R.string.wallpaper_manage_title, null,
                 () -> startActivity(new Intent(this, WallpaperActivity.class)));
+        row(list, R.string.top_shelf, () -> getString(choices.getBoolean(MainActivity.TOP_SHELF_KEY, true)
+                ? R.string.on : R.string.off), () -> sheet(getString(R.string.top_shelf), labels(R.string.on, R.string.off),
+                choices.getBoolean(MainActivity.TOP_SHELF_KEY, true) ? 0 : 1, i -> {
+                    choices.edit().putBoolean(MainActivity.TOP_SHELF_KEY, i == 0).apply();
+                    changed();
+                }));
         row(list, R.string.columns_label, () -> String.valueOf(config.columns), () -> {
             List<String> labels = new ArrayList<>();
             for (int c : COLUMNS) labels.add(String.valueOf(c));

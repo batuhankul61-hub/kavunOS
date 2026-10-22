@@ -135,4 +135,5 @@
     <string name="home_settings_tile">Ayarlar</string>
     <string name="settings_section_home">Ana ekran</string>
     <string name="settings_section_system">Sistem</string>
+    <string name="top_shelf">Üst raf</string>
 </resources>

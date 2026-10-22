@@ -154,4 +154,5 @@
     <string name="home_settings_tile">Settings</string>
     <string name="settings_section_home">Home</string>
     <string name="settings_section_system">System</string>
+    <string name="top_shelf">Top shelf</string>
 </resources>

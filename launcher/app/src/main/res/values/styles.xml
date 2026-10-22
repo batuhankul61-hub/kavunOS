@@ -6,6 +6,21 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <!-- The launcher's own pages (Settings, Wallpapers): they open and close with a soft zoom and fade. -->
+    <style name="Theme.TvHome.Page">
+        <item name="android:windowAnimationStyle">@style/PageAnimations</item>
+    </style>
+    <style name="PageAnimations" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/page_open_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/page_open_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/page_close_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/page_close_exit</item>
+        <item name="android:taskOpenEnterAnimation">@anim/page_open_enter</item>
+        <item name="android:taskOpenExitAnimation">@anim/page_open_exit</item>
+        <item name="android:taskCloseEnterAnimation">@anim/page_close_enter</item>
+        <item name="android:taskCloseExitAnimation">@anim/page_close_exit</item>
+    </style>
+
     <!-- Frosted pill, tvOS style. -->
     <style name="TopButtonBase">
         <item name="android:layout_width">wrap_content</item>

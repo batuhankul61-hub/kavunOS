@@ -1,6 +1,7 @@
 package com.gathin.tvhome;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -53,6 +54,7 @@ public class MainActivity extends Activity {
     /** The remote untouched this long starts the wallpaper's slow drift (wallpaper_motion). */
     private static final long IDLE_MS = 20_000;
     private static final float FOCUS_SCALE = 1.1f;
+    static final String TOP_SHELF_KEY = "top_shelf";
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final ExecutorService loader = Executors.newSingleThreadExecutor();
@@ -67,6 +69,9 @@ public class MainActivity extends Activity {
     private RecyclerView grid;
     private Adapter adapter;
     private WallpaperPlayer wallpaperPlayer;
+    private TopShelf shelf;
+    /** An app was opened from Home: the next resume eases Home back in. */
+    private boolean returning;
     /** Config.wallpaperGeneration when this Home was built. */
     private int wallpaperGeneration;
     private int scrolled;
@@ -116,6 +121,11 @@ public class MainActivity extends Activity {
         if (config.wallpaperEnabled && !config.wallpapers.isEmpty()) {
             getWindow().setBackgroundDrawable(null);
             root.setBackground(null);
+        }
+        int side0 = dp(56);
+        if (getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE).getBoolean(TOP_SHELF_KEY, true)) {
+            shelf = new TopShelf(this, getResources().getDisplayMetrics().heightPixels * 62 / 100, side0, density);
+            root.addView(shelf.view());
         }
         // Legibility for the tiles and their names: a soft darkening over the lower part only.
         View scrim = new View(this);
@@ -234,7 +244,7 @@ public class MainActivity extends Activity {
         focusTile(0);
     }
 
-    private void launch(HomeApps.Tile tile) {
+    private void launch(HomeApps.Tile tile, View from) {
         Intent intent = new Intent(Intent.ACTION_MAIN).setComponent(tile.component);
         if (tile.leanback) {
             intent.addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
@@ -246,9 +256,12 @@ public class MainActivity extends Activity {
                 if (getPackageManager().resolveActivity(byAction, 0) != null) intent = byAction;
             }
         }
+        // The app grows out of its tile, the way iOS and tvOS open apps.
+        Bundle zoom = ActivityOptions.makeScaleUpAnimation(from, 0, 0, from.getWidth(), from.getHeight()).toBundle();
         try {
-            if (HomeApps.OWN_SETTINGS.equals(tile.key)) startActivityForResult(intent, LAUNCHER_SETTINGS_REQUEST);
-            else startActivity(intent);
+            if (HomeApps.OWN_SETTINGS.equals(tile.key)) startActivityForResult(intent, LAUNCHER_SETTINGS_REQUEST, zoom);
+            else startActivity(intent, zoom);
+            returning = true;
         } catch (ActivityNotFoundException | SecurityException e) {
             HomeApps.invalidate();
             loadTiles();
@@ -279,6 +292,15 @@ public class MainActivity extends Activity {
         }
         wallpaperPlayer.start();
         restartIdle();
+        if (returning) {
+            returning = false;
+            // Home settles back in: the tiles come up from a touch larger and fade in, on one hardware layer.
+            grid.setAlpha(0f);
+            grid.setScaleX(1.04f);
+            grid.setScaleY(1.04f);
+            grid.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(420).setInterpolator(TopShelf.EASE)
+                    .withLayer().start();
+        }
     }
 
     @Override
@@ -445,10 +467,14 @@ public class MainActivity extends Activity {
                         .translationZ(has ? dp(10) : 0f).setDuration(has ? 160 : 120)
                         .setInterpolator(new DecelerateInterpolator(1.6f)).start();
                 label.animate().alpha(has ? 1f : 0f).translationY(has ? dp(6) : 0f).setDuration(150).start();
+                if (has && shelf != null) {
+                    int at = holder.getBindingAdapterPosition();
+                    shelf.show(at >= 0 && at < columns && at < tiles.size() ? tiles.get(at) : null);
+                }
             });
             card.setOnClickListener(v -> {
                 int at = holder.getBindingAdapterPosition();
-                if (at != RecyclerView.NO_POSITION) launch(tiles.get(at));
+                if (at != RecyclerView.NO_POSITION) launch(tiles.get(at), v);
             });
             card.setOnLongClickListener(v -> {
                 int at = holder.getBindingAdapterPosition();
