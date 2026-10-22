@@ -102,4 +102,6 @@
     <string name="dream_other">อื่นๆ</string>
     <string name="phone_page_on_tv">บนทีวี</string>
     <string name="home_settings_tile">การตั้งค่า</string>
+    <string name="settings_section_home">หน้าหลัก</string>
+    <string name="settings_section_system">ระบบ</string>
 </resources>

@@ -152,4 +152,6 @@
     <string name="dream_other">Other</string>
     <string name="phone_page_on_tv">On the TV</string>
     <string name="home_settings_tile">Settings</string>
+    <string name="settings_section_home">Home</string>
+    <string name="settings_section_system">System</string>
 </resources>

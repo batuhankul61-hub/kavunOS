@@ -105,4 +105,6 @@
     <string name="dream_other">Andere</string>
     <string name="phone_page_on_tv">Auf dem Fernseher</string>
     <string name="home_settings_tile">Einstellungen</string>
+    <string name="settings_section_home">Startbildschirm</string>
+    <string name="settings_section_system">System</string>
 </resources>

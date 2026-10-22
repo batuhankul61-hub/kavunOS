@@ -145,4 +145,6 @@
     <string name="dream_other">Annen</string>
     <string name="phone_page_on_tv">På TV-en</string>
     <string name="home_settings_tile">Innstillinger</string>
+    <string name="settings_section_home">Startskjerm</string>
+    <string name="settings_section_system">System</string>
 </resources>

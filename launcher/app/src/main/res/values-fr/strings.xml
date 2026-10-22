@@ -128,4 +128,6 @@
     <string name="dream_other">Autre</string>
     <string name="phone_page_on_tv">Sur la TV</string>
     <string name="home_settings_tile">Réglages</string>
+    <string name="settings_section_home">Accueil</string>
+    <string name="settings_section_system">Système</string>
 </resources>

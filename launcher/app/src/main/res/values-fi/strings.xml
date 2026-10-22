@@ -133,4 +133,6 @@
     <string name="dream_other">Muu</string>
     <string name="phone_page_on_tv">Televisiossa</string>
     <string name="home_settings_tile">Asetukset</string>
+    <string name="settings_section_home">Aloitusnäyttö</string>
+    <string name="settings_section_system">Järjestelmä</string>
 </resources>

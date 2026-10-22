@@ -144,4 +144,6 @@
     <string name="dream_other">Lainnya</string>
     <string name="phone_page_on_tv">Di TV</string>
     <string name="home_settings_tile">Setelan</string>
+    <string name="settings_section_home">Layar utama</string>
+    <string name="settings_section_system">Sistem</string>
 </resources>

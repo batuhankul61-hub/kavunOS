@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
  * setting opens a short list of its choices; OK on a picture offers a full-screen preview, showing only that
  * one, leaving it out of the rotation and deleting it. Also the app grid's Wallpapers tile.
  */
-public final class WallpaperActivity extends Activity {
+public final class WallpaperActivity extends TvScreen {
 
     private static final int COLUMNS = 3;
     private static final int[] MINUTES = {15, 30, 60, 180, 720, 1440};
@@ -67,40 +67,20 @@ public final class WallpaperActivity extends Activity {
     private SharedPreferences choices;
     private WallpaperLibrary library;
     private Config config;
-    private float density;
     private final List<File> images = new ArrayList<>();
     private Set<String> hidden;
 
-    private FrameLayout root;
     private ImageView backdrop, preview;
     private View previewShade;
     private TextView previewNote, subtitle;
     private RecyclerView grid;
     private Adapter adapter;
-    private final List<Row> rows = new ArrayList<>();
-    /** The sheet (choices, actions, QR) or full-screen preview over the screen; null when none is open. */
-    private View overlay;
-    /** The row or picture last clicked: where the focus goes back when a sheet closes. */
-    private View returnFocus;
     private File previewed;
     private PhoneUpload phone;
-
-    private static final class Row {
-        final TextView value;
-        final View view;
-        final Runnable refresh;
-
-        Row(View view, TextView value, Runnable refresh) {
-            this.view = view;
-            this.value = value;
-            this.refresh = refresh;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        density = getResources().getDisplayMetrics().density;
         choices = getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE);
         library = new WallpaperLibrary(this);
         config = Config.load(this);
@@ -121,8 +101,7 @@ public final class WallpaperActivity extends Activity {
     // ---- layout ----
 
     private void build() {
-        root = new FrameLayout(this);
-        root.setBackgroundColor(Color.BLACK);
+        initScreen();
         backdrop = new ImageView(this);
         backdrop.setScaleType(ImageView.ScaleType.CENTER_CROP);
         root.addView(backdrop, match());
@@ -141,9 +120,9 @@ public final class WallpaperActivity extends Activity {
         LinearLayout left = new LinearLayout(this);
         left.setOrientation(LinearLayout.VERTICAL);
         columns.addView(left, new LinearLayout.LayoutParams(dp(330), ViewGroup.LayoutParams.MATCH_PARENT));
-        TextView title = text(getString(R.string.wallpaper_manage_title), 30, Color.WHITE, R.font.outfit_medium);
+        TextView title = text(getString(R.string.wallpaper_manage_title), 30, Color.WHITE, R.font.inter_semibold);
         left.addView(title);
-        subtitle = text("", 14, 0x99FFFFFF, R.font.outfit_regular);
+        subtitle = text("", 14, 0x99FFFFFF, R.font.inter_regular);
         subtitle.setPadding(0, dp(2), 0, dp(14));
         left.addView(subtitle);
 
@@ -158,7 +137,7 @@ public final class WallpaperActivity extends Activity {
         card.addView(preview, match());
         previewShade = new View(this);
         card.addView(previewShade, match());
-        previewNote = text("", 12, Color.WHITE, R.font.outfit_regular);
+        previewNote = text("", 12, Color.WHITE, R.font.inter_regular);
         previewNote.setPadding(dp(10), dp(3), dp(10), dp(3));
         GradientDrawable pill = new GradientDrawable();
         pill.setCornerRadius(dp(10));
@@ -261,42 +240,6 @@ public final class WallpaperActivity extends Activity {
         });
     }
 
-    private interface Value {
-        String get();
-    }
-
-    private void row(LinearLayout list, int label, Value value, Runnable ok) {
-        LinearLayout view = new LinearLayout(this);
-        view.setOrientation(LinearLayout.HORIZONTAL);
-        view.setGravity(Gravity.CENTER_VERTICAL);
-        view.setPadding(dp(16), 0, dp(16), 0);
-        view.setFocusable(true);
-        view.setClickable(true);
-        view.setBackgroundResource(R.drawable.wall_row_bg);
-        TextView name = text(getString(label), 17, 0, R.font.outfit_regular);
-        name.setTextColor(getColorStateList(R.color.wall_row_text));
-        name.setDuplicateParentStateEnabled(true);
-        view.addView(name, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        TextView shown = null;
-        if (value != null) {
-            shown = text("", 16, 0, R.font.outfit_regular);
-            shown.setTextColor(getColorStateList(R.color.wall_row_value));
-            shown.setDuplicateParentStateEnabled(true);
-            view.addView(shown);
-        }
-        view.setOnClickListener(v -> {
-            returnFocus = v;
-            ok.run();
-        });
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(46));
-        params.bottomMargin = dp(2);
-        list.addView(view, params);
-        TextView finalShown = shown;
-        Row row = new Row(view, shown, value == null ? null : () -> finalShown.setText(value.get()));
-        rows.add(row);
-        if (row.refresh != null) row.refresh.run();
-    }
-
     // ---- state ----
 
     private void reload() {
@@ -321,8 +264,9 @@ public final class WallpaperActivity extends Activity {
         showPreview(previewed);
     }
 
-    private void refreshRows() {
-        for (Row row : rows) if (row.refresh != null) row.refresh.run();
+    @Override
+    protected void refreshRows() {
+        super.refreshRows();
         boolean rotating = modeIndex() != 3 && !"none".equals(choices.getString(Config.WALLPAPER_CHOICE_KEY, null));
         rows.get(1).view.setAlpha(rotating ? 1f : 0.45f);
     }
@@ -496,44 +440,6 @@ public final class WallpaperActivity extends Activity {
 
     // ---- sheets ----
 
-    private interface Pick {
-        void at(int index);
-    }
-
-    private List<String> labels(int... ids) {
-        List<String> out = new ArrayList<>();
-        for (int id : ids) out.add(getString(id));
-        return out;
-    }
-
-    /** A centred card with a title and a list of choices; the current one is ticked and focused. */
-    private void sheet(String title, List<String> labels, int current, Pick pick) {
-        LinearLayout card = card(dp(420));
-        if (title != null) {
-            TextView head = text(title, 15, 0x99FFFFFF, R.font.outfit_medium);
-            head.setPadding(dp(16), dp(4), dp(16), dp(10));
-            card.addView(head);
-        }
-        View focus = null;
-        for (int i = 0; i < labels.size(); i++) {
-            int index = i;
-            TextView option = text((i == current ? "✓  " : "") + labels.get(i), 18, 0, R.font.outfit_regular);
-            option.setTextColor(getColorStateList(R.color.wall_row_text));
-            option.setGravity(Gravity.CENTER_VERTICAL);
-            option.setPadding(dp(16), 0, dp(16), 0);
-            option.setFocusable(true);
-            option.setClickable(true);
-            option.setBackgroundResource(R.drawable.wall_row_bg);
-            option.setOnClickListener(v -> {
-                closeOverlay();
-                pick.at(index);
-            });
-            card.addView(option, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(48)));
-            if (i == current || focus == null) focus = option;
-        }
-        openOverlay(card, focus);
-    }
-
     private void tileActions(File image) {
         String name = image.getName();
         boolean inCollection = "wallpapers".equals(image.getParentFile().getName());
@@ -585,7 +491,7 @@ public final class WallpaperActivity extends Activity {
         frame.addView(shade, match());
         openOverlay(frame, frame);
         decode(image, getResources().getDisplayMetrics().widthPixels, image.getPath() + "@full", bitmap -> {
-            if (overlay == frame) view.setImageBitmap(bitmap);
+            if (overlayOpen() && frame.isAttachedToWindow()) view.setImageBitmap(bitmap);
             thumbs.remove(image.getPath() + "@full");
         });
     }
@@ -596,11 +502,11 @@ public final class WallpaperActivity extends Activity {
         String url = phone.start();
         LinearLayout card = card(dp(460));
         card.setGravity(Gravity.CENTER_HORIZONTAL);
-        TextView head = text(getString(R.string.wallpaper_add_from_phone), 22, Color.WHITE, R.font.outfit_medium);
+        TextView head = text(getString(R.string.wallpaper_add_from_phone), 22, Color.WHITE, R.font.inter_semibold);
         head.setPadding(0, dp(6), 0, dp(14));
         card.addView(head);
         if (url == null) {
-            card.addView(text(getString(R.string.phone_upload_no_network), 16, 0xCCFFFFFF, R.font.outfit_regular));
+            card.addView(text(getString(R.string.phone_upload_no_network), 16, 0xCCFFFFFF, R.font.inter_regular));
         } else {
             ImageView qr = new ImageView(this);
             int size = dp(220);
@@ -611,12 +517,12 @@ public final class WallpaperActivity extends Activity {
             qr.setBackground(white);
             qr.setPadding(dp(10), dp(10), dp(10), dp(10));
             card.addView(qr, new LinearLayout.LayoutParams(size + dp(20), size + dp(20)));
-            TextView hint = text(getString(R.string.phone_upload_hint, url), 14, 0xB3FFFFFF, R.font.outfit_regular);
+            TextView hint = text(getString(R.string.phone_upload_hint, url), 14, 0xB3FFFFFF, R.font.inter_regular);
             hint.setGravity(Gravity.CENTER);
             hint.setPadding(dp(8), dp(16), dp(8), dp(8));
             card.addView(hint);
         }
-        TextView close = text(getString(R.string.close), 18, 0, R.font.outfit_regular);
+        TextView close = text(getString(R.string.close), 18, 0, R.font.inter_regular);
         close.setTextColor(getColorStateList(R.color.wall_row_text));
         close.setGravity(Gravity.CENTER);
         close.setFocusable(true);
@@ -629,84 +535,12 @@ public final class WallpaperActivity extends Activity {
         openOverlay(card, close);
     }
 
-    private LinearLayout card(int width) {
-        LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(dp(14), dp(16), dp(14), dp(14));
-        GradientDrawable shape = new GradientDrawable();
-        shape.setCornerRadius(dp(22));
-        shape.setColor(0xF51C1D21);
-        card.setBackground(shape);
-        card.setElevation(dp(12));
-        card.setTag(width);
-        return card;
-    }
-
-    private void openOverlay(View content, View focus) {
-        closeOverlay();
-        FrameLayout scrim = new FrameLayout(this);
-        scrim.setBackgroundColor(content instanceof LinearLayout ? 0x99000000 : Color.BLACK);
-        scrim.setClickable(true);
-        if (content.getTag() instanceof Integer) {
-            scrim.addView(content, new FrameLayout.LayoutParams((Integer) content.getTag(),
-                    ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        } else {
-            scrim.addView(content, match());
-        }
-        root.addView(scrim, match());
-        overlay = scrim;
-        // Keep the focus inside the sheet while it is open.
-        for (int i = 0; i < root.getChildCount() - 1; i++) {
-            if (root.getChildAt(i) instanceof ViewGroup) {
-                ((ViewGroup) root.getChildAt(i)).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-            }
-        }
-        content.setAlpha(0f);
-        content.setScaleX(0.96f);
-        content.setScaleY(0.96f);
-        content.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(160).start();
-        if (focus != null) focus.post(focus::requestFocus);
-    }
-
-    private void closeOverlay() {
-        if (overlay == null) return;
-        root.removeView(overlay);
-        overlay = null;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            if (root.getChildAt(i) instanceof ViewGroup) {
-                ((ViewGroup) root.getChildAt(i)).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-            }
-        }
+    @Override
+    protected void onOverlayClosed() {
         if (phone != null) {
             phone.stop();
             phone = null;
         }
-        // Back to the row or picture the sheet was opened from (set on every click there).
-        View back = returnFocus;
-        if (back != null && back.isAttachedToWindow()) back.post(back::requestFocus);
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        // The full-screen preview closes on any key; a sheet closes on Back.
-        if (overlay != null && event.getAction() == KeyEvent.ACTION_UP) {
-            boolean fullScreen = !(((FrameLayout) overlay).getChildAt(0) instanceof LinearLayout);
-            if (fullScreen || event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                closeOverlay();
-                return true;
-            }
-        }
-        if (overlay != null && event.getAction() == KeyEvent.ACTION_DOWN
-                && !(((FrameLayout) overlay).getChildAt(0) instanceof LinearLayout)) {
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (overlay != null) closeOverlay();
-        else super.onBackPressed();
     }
 
     // ---- grid ----
@@ -741,7 +575,7 @@ public final class WallpaperActivity extends Activity {
             ImageView image = new ImageView(WallpaperActivity.this);
             image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             frame.addView(image, match());
-            TextView badge = text("", 12, Color.WHITE, R.font.outfit_regular);
+            TextView badge = text("", 12, Color.WHITE, R.font.inter_regular);
             badge.setPadding(dp(8), dp(2), dp(8), dp(2));
             GradientDrawable pill = new GradientDrawable();
             pill.setCornerRadius(dp(10));
@@ -822,31 +656,5 @@ public final class WallpaperActivity extends Activity {
             else parent.smoothScrollBy(0, dy);
             return true;
         }
-    }
-
-    // ---- helpers ----
-
-    private TextView text(String value, int sp, int color, int font) {
-        TextView view = new TextView(this);
-        view.setText(value);
-        view.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
-        if (color != 0) view.setTextColor(color);
-        Typeface face = getResources().getFont(font);
-        view.setTypeface(face);
-        view.setIncludeFontPadding(false);
-        return view;
-    }
-
-    private static FrameLayout.LayoutParams match() {
-        return new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    }
-
-    private static int indexOf(int[] values, int value) {
-        for (int i = 0; i < values.length; i++) if (values[i] == value) return i;
-        return -1;
-    }
-
-    private int dp(int value) {
-        return Math.round(value * density);
     }
 }

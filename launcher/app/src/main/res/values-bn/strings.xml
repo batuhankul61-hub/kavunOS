@@ -133,4 +133,6 @@
     <string name="dream_other">অন্য</string>
     <string name="phone_page_on_tv">টিভিতে</string>
     <string name="home_settings_tile">সেটিংস</string>
+    <string name="settings_section_home">হোম</string>
+    <string name="settings_section_system">সিস্টেম</string>
 </resources>

@@ -145,4 +145,6 @@
     <string name="dream_other">Otro</string>
     <string name="phone_page_on_tv">En la TV</string>
     <string name="home_settings_tile">Ajustes</string>
+    <string name="settings_section_home">Inicio</string>
+    <string name="settings_section_system">Sistema</string>
 </resources>

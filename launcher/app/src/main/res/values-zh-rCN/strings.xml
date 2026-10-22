@@ -103,4 +103,6 @@
     <string name="dream_other">其他</string>
     <string name="phone_page_on_tv">电视上</string>
     <string name="home_settings_tile">设置</string>
+    <string name="settings_section_home">主屏幕</string>
+    <string name="settings_section_system">系统</string>
 </resources>

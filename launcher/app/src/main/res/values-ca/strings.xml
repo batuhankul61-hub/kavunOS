@@ -101,4 +101,6 @@
     <string name="dream_other">Un altre</string>
     <string name="phone_page_on_tv">A la TV</string>
     <string name="home_settings_tile">Configuració</string>
+    <string name="settings_section_home">Inici</string>
+    <string name="settings_section_system">Sistema</string>
 </resources>

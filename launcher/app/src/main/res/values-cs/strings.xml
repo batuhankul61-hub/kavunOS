@@ -134,4 +134,6 @@
     <string name="dream_other">Jiný</string>
     <string name="phone_page_on_tv">V televizi</string>
     <string name="home_settings_tile">Nastavení</string>
+    <string name="settings_section_home">Domovská obrazovka</string>
+    <string name="settings_section_system">Systém</string>
 </resources>

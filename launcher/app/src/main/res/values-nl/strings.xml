@@ -146,4 +146,6 @@
     <string name="dream_other">Andere</string>
     <string name="phone_page_on_tv">Op de tv</string>
     <string name="home_settings_tile">Instellingen</string>
+    <string name="settings_section_home">Startscherm</string>
+    <string name="settings_section_system">Systeem</string>
 </resources>

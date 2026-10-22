@@ -130,4 +130,6 @@
     <string name="dream_other">Inny</string>
     <string name="phone_page_on_tv">Na telewizorze</string>
     <string name="home_settings_tile">Ustawienia</string>
+    <string name="settings_section_home">Ekran główny</string>
+    <string name="settings_section_system">System</string>
 </resources>

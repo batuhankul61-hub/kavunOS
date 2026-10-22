@@ -135,4 +135,6 @@
     <string name="dream_other">Другая</string>
     <string name="phone_page_on_tv">На телевизоре</string>
     <string name="home_settings_tile">Настройки</string>
+    <string name="settings_section_home">Главный экран</string>
+    <string name="settings_section_system">Система</string>
 </resources>
