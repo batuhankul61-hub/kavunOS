@@ -10,7 +10,6 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
@@ -30,6 +29,7 @@ import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
@@ -39,8 +39,8 @@ import java.util.Set;
 /**
  * Control Center, tvOS style: a glass panel that slides in from the right over whatever is on screen, opened
  * by holding Home (HomeKeyService, control_center_long_home); Home held again, or Back, closes it. Tiles: Wi-Fi, Bluetooth,
- * close background apps (with the memory it freed), start the screensaver, Wallpapers and Settings; the time
- * and free memory on top.
+ * close background apps (showing free memory, then what closing freed), start the screensaver, Wallpapers and
+ * Settings; the time on top. The content scrolls, so the focused tile stays on screen under Now Playing.
  */
 public final class ControlCenterActivity extends Activity {
 
@@ -48,7 +48,9 @@ public final class ControlCenterActivity extends Activity {
     private float density;
     private View scrim;
     private LinearLayout panel;
+    private View slider;
     private TextView memory;
+    private boolean closingApps;
     private boolean closing;
 
     @Override
@@ -62,22 +64,31 @@ public final class ControlCenterActivity extends Activity {
         scrim.setOnClickListener(v -> close());
         root.addView(scrim, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
+        FrameLayout glassPanel = new FrameLayout(this);
+        GradientDrawable glass = new GradientDrawable();
+        // Between clear and solid, like iOS: the app behind only hints through (90 %), the text reads cleanly.
+        glass.setColor(0xE61C1C1E);
+        // Flush with the right edge, full height; only the left corners are rounded.
+        float r = dp(32);
+        glass.setCornerRadii(new float[]{r, r, 0, 0, 0, 0, r, r});
+        glassPanel.setBackground(glass);
+        root.addView(glassPanel, new FrameLayout.LayoutParams(dp(424), ViewGroup.LayoutParams.MATCH_PARENT, Gravity.END));
+        slider = glassPanel;
+        // The content scrolls under the glass: with Now Playing the last tiles sit below the screen, and the
+        // ScrollView brings each focused tile into view.
+        ScrollView scroll = new ScrollView(this);
+        scroll.setVerticalScrollBarEnabled(false);
+        scroll.setVerticalFadingEdgeEnabled(true);
+        scroll.setFadingEdgeLength(dp(40));
+        glassPanel.addView(scroll, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         panel = new LinearLayout(this);
         panel.setOrientation(LinearLayout.VERTICAL);
         // The panel reaches the screen edge, its content keeps clear of it: older TVs crop (overscan) a few
         // percent of every edge, so the right and bottom padding are larger.
         panel.setPadding(dp(32), dp(40), dp(56), dp(44));
-        GradientDrawable glass = new GradientDrawable();
-        // Between clear and solid, like iOS: the app behind shows through, the text still reads.
-        glass.setColor(0xC41C1C1E);
-        // Flush with the right edge, full height; only the left corners are rounded.
-        float r = dp(32);
-        glass.setCornerRadii(new float[]{r, r, 0, 0, 0, 0, r, r});
-        panel.setBackground(glass);
-        FrameLayout.LayoutParams panelParams = new FrameLayout.LayoutParams(dp(424),
-                ViewGroup.LayoutParams.MATCH_PARENT, Gravity.END);
-
-        root.addView(panel, panelParams);
+        scroll.addView(panel, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
 
         TextClock time = new TextClock(this);
         time.setFormat24Hour("HH:mm");
@@ -99,24 +110,19 @@ public final class ControlCenterActivity extends Activity {
         View first = tile(grid, R.drawable.cc_wifi, getString(R.string.cc_wifi), wifiName(),
                 () -> open(new Intent(Settings.ACTION_WIFI_SETTINGS)));
         tile(grid, R.drawable.cc_bluetooth, getString(R.string.cc_bluetooth), bluetoothName(), this::bluetooth);
-        tile(grid, R.drawable.cc_close_apps, getString(R.string.cc_close_apps), null, this::closeApps);
+        memory = (TextView) tile(grid, R.drawable.cc_close_apps, getString(R.string.cc_close_apps), "", this::closeApps)
+                .getTag();
         tile(grid, R.drawable.cc_moon, getString(R.string.cc_screensaver), null, this::screensaver);
         tile(grid, R.drawable.cc_photo, getString(R.string.wallpaper_manage_title), null,
                 () -> open(new Intent(this, WallpaperActivity.class)));
         tile(grid, R.drawable.cc_settings, getString(R.string.home_settings_tile), null,
                 () -> open(new Intent(this, LauncherSettingsActivity.class)));
-
-        View spacer = new View(this);
-        panel.addView(spacer, new LinearLayout.LayoutParams(1, 0, 1f));
-        memory = new TextView(this);
-        style(memory, 14, 0x99FFFFFF, R.font.inter_regular);
-        panel.addView(memory);
         showMemory();
 
         setContentView(root);
         // Slide in from the right on the iOS-style curve, over a fading dim.
-        panel.setTranslationX(dp(424));
-        panel.animate().translationX(0f).setDuration(420).setInterpolator(TopShelf.EASE).start();
+        slider.setTranslationX(dp(424));
+        slider.animate().translationX(0f).setDuration(420).setInterpolator(TopShelf.EASE).start();
         scrim.animate().alpha(1f).setDuration(300).start();
         first.post(first::requestFocus);
     }
@@ -137,7 +143,7 @@ public final class ControlCenterActivity extends Activity {
     private void close() {
         if (closing) return;
         closing = true;
-        panel.animate().translationX(dp(424)).setDuration(300).setInterpolator(TopShelf.EASE)
+        slider.animate().translationX(dp(424)).setDuration(300).setInterpolator(TopShelf.EASE)
                 .withEndAction(() -> {
                     finish();
                     overridePendingTransition(0, 0);
@@ -178,6 +184,7 @@ public final class ControlCenterActivity extends Activity {
             sub.setSingleLine(true);
             sub.setPadding(0, dp(2), 0, 0);
             tile.addView(sub);
+            tile.setTag(sub);
         }
         tile.setOnClickListener(v -> click.run());
         tile.setOnFocusChangeListener((v, has) -> v.animate().scaleX(has ? 1.05f : 1f).scaleY(has ? 1.05f : 1f)
@@ -316,21 +323,32 @@ public final class ControlCenterActivity extends Activity {
         }
     }
 
-    /** Ends every app that is only cached in the background, as Android itself would under memory pressure. */
+    /**
+     * Ends every app that is only cached in the background, as Android itself would under memory pressure, and
+     * says on the tile what that freed. Apps on screen or playing (a foreground service) keep running: Android
+     * does not let a launcher end those.
+     */
     private void closeApps() {
+        if (closingApps) return;
+        closingApps = true;
+        memory.setText(R.string.cc_closing);
         ActivityManager am = getSystemService(ActivityManager.class);
         long before = availMemory(am);
-        PackageManager pm = getPackageManager();
-        List<ApplicationInfo> apps = pm.getInstalledApplications(0);
-        for (ApplicationInfo app : apps) {
-            if (app.packageName.equals(getPackageName())) continue;
-            am.killBackgroundProcesses(app.packageName);
-        }
-        handler.postDelayed(() -> {
-            long freed = Math.max(0, availMemory(am) - before);
-            memory.setText(getString(R.string.cc_freed, Formatter.formatShortFileSize(this, freed)));
-            handler.postDelayed(this::showMemory, 2500);
-        }, 800);
+        // A couple of hundred binder calls: off the main thread, so the panel never stutters.
+        new Thread(() -> {
+            List<ApplicationInfo> apps = getPackageManager().getInstalledApplications(0);
+            for (ApplicationInfo app : apps) {
+                if (app.packageName.equals(getPackageName())) continue;
+                am.killBackgroundProcesses(app.packageName);
+            }
+            handler.postDelayed(() -> {
+                closingApps = false;
+                long freed = Math.max(0, availMemory(am) - before);
+                memory.setText(freed < (8L << 20) ? getString(R.string.cc_nothing_to_close)
+                        : getString(R.string.cc_freed, Formatter.formatShortFileSize(this, freed)));
+                handler.postDelayed(this::showMemory, 3000);
+            }, 600);
+        }, "close-apps").start();
     }
 
     private void screensaver() {
@@ -345,11 +363,9 @@ public final class ControlCenterActivity extends Activity {
     }
 
     private void showMemory() {
-        ActivityManager am = getSystemService(ActivityManager.class);
-        ActivityManager.MemoryInfo info = new ActivityManager.MemoryInfo();
-        am.getMemoryInfo(info);
-        memory.setText(getString(R.string.cc_memory, Formatter.formatShortFileSize(this, info.availMem),
-                Formatter.formatShortFileSize(this, info.totalMem)));
+        if (closingApps) return;
+        memory.setText(getString(R.string.cc_free,
+                Formatter.formatShortFileSize(this, availMemory(getSystemService(ActivityManager.class)))));
     }
 
     private static long availMemory(ActivityManager am) {

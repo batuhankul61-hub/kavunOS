@@ -166,7 +166,9 @@ public class MainActivity extends Activity {
         grid.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
-                scrolled += dy;
+                // Read the real offset: summing dy drifts when the grid is laid out again (returning from
+                // another app), which left Home dimmed and the clock hidden at the top of the grid.
+                scrolled = rv.computeVerticalScrollOffset();
                 float a = Math.max(0f, Math.min(1f, scrolled / (float) (tileH + labelSpace)));
                 dim.setAlpha(a);
                 dim.setVisibility(a > 0f ? View.VISIBLE : View.GONE);

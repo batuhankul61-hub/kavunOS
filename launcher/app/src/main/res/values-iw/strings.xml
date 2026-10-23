@@ -159,7 +159,9 @@
     <string name="cc_connected">מחובר</string>
     <string name="cc_connecting">מתחבר…</string>
     <string name="cc_freed">התפנו %1$s</string>
-    <string name="cc_memory">זיכרון פנוי: %1$s מתוך %2$s</string>
+    <string name="cc_free">%1$s פנוי</string>
+    <string name="cc_closing">סוגר…</string>
+    <string name="cc_nothing_to_close">אין מה לסגור</string>
     <string name="shelf_playing">מתנגן</string>
     <string name="shelf_paused">מושהה</string>
     <string name="shelf_last_opened">נפתח לאחרונה</string>
