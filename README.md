@@ -1,4 +1,4 @@
-﻿<p align="center">
+<p align="center">
   <img src="docs/kavunos/logo.svg" alt="kavunOS logosu: koyu yeşil kare içinde kesik kavun dilimi" width="140">
 </p>
 
