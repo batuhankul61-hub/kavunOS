@@ -145,4 +145,7 @@
     <string name="cc_connecting">Bağlanıyor…</string>
     <string name="cc_freed">%1$s boşaldı</string>
     <string name="cc_memory">Boş bellek: %1$s / %2$s</string>
+    <string name="shelf_playing">Çalıyor</string>
+    <string name="shelf_paused">Duraklatıldı</string>
+    <string name="shelf_last_opened">Son açılma</string>
 </resources>

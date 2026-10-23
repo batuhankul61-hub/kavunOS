@@ -57,7 +57,7 @@ public final class ControlCenterActivity extends Activity {
         density = getResources().getDisplayMetrics().density;
         FrameLayout root = new FrameLayout(this);
         scrim = new View(this);
-        scrim.setBackgroundColor(0x80000000);
+        scrim.setBackgroundColor(0x4D000000);
         scrim.setAlpha(0f);
         scrim.setOnClickListener(v -> close());
         root.addView(scrim, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -68,7 +68,8 @@ public final class ControlCenterActivity extends Activity {
         // percent of every edge, so the right and bottom padding are larger.
         panel.setPadding(dp(32), dp(40), dp(56), dp(44));
         GradientDrawable glass = new GradientDrawable();
-        glass.setColor(0xFA1C1C1E);
+        // Between clear and solid, like iOS: the app behind shows through, the text still reads.
+        glass.setColor(0xC41C1C1E);
         // Flush with the right edge, full height; only the left corners are rounded.
         float r = dp(32);
         glass.setCornerRadii(new float[]{r, r, 0, 0, 0, 0, r, r});
@@ -90,6 +91,8 @@ public final class ControlCenterActivity extends Activity {
         date.setPadding(0, dp(4), 0, dp(24));
         panel.addView(date);
 
+        NowPlaying.Media media = NowPlaying.current(this);
+        if (media != null) panel.addView(nowPlaying(media));
         GridLayout grid = new GridLayout(this);
         grid.setColumnCount(2);
         panel.addView(grid);
@@ -185,6 +188,86 @@ public final class ControlCenterActivity extends Activity {
         params.setMargins(dp(6), dp(6), dp(6), dp(6));
         grid.addView(tile, params);
         return tile;
+    }
+
+    /** Now Playing, iOS style: artwork, title and artist, and previous / play-pause / next for the session. */
+    private View nowPlaying(NowPlaying.Media media) {
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(dp(16), dp(14), dp(16), dp(10));
+        GradientDrawable bg = new GradientDrawable();
+        bg.setCornerRadius(dp(22));
+        bg.setColor(0x33FFFFFF);
+        box.setBackground(bg);
+        LinearLayout top = new LinearLayout(this);
+        top.setGravity(Gravity.CENTER_VERTICAL);
+        box.addView(top);
+        ImageView cover = new ImageView(this);
+        cover.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        if (media.art != null) cover.setImageBitmap(media.art);
+        else cover.setImageResource(R.drawable.cc_play);
+        cover.setClipToOutline(true);
+        cover.setOutlineProvider(new android.view.ViewOutlineProvider() {
+            @Override
+            public void getOutline(View v, android.graphics.Outline outline) {
+                outline.setRoundRect(0, 0, v.getWidth(), v.getHeight(), dp(10));
+            }
+        });
+        top.addView(cover, new LinearLayout.LayoutParams(dp(52), dp(52)));
+        LinearLayout lines = new LinearLayout(this);
+        lines.setOrientation(LinearLayout.VERTICAL);
+        lines.setPadding(dp(12), 0, 0, 0);
+        top.addView(lines, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        TextView title = new TextView(this);
+        style(title, 15, 0xFFFFFFFF, R.font.inter_semibold);
+        title.setText(media.title);
+        title.setSingleLine(true);
+        title.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        lines.addView(title);
+        if (media.subtitle != null) {
+            TextView sub = new TextView(this);
+            style(sub, 13, 0xB3FFFFFF, R.font.inter_regular);
+            sub.setText(media.subtitle);
+            sub.setSingleLine(true);
+            sub.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            sub.setPadding(0, dp(3), 0, 0);
+            lines.addView(sub);
+        }
+        LinearLayout controls = new LinearLayout(this);
+        controls.setGravity(Gravity.CENTER);
+        controls.setPadding(0, dp(8), 0, 0);
+        box.addView(controls, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        android.media.session.MediaController.TransportControls t = media.controller.getTransportControls();
+        control(controls, R.drawable.cc_prev, t::skipToPrevious);
+        ImageView[] play = new ImageView[1];
+        boolean[] playing = {media.playing};
+        play[0] = control(controls, media.playing ? R.drawable.cc_pause : R.drawable.cc_play, () -> {
+            if (playing[0]) t.pause();
+            else t.play();
+            playing[0] = !playing[0];
+            play[0].setImageResource(playing[0] ? R.drawable.cc_pause : R.drawable.cc_play);
+        });
+        control(controls, R.drawable.cc_next, t::skipToNext);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(332), ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(dp(6), 0, dp(6), dp(6));
+        box.setLayoutParams(params);
+        return box;
+    }
+
+    private ImageView control(LinearLayout row, int icon, Runnable click) {
+        ImageView button = new ImageView(this);
+        button.setImageResource(icon);
+        button.setImageTintList(getColorStateList(R.color.wall_row_text));
+        button.setScaleType(ImageView.ScaleType.CENTER);
+        button.setBackgroundResource(R.drawable.cc_tile_bg);
+        button.setFocusable(true);
+        button.setClickable(true);
+        button.setOnClickListener(v -> click.run());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(64), dp(44));
+        params.setMargins(dp(6), 0, dp(6), 0);
+        row.addView(button, params);
+        return button;
     }
 
     private String wifiName() {

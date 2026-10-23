@@ -164,4 +164,7 @@
     <string name="cc_connecting">Connecting…</string>
     <string name="cc_freed">%1$s freed</string>
     <string name="cc_memory">Free memory: %1$s of %2$s</string>
+    <string name="shelf_playing">Playing</string>
+    <string name="shelf_paused">Paused</string>
+    <string name="shelf_last_opened">Last opened</string>
 </resources>

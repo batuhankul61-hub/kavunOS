@@ -77,6 +77,7 @@ Write-Host $start
 if ($start -notmatch 'Status: ok' -or $start -match '(?m)^Error') { throw "the new launcher did not start (see above); $StockLauncher was left enabled" }
 @(
     'pm grant com.gathin.tvhome android.permission.ACCESS_FINE_LOCATION 2>/dev/null; echo location-granted',
+    'cmd notification allow_listener com.gathin.tvhome/com.gathin.tvhome.MediaListener 2>/dev/null; echo media-sessions-granted',
     'cmd package compile -m speed -f com.gathin.tvhome',
     $disableStock,
     'cmd package set-home-activity --user 0 com.gathin.tvhome/.MainActivity'

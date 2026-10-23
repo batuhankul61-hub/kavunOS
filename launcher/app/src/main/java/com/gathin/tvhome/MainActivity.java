@@ -259,6 +259,7 @@ public class MainActivity extends Activity {
         // The app grows out of its tile, the way iOS and tvOS open apps.
         Bundle zoom = ActivityOptions.makeScaleUpAnimation(from, 0, 0, from.getWidth(), from.getHeight()).toBundle();
         try {
+            if (tile.leanback) NowPlaying.opened(this, tile.key);
             if (HomeApps.OWN_SETTINGS.equals(tile.key)) startActivityForResult(intent, LAUNCHER_SETTINGS_REQUEST, zoom);
             else startActivity(intent, zoom);
             returning = true;
@@ -309,6 +310,7 @@ public class MainActivity extends Activity {
         handler.removeCallbacks(goIdle);
         wallpaperPlayer.setIdle(false);
         wallpaperPlayer.stop();
+        if (shelf != null) shelf.show(null);
     }
 
     @Override
