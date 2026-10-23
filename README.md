@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="docs/kavunos/logo.svg" alt="kavunOS logosu: koyu yeşil kare içinde kesik kavun dilimi" width="140">
 </p>
 
@@ -49,6 +49,10 @@ Görüntülerdeki duvar kâğıdı depodaki ücretsiz [scenes](themes/scenes) te
   Gizlenenler Ayarlar → Gizli uygulamalar'dan geri getirilir.
 - **Duvar kâğıtları:** karışık, sıralı, günün saatine göre ya da sabit; otomatik karartma; telefondan
   duvar kâğıdı ekleme; duvar kâğıtlarıyla ekran koruyucu.
+- **Kumanda tuşları (ana ekranda):** ≡ odaktaki uygulamanın menüsü, INFO uygulama bilgisi, LAST son açılan
+  uygulama, Favorite odaktakini en başa taşır, CH ∧/∨ iki satır atlar, 1–9 ve 0 ilk on uygulamayı açar; renkli
+  tuşlar Kontrol Merkezi (kırmızı), Duvar kâğıtları (yeşil), Ayarlar (turuncu) ve ekran koruyucu (mavi); SAT ve EPG
+  uydu TV'yi açar. Uygulamaların içinde tuşlar uygulamaya gider.
 - **Inter yazı tipi**, Türkçe dahil 23 dil.
 
 ## Hız
@@ -88,10 +92,15 @@ TV_HOST=192.168.1.50 HOME_KEY_SERVICE=1 PHONE_UPLOAD=1 launcher/build-and-instal
 Betik derler, kurar, kavunOS'u ana ekran yapar; ana ekran ona geçmezse eski başlatıcıyı geri getirir.
 Gerekli JDK 17 ve Android SDK, Android Studio ile gelir.
 
-## Test edilen cihaz
+## Test edilen cihazlar
 
 - Xiaomi Mi TV Stick 4K (MiTV-AYFR0, Android 11) — temizleme listesi:
   [examples/xiaomi-mitv-ayfr0](examples/xiaomi-mitv-ayfr0/debloat.txt)
+- Hiremco Matrix PRO MAX (Android 12, Allwinner, 4 GB) — `-StockLauncher com.qstar.blue -HomeKeyService` ile;
+  kumandanın renkli ve SAT tuşları F-tuşu gönderir, kavunOS bunları ana ekranda tanır.
+
+Bir kumanda tuşunun ne gönderdiğini görmek için: `adb shell setprop log.tag.kavunOS.Key DEBUG`, tuşlara basın,
+`adb logcat -s kavunOS.Key` (Home tuşu servisi açık olmalı).
 
 Diğer cihazlarda da çalışması beklenir; cleanyourtv'nin 170'ten fazla TV modeli için temizleme listeleri
 [examples](examples/README.md) klasöründe duruyor.

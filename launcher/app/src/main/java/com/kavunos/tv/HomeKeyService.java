@@ -64,8 +64,17 @@ public class HomeKeyService extends AccessibilityService {
         return false;
     }
 
+    /** Off unless asked for (adb shell setprop log.tag.kavunOS.Key DEBUG): what each remote button sends. */
+    private static final String KEY_LOG = "kavunOS.Key";
+
     @Override
     protected boolean onKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0
+                && android.util.Log.isLoggable(KEY_LOG, android.util.Log.DEBUG)) {
+            android.view.InputDevice device = event.getDevice();
+            android.util.Log.d(KEY_LOG, KeyEvent.keyCodeToString(event.getKeyCode()) + " scan=" + event.getScanCode()
+                    + " device=" + (device == null ? "?" : device.getName()));
+        }
         // A scancode entry is more specific than any keycode, so it goes first.
         String scanApp = appScancodes.get(event.getScanCode());
         if (scanApp != null) {

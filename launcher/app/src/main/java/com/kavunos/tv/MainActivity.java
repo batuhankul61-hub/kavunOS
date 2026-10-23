@@ -629,13 +629,123 @@ public class MainActivity extends Activity {
         if (scrolled > 0) toTop();
     }
 
+    /**
+     * Remote buttons on Home only; inside apps every button still goes to the app. Hiremco's remote sends F-keys
+     * for its coloured and SAT buttons, so those are taken alongside the standard codes.
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_SETTINGS) {
-            startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST);
-            return true;
+        if (event.getRepeatCount() > 0) return super.onKeyDown(keyCode, event);
+        Holder focused = focusedHolder();
+        int at = focused == null ? RecyclerView.NO_POSITION : focused.getBindingAdapterPosition();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_SETTINGS:
+            case KeyEvent.KEYCODE_PROG_YELLOW:
+            case KeyEvent.KEYCODE_F10:
+                startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST);
+                return true;
+            case KeyEvent.KEYCODE_MENU:
+                if (focused != null && at != RecyclerView.NO_POSITION) openMenu(focused);
+                return true;
+            case KeyEvent.KEYCODE_INFO:
+                if (at != RecyclerView.NO_POSITION) details(tiles.get(at));
+                return true;
+            case KeyEvent.KEYCODE_PROG_RED:
+            case KeyEvent.KEYCODE_F9:
+                startActivity(new Intent(this, ControlCenterActivity.class));
+                return true;
+            case KeyEvent.KEYCODE_PROG_GREEN:
+            case KeyEvent.KEYCODE_F12:
+                startActivity(new Intent(this, WallpaperActivity.class));
+                return true;
+            case KeyEvent.KEYCODE_PROG_BLUE:
+            case KeyEvent.KEYCODE_F11:
+                startScreensaver();
+                return true;
+            case KeyEvent.KEYCODE_F1:      // SAT
+            case KeyEvent.KEYCODE_GUIDE:   // EPG
+                return openPackage(LIVE_TV_PACKAGE);
+            case KeyEvent.KEYCODE_DEL:     // LAST
+            case KeyEvent.KEYCODE_LAST_CHANNEL:
+                return openLast();
+            case KeyEvent.KEYCODE_ZENKAKU_HANKAKU:   // Favorite
+            case KeyEvent.KEYCODE_BOOKMARK:
+                if (at > 0) {
+                    tiles.add(0, tiles.remove(at));
+                    adapter.notifyItemMoved(at, 0);
+                    HomeApps.saveOrder(this, tiles);
+                    toTop();
+                }
+                return true;
+            case KeyEvent.KEYCODE_PAGE_DOWN:
+            case KeyEvent.KEYCODE_CHANNEL_DOWN:
+                if (at != RecyclerView.NO_POSITION) focusTile(Math.min(tiles.size() - 1, at + 2 * columns));
+                return true;
+            case KeyEvent.KEYCODE_PAGE_UP:
+            case KeyEvent.KEYCODE_CHANNEL_UP:
+                if (at != RecyclerView.NO_POSITION) {
+                    if (at - 2 * columns < columns) toTop();
+                    else focusTile(at - 2 * columns);
+                }
+                return true;
+            default:
+                // 1–9 and 0 open the first ten apps, the way a channel number picks a channel.
+                if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) {
+                    int n = keyCode == KeyEvent.KEYCODE_0 ? 9 : keyCode - KeyEvent.KEYCODE_1;
+                    if (n < tiles.size()) {
+                        RecyclerView.ViewHolder h = grid.findViewHolderForAdapterPosition(n);
+                        launch(tiles.get(n), h != null ? ((Holder) h).card : grid);
+                    }
+                    return true;
+                }
+                return super.onKeyDown(keyCode, event);
         }
-        return super.onKeyDown(keyCode, event);
+    }
+
+    /** The satellite / live TV app on boxes that have one (Hiremco: android.dtv). */
+    private static final String LIVE_TV_PACKAGE = "android.dtv";
+
+    private Holder focusedHolder() {
+        View focus = grid.getFocusedChild();
+        return focus == null ? null : (Holder) grid.findContainingViewHolder(focus);
+    }
+
+    private boolean openPackage(String pkg) {
+        Intent intent = getPackageManager().getLeanbackLaunchIntentForPackage(pkg);
+        if (intent == null) intent = getPackageManager().getLaunchIntentForPackage(pkg);
+        if (intent == null) return false;
+        try {
+            startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            returning = true;
+        } catch (ActivityNotFoundException | SecurityException ignored) {
+        }
+        return true;
+    }
+
+    /** LAST: back to the app opened most recently from Home. */
+    private boolean openLast() {
+        HomeApps.Tile last = null;
+        long when = 0;
+        for (HomeApps.Tile t : tiles) {
+            long opened = t.leanback ? NowPlaying.lastOpened(this, t.key) : 0;
+            if (opened > when) {
+                when = opened;
+                last = t;
+            }
+        }
+        if (last == null) return false;
+        int at = tiles.indexOf(last);
+        RecyclerView.ViewHolder h = grid.findViewHolderForAdapterPosition(at);
+        launch(last, h != null ? ((Holder) h).card : grid);
+        return true;
+    }
+
+    private void startScreensaver() {
+        try {
+            startActivity(new Intent().setComponent(new android.content.ComponentName("com.android.systemui",
+                    "com.android.systemui.Somnambulator")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (ActivityNotFoundException | SecurityException ignored) {
+        }
     }
 
     @Override
