@@ -64,15 +64,18 @@ public final class ControlCenterActivity extends Activity {
 
         panel = new LinearLayout(this);
         panel.setOrientation(LinearLayout.VERTICAL);
-        panel.setPadding(dp(32), dp(40), dp(32), dp(32));
+        // The panel reaches the screen edge, its content keeps clear of it: older TVs crop (overscan) a few
+        // percent of every edge, so the right and bottom padding are larger.
+        panel.setPadding(dp(32), dp(40), dp(56), dp(44));
         GradientDrawable glass = new GradientDrawable();
-        glass.setColor(0xF01C1C1E);
-        // A floating card inset from every edge, as on tvOS; it also clears the overscan of older TVs.
-        glass.setCornerRadius(dp(30));
+        glass.setColor(0xFA1C1C1E);
+        // Flush with the right edge, full height; only the left corners are rounded.
+        float r = dp(32);
+        glass.setCornerRadii(new float[]{r, r, 0, 0, 0, 0, r, r});
         panel.setBackground(glass);
-        FrameLayout.LayoutParams panelParams = new FrameLayout.LayoutParams(dp(400),
+        FrameLayout.LayoutParams panelParams = new FrameLayout.LayoutParams(dp(424),
                 ViewGroup.LayoutParams.MATCH_PARENT, Gravity.END);
-        panelParams.setMargins(0, dp(36), dp(48), dp(36));
+
         root.addView(panel, panelParams);
 
         TextClock time = new TextClock(this);
@@ -109,7 +112,7 @@ public final class ControlCenterActivity extends Activity {
 
         setContentView(root);
         // Slide in from the right on the iOS-style curve, over a fading dim.
-        panel.setTranslationX(dp(460));
+        panel.setTranslationX(dp(424));
         panel.animate().translationX(0f).setDuration(420).setInterpolator(TopShelf.EASE).start();
         scrim.animate().alpha(1f).setDuration(300).start();
         first.post(first::requestFocus);
@@ -131,7 +134,7 @@ public final class ControlCenterActivity extends Activity {
     private void close() {
         if (closing) return;
         closing = true;
-        panel.animate().translationX(dp(460)).setDuration(300).setInterpolator(TopShelf.EASE)
+        panel.animate().translationX(dp(424)).setDuration(300).setInterpolator(TopShelf.EASE)
                 .withEndAction(() -> {
                     finish();
                     overridePendingTransition(0, 0);
@@ -178,7 +181,7 @@ public final class ControlCenterActivity extends Activity {
                 .setDuration(160).setInterpolator(TopShelf.EASE).start());
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.width = dp(160);
-        params.height = dp(112);
+        params.height = dp(100);
         params.setMargins(dp(6), dp(6), dp(6), dp(6));
         grid.addView(tile, params);
         return tile;
