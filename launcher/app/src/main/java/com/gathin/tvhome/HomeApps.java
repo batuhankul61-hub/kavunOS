@@ -19,7 +19,7 @@ import java.text.Collator;
 
 /**
  * Home's tiles: the TV apps (LEANBACK_LAUNCHER), dock apps first in their configured order, the rest by name,
- * then the launcher's own Wallpapers and Settings tiles. Built off the main thread and kept in memory, so Home
+ * then the launcher's own Wallpapers and Settings tiles; once the user has moved tiles on Home, their order. Built off the main thread and kept in memory, so Home
  * coming back (or rebuilding itself) shows its tiles in the first frame instead of querying the package
  * manager and decoding every banner again.
  */
@@ -27,6 +27,7 @@ final class HomeApps {
 
     static final String OWN_WALLPAPERS = "@wallpapers";
     static final String OWN_SETTINGS = "@settings";
+    private static final String ORDER_KEY = "home_order";
 
     static final class Tile {
         final String key;
@@ -95,11 +96,40 @@ final class HomeApps {
         apps.add(new Tile(OWN_SETTINGS, context.getString(R.string.home_settings_tile),
                 new ComponentName(context, LauncherSettingsActivity.class),
                 context.getDrawable(R.drawable.banner_settings), null, false));
+        // The order the user arranged on Home wins; tiles it does not know yet (new apps) follow, as on iOS.
+        List<String> order = savedOrder(context);
+        if (!order.isEmpty()) {
+            List<Tile> byDefault = new ArrayList<>(apps);
+            Collections.sort(apps, (a, b) -> {
+                int oa = order.indexOf(a.key), ob = order.indexOf(b.key);
+                if (oa < 0) oa = order.size() + byDefault.indexOf(a);
+                if (ob < 0) ob = order.size() + byDefault.indexOf(b);
+                return Integer.compare(oa, ob);
+            });
+        }
         synchronized (HomeApps.class) {
             cache = Collections.unmodifiableList(apps);
             cacheKey = key(config);
         }
         return cache;
+    }
+
+    /** Saves the order the tiles were arranged in on Home, and keeps the cache in step with it. */
+    static void saveOrder(Context context, List<Tile> tiles) {
+        StringBuilder keys = new StringBuilder();
+        for (Tile t : tiles) keys.append(t.key).append('\n');
+        context.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).edit()
+                .putString(ORDER_KEY, keys.toString()).apply();
+        synchronized (HomeApps.class) {
+            if (cache != null) cache = Collections.unmodifiableList(new ArrayList<>(tiles));
+        }
+    }
+
+    private static List<String> savedOrder(Context context) {
+        String saved = context.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(ORDER_KEY, "");
+        List<String> keys = new ArrayList<>();
+        for (String key : saved.split("\n")) if (!key.isEmpty()) keys.add(key);
+        return keys;
     }
 
     private static Drawable banner(Context context, PackageManager pm, ResolveInfo ri) {

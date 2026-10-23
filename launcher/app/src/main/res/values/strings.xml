@@ -169,4 +169,5 @@
     <string name="shelf_playing">Playing</string>
     <string name="shelf_paused">Paused</string>
     <string name="shelf_last_opened">Last opened</string>
+    <string name="home_move_hint">Arrows to move · OK to drop</string>
 </resources>

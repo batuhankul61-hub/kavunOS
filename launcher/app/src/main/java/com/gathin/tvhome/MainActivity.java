@@ -1,5 +1,7 @@
 package com.gathin.tvhome;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
@@ -29,6 +31,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,6 +78,11 @@ public class MainActivity extends Activity {
     /** Config.wallpaperGeneration when this Home was built. */
     private int wallpaperGeneration;
     private int scrolled;
+    /** The tile being moved (held OK), or null. */
+    private Holder moving;
+    private boolean okReleased;
+    private ObjectAnimator wiggle;
+    private TextView moveHint;
 
     private final Runnable goIdle = () -> wallpaperPlayer.setIdle(true);
 
@@ -191,6 +199,23 @@ public class MainActivity extends Activity {
         clockParams.setMargins(0, dp(30), side, 0);
         root.addView(clock, clockParams);
 
+        moveHint = new TextView(this);
+        moveHint.setText(R.string.home_move_hint);
+        moveHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        moveHint.setTypeface(getResources().getFont(R.font.inter_medium));
+        moveHint.setTextColor(Color.WHITE);
+        moveHint.setPadding(dp(20), dp(10), dp(20), dp(10));
+        GradientDrawable pill = new GradientDrawable();
+        pill.setCornerRadius(dp(20));
+        pill.setColor(0xE61C1C1E);
+        moveHint.setBackground(pill);
+        moveHint.setAlpha(0f);
+        moveHint.setVisibility(View.GONE);
+        FrameLayout.LayoutParams hintParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+        hintParams.topMargin = dp(30);
+        root.addView(moveHint, hintParams);
+
         setContentView(root);
     }
 
@@ -271,7 +296,102 @@ public class MainActivity extends Activity {
         }
     }
 
-    /** Hold OK on a tile: the app's system page (Settings tile: the TV's own settings). */
+    // ---- moving tiles ----
+
+    /**
+     * Hold OK on a tile, as on tvOS: it lifts and wiggles, the arrows move it through the grid while the others
+     * slide aside, and OK or Back drops it. Only the lifted tile animates; the order is saved for good.
+     */
+    private void startMove(Holder holder) {
+        if (moving != null) return;
+        moving = holder;
+        okReleased = false;
+        if (shelf != null) shelf.show(null);
+        DefaultItemAnimator slide = new DefaultItemAnimator();
+        slide.setMoveDuration(220);
+        grid.setItemAnimator(slide);
+        holder.card.animate().scaleX(1.18f).scaleY(1.18f).translationZ(dp(18)).setDuration(200)
+                .setInterpolator(TopShelf.EASE).start();
+        wiggle = ObjectAnimator.ofFloat(holder.card, View.ROTATION, -1.3f, 1.3f);
+        wiggle.setDuration(140);
+        wiggle.setRepeatCount(ValueAnimator.INFINITE);
+        wiggle.setRepeatMode(ValueAnimator.REVERSE);
+        wiggle.start();
+        moveHint.setVisibility(View.VISIBLE);
+        moveHint.animate().alpha(1f).setDuration(200).start();
+    }
+
+    private void stopMove() {
+        if (moving == null) return;
+        View card = moving.card;
+        moving = null;
+        wiggle.cancel();
+        card.animate().rotation(0f).scaleX(card.isFocused() ? FOCUS_SCALE : 1f).scaleY(card.isFocused() ? FOCUS_SCALE : 1f)
+                .translationZ(card.isFocused() ? dp(10) : 0f).setDuration(200).setInterpolator(TopShelf.EASE).start();
+        // Back to no item animator (nothing runs per frame) once the last slide has finished.
+        handler.postDelayed(() -> {
+            if (moving == null) grid.setItemAnimator(null);
+        }, 300);
+        moveHint.animate().alpha(0f).setDuration(160).withEndAction(() -> moveHint.setVisibility(View.GONE)).start();
+        HomeApps.saveOrder(this, tiles);
+    }
+
+    /** Moves the lifted tile one step (±1 along the row, ±columns between rows) and keeps it on screen. */
+    private void moveBy(int delta) {
+        int from = moving.getBindingAdapterPosition();
+        if (from == RecyclerView.NO_POSITION) return;
+        int to = from + delta;
+        // Down onto a last row that ends earlier: the tile goes to its end.
+        if (delta > 0 && to >= tiles.size() && from / columns < (tiles.size() - 1) / columns) to = tiles.size() - 1;
+        if (to < 0 || to >= tiles.size() || to == from) return;
+        tiles.add(to, tiles.remove(from));
+        adapter.notifyItemMoved(from, to);
+        int row = to / columns;
+        int target = row == 0 ? 0 : Math.max(0, grid.getPaddingTop() + row * (tileH + dp(58))
+                - getResources().getDisplayMetrics().heightPixels / 3);
+        if (target != scrolled) grid.smoothScrollBy(0, target - scrolled, new DecelerateInterpolator(2f));
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (moving == null) return super.dispatchKeyEvent(event);
+        int code = event.getKeyCode();
+        boolean ok = code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER
+                || code == KeyEvent.KEYCODE_NUMPAD_ENTER;
+        if (event.getAction() == KeyEvent.ACTION_UP) {
+            // The release of the hold that lifted the tile does not drop it.
+            if (ok) okReleased = true;
+            return ok || code == KeyEvent.KEYCODE_BACK || isArrow(code) || super.dispatchKeyEvent(event);
+        }
+        switch (code) {
+            case KeyEvent.KEYCODE_DPAD_LEFT: moveBy(-1); return true;
+            case KeyEvent.KEYCODE_DPAD_RIGHT: moveBy(1); return true;
+            case KeyEvent.KEYCODE_DPAD_UP: moveBy(-columns); return true;
+            case KeyEvent.KEYCODE_DPAD_DOWN: moveBy(columns); return true;
+            case KeyEvent.KEYCODE_BACK: stopMove(); return true;
+            case KeyEvent.KEYCODE_MENU:
+            case KeyEvent.KEYCODE_INFO:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE: {
+                int at = moving.getBindingAdapterPosition();
+                stopMove();
+                if (at != RecyclerView.NO_POSITION) details(tiles.get(at));
+                return true;
+            }
+            default:
+                if (ok) {
+                    if (okReleased && event.getRepeatCount() == 0) stopMove();
+                    return true;
+                }
+                return super.dispatchKeyEvent(event);
+        }
+    }
+
+    private static boolean isArrow(int code) {
+        return code == KeyEvent.KEYCODE_DPAD_LEFT || code == KeyEvent.KEYCODE_DPAD_RIGHT
+                || code == KeyEvent.KEYCODE_DPAD_UP || code == KeyEvent.KEYCODE_DPAD_DOWN;
+    }
+
+    /** Menu or Play/Pause while a tile is lifted: the app's system page (Settings tile: the TV's own settings). */
     private void details(HomeApps.Tile tile) {
         Intent intent = HomeApps.OWN_SETTINGS.equals(tile.key) ? new Intent(Settings.ACTION_SETTINGS)
                 : tile.leanback ? new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + tile.key))
@@ -309,6 +429,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        stopMove();
         handler.removeCallbacks(goIdle);
         wallpaperPlayer.setIdle(false);
         wallpaperPlayer.stop();
@@ -327,6 +448,7 @@ public class MainActivity extends Activity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (openLauncherSettingsIfAsked(intent)) return;
+        stopMove();
         // Home pressed while Home is showing: back to the first row, like tvOS.
         if (hasWindowFocus()) toTop();
     }
@@ -497,8 +619,7 @@ public class MainActivity extends Activity {
                 if (at != RecyclerView.NO_POSITION) launch(tiles.get(at), v);
             });
             card.setOnLongClickListener(v -> {
-                int at = holder.getBindingAdapterPosition();
-                if (at != RecyclerView.NO_POSITION) details(tiles.get(at));
+                if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION) startMove(holder);
                 return true;
             });
             return holder;

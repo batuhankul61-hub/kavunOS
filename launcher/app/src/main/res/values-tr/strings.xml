@@ -150,4 +150,5 @@
     <string name="shelf_playing">Çalıyor</string>
     <string name="shelf_paused">Duraklatıldı</string>
     <string name="shelf_last_opened">Son açılma</string>
+    <string name="home_move_hint">Taşımak için yön tuşları · Bırakmak için OK</string>
 </resources>
