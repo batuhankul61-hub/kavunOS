@@ -65,7 +65,7 @@ com.xiaomi.mimusic2                    # Mi Music
 com.google.android.play.games          # Play Games
 
 # ---------------------------------------------------------------------------------------------
-# ONLY AFTER com.gathin.tvhome IS INSTALLED. Do not apply this section on a fresh run, or the
+# ONLY AFTER com.kavunos.tv IS INSTALLED. Do not apply this section on a fresh run, or the
 # Home button has nowhere to go.
 #
 # Disabling the stock launcher is not enough on this firmware:

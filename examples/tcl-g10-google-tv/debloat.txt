@@ -36,7 +36,7 @@
 #   it back. Confirmed on two separate 55P6K units.
 # - TclAppBoot blocks the launcher's key services (and WireGuard's VPN) at every boot until the
 #   package has APP_AUTO_START (docs/TROUBLESHOOTING.md). Run `appops write-settings` after
-#   `appops set com.gathin.tvhome APP_AUTO_START allow`: app-ops are saved lazily, and a plain
+#   `appops set com.kavunos.tv APP_AUTO_START allow`: app-ops are saved lazily, and a plain
 #   `reboot` drops the change. Confirmed on the C69B over three reboots.
 
 # TCL content, ads and promos

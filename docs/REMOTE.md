@@ -77,7 +77,7 @@ connect from another network.
 
 ## Connecting
 
-Ask them to turn on debugging exactly as in the [Quick start](../README.md#quick-start), then:
+Ask them to turn on debugging exactly as in the [Quick start](../CLEANYOURTV.md#quick-start), then:
 
 ```bash
 TV_HOST=100.x.y.z tools/tv.py --probe

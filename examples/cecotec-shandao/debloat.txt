@@ -78,7 +78,7 @@ com.smartdevice.tv.aircast                       # Coocaa iCast AirPlay/mirrorin
                                                  # no receiver works on a client-isolated network.
 com.google.android.backdrop                      # Google aerial screensaver
 com.google.android.tvrecommendations             # launcher recommendation rows. Only safe
-                                                 # once com.gathin.tvhome owns Home and
+                                                 # once com.kavunos.tv owns Home and
                                                  # com.google.android.tvlauncher is disabled.
 
 # MediaTek extras

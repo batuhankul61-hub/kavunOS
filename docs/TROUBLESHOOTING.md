@@ -1,7 +1,7 @@
 # Troubleshooting
 
 Things that bit us or contributors, so they don't bite you. Commands use `tools/tv.py`; see the
-[README](../README.md#doing-it-by-hand) for setting it up.
+[README](../CLEANYOURTV.md#doing-it-by-hand) for setting it up.
 
 ## Connecting
 
@@ -247,9 +247,9 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   If the clock then jumps an hour ahead in spring, a fixed offset keeps it right:
   `tools/tv.py 'cmd alarm set-timezone GMT+03:30'`. The same applies to any country whose rules
   changed after the firmware was built.
-- **The network pill says "Wi-Fi" instead of the network name** after `pm clear com.gathin.tvhome`
+- **The network pill says "Wi-Fi" instead of the network name** after `pm clear com.kavunos.tv`
   or a reinstall from scratch: clearing the launcher's data also drops the location permission
-  Android 10 needs to read the SSID. `pm grant com.gathin.tvhome android.permission.ACCESS_FINE_LOCATION`
+  Android 10 needs to read the SSID. `pm grant com.kavunos.tv android.permission.ACCESS_FINE_LOCATION`
   (the install script does this).
 - **Home is "Select a Home app"** after `tools/restore.sh` followed by re-applying a list: disabling a
   package that also claims HOME (PatchWall on Xiaomi) makes Android drop the default. The install
@@ -291,11 +291,11 @@ tools/tv.py 'dumpsys accessibility'
 
 | Helper | Component in the enabled-services list | Key it filters |
 | --- | --- | --- |
-| Home button | `com.gathin.tvhome/.HomeKeyService` | `KEYCODE_ALL_APPS` (not an ordinary `KEYCODE_HOME`) |
-| Input button | `com.gathin.tvhome/.InputKeyService` | `KEYCODE_TV`, `KEYCODE_TV_INPUT`, plus the keycodes in `input_key_keycodes` and `app_keys` (`config.xml` or a theme) |
+| Home button | `com.kavunos.tv/.HomeKeyService` | `KEYCODE_ALL_APPS` (not an ordinary `KEYCODE_HOME`) |
+| Input button | `com.kavunos.tv/.InputKeyService` | `KEYCODE_TV`, `KEYCODE_TV_INPUT`, plus the keycodes in `input_key_keycodes` and `app_keys` (`config.xml` or a theme) |
 
 - **Enabled** means the component is in that user's colon-separated list (the class may be written in
-  full, `com.gathin.tvhome/com.gathin.tvhome.HomeKeyService`). Match the whole component.
+  full, `com.kavunos.tv/com.kavunos.tv.HomeKeyService`). Match the whole component.
 - **Bound** means it appears under that user's `Bound services` section of the dump (`services` on older
   builds). Give it a few seconds after enabling and read again. Labels in the dump can be translated or
   shared with other services; a line containing "Home" is not proof.
@@ -313,7 +313,7 @@ tools/tv.py 'dumpsys accessibility'
   (an RC-36 remote sends its gear on scancode 240 and its notifications button on 362 that way; see
   [the FPD CG50-C3 note](devices/fpd-cg50-c3.md)).
 
-A force-stop switches the helpers off for good: after `am force-stop com.gathin.tvhome` (or Force stop in
+A force-stop switches the helpers off for good: after `am force-stop com.kavunos.tv` (or Force stop in
 Settings > Apps) Android removes the launcher's services from the enabled list, and they do not come back
 when the launcher starts again (seen on a TCL 55C715, Android TV 9). Enable them again the same way you did
 the first time, and avoid force-stopping the launcher while testing.
@@ -321,13 +321,13 @@ the first time, and avoid force-stopping the launcher while testing.
 Enabled but never bound points at a firmware restriction on auto-starting sideloaded services (some TCL
 builds log `OP_AUTO_START` denials). Look at `logcat` for the binding failure before changing settings,
 and do not rewrite the enabled-services list or grant app-ops as a blanket fix. On a TCL 55S470G (Google
-TV 12) the line is `[TclAppBoot] ... calleeComponent = 'com.gathin.tvhome/.HomeKeyService', bootType =
+TV 12) the line is `[TclAppBoot] ... calleeComponent = 'com.kavunos.tv/.HomeKeyService', bootType =
 'bind_service', isAllow = 'false', reason = 'callee_does't_have_OP_AUTO_START_permission.'`, and
-`appops get com.gathin.tvhome` shows `APP_AUTO_START: ignore`. Allowing that one op for the launcher only
-and saving it (`appops set com.gathin.tvhome APP_AUTO_START allow; appops write-settings`) made the service
+`appops get com.kavunos.tv` shows `APP_AUTO_START: ignore`. Allowing that one op for the launcher only
+and saving it (`appops set com.kavunos.tv APP_AUTO_START allow; appops write-settings`) made the service
 bind on its own after a restart; toggling the service off and on in Accessibility works until the next
 restart. App-ops reach the disk lazily: without `write-settings`, a restart soon after the `set` drops the
 change and the denial is back. Seen on a TCL C89B (Google TV 14, `G08`, `UTT2.250416.001 AU02`), whose log
-reads `[TclAppBoot]:forbid bind service ComponentInfo{com.gathin.tvhome/com.gathin.tvhome.HomeKeyService}`
+reads `[TclAppBoot]:forbid bind service ComponentInfo{com.kavunos.tv/com.kavunos.tv.HomeKeyService}`
 and whose `appops get` names the op `AUTO_START`: use the name `appops get` prints. When reporting, give the
 model, build, current user and the relevant redacted lines, not the raw dump.

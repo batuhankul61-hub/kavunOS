@@ -21,9 +21,9 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 STOCK_HOME = "com.google.android.tvlauncher/.MainActivity"
-NEW_HOME = "com.gathin.tvhome/.MainActivity"
+NEW_HOME = "com.kavunos.tv/.MainActivity"
 TROUBLE = ROOT / "docs" / "TROUBLESHOOTING.md"
-README = ROOT / "README.md"
+README = ROOT / "CLEANYOURTV.md"
 EXAMPLES = ROOT / "examples" / "README.md"
 PROMPT = ROOT / "PROMPT.md"
 

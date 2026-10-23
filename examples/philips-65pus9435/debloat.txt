@@ -30,7 +30,7 @@
 #    order the 8505 notes warn against. The stock home still drew and opened apps afterwards, and
 #    build-and-install.sh moved Home without trouble, so on this unit the order did not matter.
 # 3. Launcher: build-and-install.sh ran through on its own, without the `am start -W` timeout the
-#    8505 saw (cold start 2.2 s), and Home resolved to com.gathin.tvhome. config.xml used:
+#    8505 saw (cold start 2.2 s), and Home resolved to com.kavunos.tv. config.xml used:
 #    live_tv_package org.droidtv.playtv; hidden_apps org.droidtv.playtv, org.droidtv.demome,
 #    org.droidtv.eum, org.droidtv.channels, com.vewd.core.browserui (hidden, not disabled: eum and
 #    channels back the SOURCES drawer, vewd is the HbbTV engine).

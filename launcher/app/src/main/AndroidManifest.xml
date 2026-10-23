@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <!-- Lets the Wallpapers screen pick the TV's screensaver itself. Only adb can grant it
-         (`pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS`); without it the screen opens the
+         (`pm grant com.kavunos.tv android.permission.WRITE_SECURE_SETTINGS`); without it the screen opens the
          TV's screensaver settings instead. -->
     <!-- Control Center: Close apps ends apps that are only cached in the background. -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
@@ -40,7 +40,7 @@
         </intent>
         <intent>
             <action android:name="android.intent.action.MAIN" />
-            <category android:name="com.gathin.tvhome.category.DOCK_CARD" />
+            <category android:name="com.kavunos.tv.category.DOCK_CARD" />
         </intent>
         <!-- China-market MIUI TV firmware: the Settings and Wi-Fi pills fall back to Xiaomi's settings app. -->
         <package android:name="com.xiaomi.mitv.settings" />
@@ -107,7 +107,7 @@
         </service>
 
         <!-- Screensaver: pick it in Settings, or `settings put secure screensaver_components
-             com.gathin.tvhome/.ClockDream` over adb. -->
+             com.kavunos.tv/.ClockDream` over adb. -->
         <service
             android:name=".ClockDream"
             android:label="@string/dream_name"
@@ -148,7 +148,7 @@
             android:name=".ControlCenterActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:taskAffinity="com.gathin.tvhome.controlcenter"
+            android:taskAffinity="com.kavunos.tv.controlcenter"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.TvHome.Overlay" />
 
@@ -158,7 +158,7 @@
         <activity
             android:name=".WallpaperActivity"
             android:theme="@style/Theme.TvHome.Page"
-            android:taskAffinity="com.gathin.tvhome.wallpapers"
+            android:taskAffinity="com.kavunos.tv.wallpapers"
             android:label="@string/wallpaper_manage_title"
             android:banner="@drawable/banner_wallpapers"
             android:exported="true"

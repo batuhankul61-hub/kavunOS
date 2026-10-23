@@ -205,4 +205,4 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | vc.ru (Aleksandr Biryukov) | [CleanYourTV — AI DIY проект, который убирает рекламу и стилизует вашу TV OS](https://vc.ru/id553757/3205401-cleanyourtv-proekt-dlya-udaleniya-reklamy-i-kustomizatsii-android-tv) | 20&nbsp;Oct |
 | Prism Labs (YouTube) | [CleanYourTV Strips Ads From 54 Smart TVs Free](https://www.youtube.com/watch?v=lHonkeutGvg) | 19&nbsp;Oct |
 
-[Back to the README](../README.md)
+[Back to the README](../CLEANYOURTV.md)

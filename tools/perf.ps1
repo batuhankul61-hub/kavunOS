@@ -14,7 +14,7 @@ $env:TV_HOST = $TvHost
 $repo = Split-Path -Parent $PSScriptRoot
 $py = Join-Path $repo 'tools\venv\Scripts\python.exe'
 $tv = Join-Path $repo 'tools\tv.py'
-$pkg = 'com.gathin.tvhome'
+$pkg = 'com.kavunos.tv'
 function Tv([string]$cmd) { & $py -I $tv $cmd }
 
 function Median([double[]]$xs) { $s = $xs | Sort-Object; $s[[int][math]::Floor(($s.Count - 1) / 2)] }

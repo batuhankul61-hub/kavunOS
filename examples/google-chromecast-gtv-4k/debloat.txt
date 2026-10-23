@@ -13,7 +13,7 @@
 #   the stock adb: Developer options > Wireless debugging > Pair device with pairing code, `adb pair
 #   <ip:pairport> <code>`, `adb connect <ip:connectport>` (`adb mdns services` lists both ports), then
 #   `adb tcpip 5555`. After that tools/tv.py works on 5555 (README, Troubleshooting).
-# - `cmd package set-home-activity com.gathin.tvhome` returns Success but launcherx stays the default.
+# - `cmd package set-home-activity com.kavunos.tv` returns Success but launcherx stays the default.
 #   Disable BOTH com.google.android.apps.tv.launcherx and com.google.android.tungsten.setupwraith
 #   (setupwraith re-enables launcherx), only after the new launcher is installed.
 # - Disabling setupwraith also breaks casting from phones, reported on the Chromecast HD on the same
@@ -41,7 +41,7 @@
 #   disabled at the factory; `pm disable-user` on them fails with "Shell cannot change component
 #   state". Don't add them to a restore list either.
 # - Disabling dreamx leaves screensaver_components pointing at it. Point it at the launcher's clock:
-#   settings put secure screensaver_components com.gathin.tvhome/.ClockDream
+#   settings put secure screensaver_components com.kavunos.tv/.ClockDream
 # - Animation scales already ship at 0.5x on this build.
 #
 # Kept on purpose: Google Assistant (com.google.android.katniss), Cast receiver

@@ -118,7 +118,7 @@ theme again.
 
 The Screensaver row picks the TV's screensaver: the wallpaper screensaver (the collection, honouring
 what is left out and the daylight order, with a slow push-in and a corner clock) or the clock. Setting
-it from the launcher needs `adb shell pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS`
+it from the launcher needs `adb shell pm grant com.kavunos.tv android.permission.WRITE_SECURE_SETTINGS`
 once; without it the row opens the TV's own screensaver settings.
 
 Built with phone upload (`launcheruild-and-install.ps1 -PhoneUpload`, `PHONE_UPLOAD=1` for the shell

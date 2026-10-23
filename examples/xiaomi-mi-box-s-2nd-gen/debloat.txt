@@ -12,7 +12,7 @@
 #
 # Tested: every package below was disabled in batches with screenshots in between, the launcher from
 # launcher/ was installed and owns Home, and Home and Wi-Fi both came back by themselves after a reboot.
-# Validated again 2026-10-19 on 737: launcher com.gathin.tvhome owns Home,
+# Validated again 2026-10-19 on 737: launcher com.kavunos.tv owns Home,
 # cname switched from setupwraith to com.android.tv.settings and survives reboot. Still provisional
 # until few-days soak per CONTRIBUTING.md, but second confirmation.
 #
@@ -60,7 +60,7 @@ com.google.android.videos              # Google TV / Play Movies
 com.google.android.play.games
 com.android.printspooler
 
-# ONLY AFTER com.gathin.tvhome IS INSTALLED. Disabling launcherx alone hands Home to the setup wizard's
+# ONLY AFTER com.kavunos.tv IS INSTALLED. Disabling launcherx alone hands Home to the setup wizard's
 # RecoveryActivity, so the wizard has to go too. Re-enable it before a factory reset (restore.sh does).
 # On this box Wi-Fi dropped right after disabling it and the password had to be re-entered once.
 com.google.android.tungsten.setupwraith

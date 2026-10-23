@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">English</a> · 简体中文
+  <a href="CLEANYOURTV.md">English</a> · 简体中文
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
 
 通过局域网连接 Android TV 或 Google TV，停用不需要的预装应用、广告和遥测服务，并在兼容设备上安装简洁的原生桌面。无需 root、刷机或 USB 数据线；清理工具采用停用方式，不卸载系统应用，并提供恢复脚本。
 
-本文介绍通用功能和使用方法。不同机型、地区和固件的应用包及限制可能不同，请先核对自己的设备。功能变化以[英文 README](README.md)为准，具体机型记录见[机型清单](examples/README.md)。
+本文介绍通用功能和使用方法。不同机型、地区和固件的应用包及限制可能不同，请先核对自己的设备。功能变化以[英文 README](CLEANYOURTV.md)为准，具体机型记录见[机型清单](examples/README.md)。
 
 ![原生 Google TV 桌面与 CleanYourTV 桌面对比](docs/stock-vs-new-side.jpg)
 
@@ -124,7 +124,7 @@ tools/disable.sh examples/xiaomi-mi-tv-4a/debloat.txt
 
 ### 3. 编译和安装桌面
 
-桌面使用 Java 和 AndroidX RecyclerView，应用包名为 `com.gathin.tvhome`。编译需要 JDK 17、Android SDK Platform 34 和 Build Tools 34.0.0。macOS 可安装：
+桌面使用 Java 和 AndroidX RecyclerView，应用包名为 `com.kavunos.tv`。编译需要 JDK 17、Android SDK Platform 34 和 Build Tools 34.0.0。macOS 可安装：
 
 ```bash
 brew install openjdk@17 android-commandlinetools
@@ -196,8 +196,8 @@ TV_HOST=192.168.1.50 tools/theme.sh --reset
 
 以下 ADB 命令使用 macOS/Linux 的虚拟环境路径；Windows 将前缀 `tools/venv/bin/python -I tools/tv.py` 换为 `tools\venv\Scripts\python.exe -I tools\tv.py`。
 
-- **语言**随电视系统切换，包括简体中文和繁体中文。Android 13 及以上也支持单独设置应用语言，例如：`tools/venv/bin/python -I tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales zh-CN'`。
-- **时钟屏保**可在电视的屏保设置中选择 Clock；也可执行：`tools/venv/bin/python -I tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`。
+- **语言**随电视系统切换，包括简体中文和繁体中文。Android 13 及以上也支持单独设置应用语言，例如：`tools/venv/bin/python -I tools/tv.py 'cmd locale set-app-locales com.kavunos.tv --locales zh-CN'`。
+- **时钟屏保**可在电视的屏保设置中选择 Clock；也可执行：`tools/venv/bin/python -I tools/tv.py 'settings put secure screensaver_components com.kavunos.tv/.ClockDream; settings put secure screensaver_enabled 1'`。
 - **输入源键**可在 macOS/Linux 安装时使用 `INPUT_KEY_SERVICE=1` 启用辅助功能服务，以适配 Google TV 的遥控器输入源按钮；Windows 使用 `-InputKeyService`。
 - **HOME / 设置键**可在 macOS/Linux 安装时使用 `HOME_KEY_SERVICE=1`，并通过 `config.xml` 中的按键配置适配部分设备；Windows 使用 `-HomeKeyService`。`settings_key_panel` 可启用快捷设置面板，提供电视设置、显示、网络、应用和桌面设置入口。重装时需重新传入所需的服务选项。
 
