@@ -166,9 +166,9 @@ public class MainActivity extends Activity {
         grid.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
-                // Read the real offset: summing dy drifts when the grid is laid out again (returning from
-                // another app), which left Home dimmed and the clock hidden at the top of the grid.
-                scrolled = rv.computeVerticalScrollOffset();
+                // Exact whenever the first row is laid out: summing dy alone drifted when the grid was laid out
+                // again (returning from another app), which left Home dimmed with the clock hidden at the top.
+                scrolled = scrollOffset(rv, dy);
                 float a = Math.max(0f, Math.min(1f, scrolled / (float) (tileH + labelSpace)));
                 dim.setAlpha(a);
                 dim.setVisibility(a > 0f ? View.VISIBLE : View.GONE);
@@ -396,13 +396,29 @@ public class MainActivity extends Activity {
         public boolean requestChildRectangleOnScreen(@NonNull RecyclerView parent, @NonNull View child,
                                                      @NonNull Rect rect, boolean immediate, boolean focusedChildVisible) {
             int position = parent.getChildAdapterPosition(child);
-            int dy = position < columns ? -scrolled
+            int dy = position < columns ? child.getTop() - restTop(child)
                     : child.getTop() - getResources().getDisplayMetrics().heightPixels / 3;
             if (dy == 0) return false;
             if (immediate) parent.scrollBy(0, dy);
             else parent.smoothScrollBy(0, dy, new DecelerateInterpolator(2f));
             return true;
         }
+
+        /** Where a first-row tile sits when the grid is at the top. */
+        int restTop(View child) {
+            return getPaddingTop() + getTopDecorationHeight(child)
+                    + ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).topMargin;
+        }
+    }
+
+    /**
+     * How far the grid is scrolled: exact from the first row while it is laid out (RecyclerView's own offset is an
+     * estimate that falls short in a grid), else summed from the scroll steps.
+     */
+    private int scrollOffset(RecyclerView rv, int dy) {
+        Layout layout = (Layout) rv.getLayoutManager();
+        View first = layout == null ? null : layout.findViewByPosition(0);
+        return first != null ? layout.restTop(first) - first.getTop() : scrolled + dy;
     }
 
     private final class Adapter extends RecyclerView.Adapter<Holder> {

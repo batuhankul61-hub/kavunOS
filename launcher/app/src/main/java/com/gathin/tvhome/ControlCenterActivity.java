@@ -66,8 +66,8 @@ public final class ControlCenterActivity extends Activity {
 
         FrameLayout glassPanel = new FrameLayout(this);
         GradientDrawable glass = new GradientDrawable();
-        // Between clear and solid, like iOS: the app behind only hints through (90 %), the text reads cleanly.
-        glass.setColor(0xE61C1C1E);
+        // All but solid (99 %): the app behind no longer shows through the tiles and text.
+        glass.setColor(0xFC1C1C1E);
         // Flush with the right edge, full height; only the left corners are rounded.
         float r = dp(32);
         glass.setCornerRadii(new float[]{r, r, 0, 0, 0, 0, r, r});
