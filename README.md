@@ -20,8 +20,12 @@ tvOS'tan esinlenerek yeniden yazılmıştır. Orijinal projenin belgeleri [CLEAN
 | *Ana ekran* | *Önizleme kartı* |
 | ![Basılı tutma menüsü: Taşı, Uygulama bilgisi, Ana ekrandan gizle, Kaldır](docs/kavunos/menu.jpg) | ![Taşıma modu: kalkan ve hafif eğilen uygulama, üstte ipucu](docs/kavunos/move.jpg) |
 | *Basılı tutma menüsü* | *Taşıma modu* |
-| ![Aşağı kaydırılmış uygulama ızgarası, kararmış duvar kâğıdı](docs/kavunos/grid.jpg) | |
-| *Tüm uygulamalar* | |
+| ![Aşağı kaydırılmış uygulama ızgarası, kararmış duvar kâğıdı](docs/kavunos/grid.jpg) | ![Ayarlar: duvar kâğıtları, üst raf, satır başına uygulama, gizli uygulamalar, sistem](docs/kavunos/settings.jpg) |
+| *Tüm uygulamalar* | *Ayarlar* |
+| ![Duvar kâğıtları sayfası: büyük önizleme, sıra, değişim, karartma ve koleksiyon](docs/kavunos/wallpapers.jpg) | ![Bir duvar kâğıdının seçenekleri: önizle, sadece bunu göster, döngüden çıkar, sil](docs/kavunos/sheet.jpg) |
+| *Duvar kâğıtları* | *Duvar kâğıdı seçenekleri* |
+| ![Telefondan ekle: QR kod ve ağ adresi](docs/kavunos/qr.jpg) | <img src="docs/kavunos/phone.jpg" alt="Telefondaki sayfa: fotoğraf seç ve TV'deki görseller" width="300"> |
+| *Telefondan ekle: QR'yi okutun* | *Telefondaki sayfa* |
 
 Görüntülerdeki duvar kâğıdı depodaki ücretsiz [scenes](themes/scenes) temasından.
 
