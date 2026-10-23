@@ -17,6 +17,8 @@
          TV's screensaver settings instead. -->
     <!-- Control Center: Close apps ends apps that are only cached in the background. -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <!-- Uninstall from Home's tile menu; Android still asks the user to confirm every removal. -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <!-- Needed since Android 10 to read the Wi-Fi network name for the network pill. Never requested at

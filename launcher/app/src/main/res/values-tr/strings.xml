@@ -151,4 +151,11 @@
     <string name="shelf_paused">Duraklatıldı</string>
     <string name="shelf_last_opened">Son açılma</string>
     <string name="home_move_hint">Taşımak için yön tuşları · Bırakmak için OK</string>
+    <string name="home_menu_move">Taşı</string>
+    <string name="home_menu_info">Uygulama bilgisi</string>
+    <string name="home_menu_hide">Ana ekrandan gizle</string>
+    <string name="home_menu_uninstall">Kaldır</string>
+    <string name="hidden_apps">Gizli uygulamalar</string>
+    <string name="hidden_apps_none">Gizli uygulama yok</string>
+    <string name="hidden_apps_pick">Yeniden göstermek için bir uygulama seçin</string>
 </resources>

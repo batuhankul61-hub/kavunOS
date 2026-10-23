@@ -170,4 +170,11 @@
     <string name="shelf_paused">Paused</string>
     <string name="shelf_last_opened">Last opened</string>
     <string name="home_move_hint">Arrows to move · OK to drop</string>
+    <string name="home_menu_move">Move</string>
+    <string name="home_menu_info">App info</string>
+    <string name="home_menu_hide">Hide from Home</string>
+    <string name="home_menu_uninstall">Uninstall</string>
+    <string name="hidden_apps">Hidden apps</string>
+    <string name="hidden_apps_none">No hidden apps</string>
+    <string name="hidden_apps_pick">Choose an app to show it again</string>
 </resources>

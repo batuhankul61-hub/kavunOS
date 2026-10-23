@@ -3,6 +3,7 @@ package com.gathin.tvhome;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.os.Bundle;
@@ -95,6 +96,7 @@ public final class LauncherSettingsActivity extends TvScreen {
                 changed();
             });
         });
+        row(list, R.string.hidden_apps, () -> String.valueOf(HomeApps.hiddenByUser(this).size()), this::hiddenApps);
         section(list, getString(R.string.settings_section_system));
         row(list, R.string.home_settings, null, () -> {
             Toast.makeText(this, R.string.home_settings_help, Toast.LENGTH_LONG).show();
@@ -123,6 +125,30 @@ public final class LauncherSettingsActivity extends TvScreen {
         super.onResume();
         config = Config.load(this);
         refreshRows();
+    }
+
+    /** The apps hidden with Home's tile menu; choosing one shows it on Home again. */
+    private void hiddenApps() {
+        List<String> hidden = HomeApps.hiddenByUser(this);
+        if (hidden.isEmpty()) {
+            Toast.makeText(this, R.string.hidden_apps_none, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        PackageManager pm = getPackageManager();
+        List<String> labels = new ArrayList<>();
+        for (String pkg : hidden) {
+            String label;
+            try {
+                label = HomeApps.cleanLabel(String.valueOf(pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0))), pkg);
+            } catch (PackageManager.NameNotFoundException e) {
+                label = pkg;
+            }
+            labels.add(label);
+        }
+        sheet(getString(R.string.hidden_apps_pick), labels, -1, i -> {
+            HomeApps.setHidden(this, hidden.get(i), false);
+            changed();
+        });
     }
 
     private void open(Intent intent) {

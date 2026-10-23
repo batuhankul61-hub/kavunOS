@@ -166,4 +166,11 @@
     <string name="shelf_paused">מושהה</string>
     <string name="shelf_last_opened">נפתח לאחרונה</string>
     <string name="home_move_hint">חצים להזזה · OK לשחרור</string>
+    <string name="home_menu_move">הזזה</string>
+    <string name="home_menu_info">פרטי האפליקציה</string>
+    <string name="home_menu_hide">הסתרה ממסך הבית</string>
+    <string name="home_menu_uninstall">הסרה</string>
+    <string name="hidden_apps">אפליקציות מוסתרות</string>
+    <string name="hidden_apps_none">אין אפליקציות מוסתרות</string>
+    <string name="hidden_apps_pick">בחרו אפליקציה כדי להציג אותה שוב</string>
 </resources>

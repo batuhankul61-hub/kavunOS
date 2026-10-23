@@ -28,6 +28,7 @@ final class HomeApps {
     static final String OWN_WALLPAPERS = "@wallpapers";
     static final String OWN_SETTINGS = "@settings";
     private static final String ORDER_KEY = "home_order";
+    private static final String HIDDEN_KEY = "home_hidden";
 
     static final class Tile {
         final String key;
@@ -71,6 +72,7 @@ final class HomeApps {
         List<ResolveInfo> found = pm.queryIntentActivities(
                 new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER), 0);
         Set<String> hidden = new HashSet<>(config.hiddenApps);
+        hidden.addAll(hiddenByUser(context));
         Set<String> seen = new HashSet<>();
         List<Tile> apps = new ArrayList<>();
         for (ResolveInfo ri : found) {
@@ -126,7 +128,26 @@ final class HomeApps {
     }
 
     private static List<String> savedOrder(Context context) {
-        String saved = context.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(ORDER_KEY, "");
+        return keys(context, ORDER_KEY);
+    }
+
+    /** Apps hidden from Home with the tile menu (Settings lists them to bring back). */
+    static List<String> hiddenByUser(Context context) {
+        return keys(context, HIDDEN_KEY);
+    }
+
+    /** Hides an app from Home, or brings it back. */
+    static void setHidden(Context context, String pkg, boolean hide) {
+        List<String> hidden = hiddenByUser(context);
+        hidden.remove(pkg);
+        if (hide) hidden.add(pkg);
+        context.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).edit()
+                .putString(HIDDEN_KEY, String.join("\n", hidden)).apply();
+        invalidate();
+    }
+
+    private static List<String> keys(Context context, String pref) {
+        String saved = context.getSharedPreferences(Config.SETTINGS_NAME, Context.MODE_PRIVATE).getString(pref, "");
         List<String> keys = new ArrayList<>();
         for (String key : saved.split("\n")) if (!key.isEmpty()) keys.add(key);
         return keys;

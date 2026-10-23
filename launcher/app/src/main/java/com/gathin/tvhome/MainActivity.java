@@ -9,6 +9,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Rect;
@@ -27,6 +30,7 @@ import android.view.ViewOutlineProvider;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextClock;
 import android.widget.TextView;
 
@@ -83,6 +87,11 @@ public class MainActivity extends Activity {
     private boolean okReleased;
     private ObjectAnimator wiggle;
     private TextView moveHint;
+    /** The open tile menu (held OK), or null; its rows, what each runs, and the chosen one. */
+    private LinearLayout menu;
+    private final List<LinearLayout> menuRows = new ArrayList<>();
+    private final List<Runnable> menuActions = new ArrayList<>();
+    private int menuIndex;
 
     private final Runnable goIdle = () -> wallpaperPlayer.setIdle(true);
 
@@ -352,12 +361,173 @@ public class MainActivity extends Activity {
         if (target != scrolled) grid.smoothScrollBy(0, target - scrolled, new DecelerateInterpolator(2f));
     }
 
+    // ---- tile menu ----
+
+    /**
+     * Hold OK on a tile: a glass menu rises beside it, like an iPhone's context menu: Move, App info, Hide
+     * from Home, Uninstall (apps the user installed; Android asks to confirm). Up and Down choose, OK runs,
+     * Back closes. It takes no focus, so the grid underneath stays exactly as it was.
+     */
+    private void openMenu(Holder holder) {
+        if (menu != null || moving != null) return;
+        int at = holder.getBindingAdapterPosition();
+        HomeApps.Tile tile = tiles.get(at);
+        if (shelf != null) shelf.show(null);
+        menuActions.clear();
+        menuRows.clear();
+        menu = new LinearLayout(this);
+        menu.setOrientation(LinearLayout.VERTICAL);
+        menu.setPadding(dp(8), dp(8), dp(8), dp(8));
+        GradientDrawable glass = new GradientDrawable();
+        glass.setCornerRadius(dp(22));
+        glass.setColor(0xF21C1C1E);
+        glass.setStroke(Math.max(1, dp(1)), 0x1FFFFFFF);
+        menu.setBackground(glass);
+        menu.setElevation(dp(24));
+
+        menuRow(R.drawable.menu_move, R.string.home_menu_move, false, () -> startMove(holder));
+        if (tile.leanback) {
+            menuRow(R.drawable.menu_info, R.string.home_menu_info, false, () -> details(tile));
+            menuRow(R.drawable.menu_hide, R.string.home_menu_hide, false, () -> {
+                HomeApps.setHidden(this, tile.key, true);
+                loadTiles();
+            });
+            if (removable(tile.key)) {
+                menuRow(R.drawable.menu_uninstall, R.string.home_menu_uninstall, true, () -> uninstall(tile.key));
+            }
+        } else if (HomeApps.OWN_SETTINGS.equals(tile.key)) {
+            menuRow(R.drawable.menu_info, R.string.tv_settings, false, () -> details(tile));
+        }
+        menuIndex = 0;
+        paintMenu();
+
+        // Above the tile when there is room (the first row sits low), else below it; inside the safe edges.
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int menuW = dp(320);
+        menu.measure(View.MeasureSpec.makeMeasureSpec(menuW, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        int menuH = menu.getMeasuredHeight();
+        int[] loc = new int[2];
+        holder.card.getLocationInWindow(loc);
+        int x = Math.max(dp(56), Math.min(loc[0], width - dp(56) - menuW));
+        boolean above = loc[1] - menuH - dp(28) >= dp(40);
+        int y = above ? loc[1] - menuH - dp(28) : loc[1] + holder.card.getHeight() + dp(28);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(menuW, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = x;
+        params.topMargin = y;
+        root.addView(menu, params);
+        menu.setPivotX(Math.max(0, Math.min(menuW, loc[0] + holder.card.getWidth() / 2 - x)));
+        menu.setPivotY(above ? menuH : 0);
+        menu.setAlpha(0f);
+        menu.setScaleX(0.85f);
+        menu.setScaleY(0.85f);
+        menu.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(240).setInterpolator(TopShelf.EASE).start();
+        okReleased = false;
+    }
+
+    private void menuRow(int icon, int label, boolean destructive, Runnable action) {
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(dp(16), 0, dp(16), 0);
+        ImageView image = new ImageView(this);
+        image.setImageResource(icon);
+        row.addView(image, new LinearLayout.LayoutParams(dp(22), dp(22)));
+        TextView text = new TextView(this);
+        text.setText(label);
+        text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+        text.setTypeface(getResources().getFont(R.font.inter_medium));
+        text.setSingleLine(true);
+        text.setPadding(dp(14), 0, 0, 0);
+        row.addView(text);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setCornerRadius(dp(14));
+        row.setBackground(bg);
+        row.setTag(destructive);
+        menu.addView(row, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(52)));
+        menuRows.add(row);
+        menuActions.add(action);
+    }
+
+    /** The chosen row turns white, as the focus does everywhere else; Uninstall stays red. */
+    private void paintMenu() {
+        for (int i = 0; i < menuRows.size(); i++) {
+            LinearLayout row = menuRows.get(i);
+            boolean on = i == menuIndex;
+            int ink = Boolean.TRUE.equals(row.getTag()) ? 0xFFFF453A : on ? 0xFF1C1C1E : Color.WHITE;
+            ((GradientDrawable) row.getBackground()).setColor(on ? Color.WHITE : Color.TRANSPARENT);
+            ((ImageView) row.getChildAt(0)).setImageTintList(ColorStateList.valueOf(ink));
+            ((TextView) row.getChildAt(1)).setTextColor(ink);
+        }
+    }
+
+    private void closeMenu() {
+        if (menu == null) return;
+        View closing = menu;
+        menu = null;
+        closing.animate().alpha(0f).scaleX(0.92f).scaleY(0.92f).setDuration(160).setInterpolator(TopShelf.EASE)
+                .withEndAction(() -> root.removeView(closing)).start();
+    }
+
+    /** Apps the user installed; the TV's own apps cannot be removed, only their updates. */
+    private boolean removable(String pkg) {
+        try {
+            ApplicationInfo info = getPackageManager().getApplicationInfo(pkg, 0);
+            return (info.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    private void uninstall(String pkg) {
+        try {
+            // Android's own dialog confirms; Home reloads from the package broadcast when the app is gone.
+            startActivity(new Intent(Intent.ACTION_DELETE, Uri.parse("package:" + pkg)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (ActivityNotFoundException ignored) {
+        }
+    }
+
+    private boolean menuKey(KeyEvent event) {
+        int code = event.getKeyCode();
+        boolean ok = isOk(code);
+        if (event.getAction() == KeyEvent.ACTION_UP) {
+            // The release of the hold that opened the menu does not choose anything.
+            if (ok) okReleased = true;
+            return ok || code == KeyEvent.KEYCODE_BACK || isArrow(code) || super.dispatchKeyEvent(event);
+        }
+        if (code == KeyEvent.KEYCODE_DPAD_UP || code == KeyEvent.KEYCODE_DPAD_DOWN) {
+            int next = menuIndex + (code == KeyEvent.KEYCODE_DPAD_UP ? -1 : 1);
+            if (next >= 0 && next < menuRows.size()) {
+                menuIndex = next;
+                paintMenu();
+            }
+            return true;
+        }
+        if (code == KeyEvent.KEYCODE_BACK || code == KeyEvent.KEYCODE_DPAD_LEFT || code == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            closeMenu();
+            return true;
+        }
+        if (ok) {
+            if (okReleased && event.getRepeatCount() == 0) {
+                Runnable action = menuActions.get(menuIndex);
+                closeMenu();
+                action.run();
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    private static boolean isOk(int code) {
+        return code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER
+                || code == KeyEvent.KEYCODE_NUMPAD_ENTER;
+    }
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        if (menu != null) return menuKey(event);
         if (moving == null) return super.dispatchKeyEvent(event);
         int code = event.getKeyCode();
-        boolean ok = code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER
-                || code == KeyEvent.KEYCODE_NUMPAD_ENTER;
+        boolean ok = isOk(code);
         if (event.getAction() == KeyEvent.ACTION_UP) {
             // The release of the hold that lifted the tile does not drop it.
             if (ok) okReleased = true;
@@ -369,14 +539,6 @@ public class MainActivity extends Activity {
             case KeyEvent.KEYCODE_DPAD_UP: moveBy(-columns); return true;
             case KeyEvent.KEYCODE_DPAD_DOWN: moveBy(columns); return true;
             case KeyEvent.KEYCODE_BACK: stopMove(); return true;
-            case KeyEvent.KEYCODE_MENU:
-            case KeyEvent.KEYCODE_INFO:
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE: {
-                int at = moving.getBindingAdapterPosition();
-                stopMove();
-                if (at != RecyclerView.NO_POSITION) details(tiles.get(at));
-                return true;
-            }
             default:
                 if (ok) {
                     if (okReleased && event.getRepeatCount() == 0) stopMove();
@@ -391,7 +553,7 @@ public class MainActivity extends Activity {
                 || code == KeyEvent.KEYCODE_DPAD_UP || code == KeyEvent.KEYCODE_DPAD_DOWN;
     }
 
-    /** Menu or Play/Pause while a tile is lifted: the app's system page (Settings tile: the TV's own settings). */
+    /** App info from the tile menu: the app's system page (Settings tile: the TV's own settings). */
     private void details(HomeApps.Tile tile) {
         Intent intent = HomeApps.OWN_SETTINGS.equals(tile.key) ? new Intent(Settings.ACTION_SETTINGS)
                 : tile.leanback ? new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + tile.key))
@@ -430,6 +592,7 @@ public class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
         stopMove();
+        closeMenu();
         handler.removeCallbacks(goIdle);
         wallpaperPlayer.setIdle(false);
         wallpaperPlayer.stop();
@@ -449,6 +612,7 @@ public class MainActivity extends Activity {
         super.onNewIntent(intent);
         if (openLauncherSettingsIfAsked(intent)) return;
         stopMove();
+        closeMenu();
         // Home pressed while Home is showing: back to the first row, like tvOS.
         if (hasWindowFocus()) toTop();
     }
@@ -619,7 +783,7 @@ public class MainActivity extends Activity {
                 if (at != RecyclerView.NO_POSITION) launch(tiles.get(at), v);
             });
             card.setOnLongClickListener(v -> {
-                if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION) startMove(holder);
+                if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION) openMenu(holder);
                 return true;
             });
             return holder;
