@@ -121,7 +121,6 @@
     <string name="wallpaper_row_mode">Pořadí</string>
     <string name="wallpaper_row_interval">Změnit každých</string>
     <string name="wallpaper_row_dim">Ztmavení</string>
-    <string name="wallpaper_row_motion">Pohyb</string>
     <string name="wallpaper_row_dream">Spořič obrazovky</string>
     <string name="wallpaper_row_dream_interval">Fotka ve spořiči</string>
     <string name="wallpaper_mode_daylight">Denní světlo</string>

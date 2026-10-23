@@ -135,7 +135,6 @@
     <string name="wallpaper_row_mode">סדר</string>
     <string name="wallpaper_row_interval">החלפה כל</string>
     <string name="wallpaper_row_dim">עמעום</string>
-    <string name="wallpaper_row_motion">תנועה</string>
     <string name="wallpaper_row_dream">שומר מסך</string>
     <string name="wallpaper_row_dream_interval">משך תמונה בשומר המסך</string>
     <string name="wallpaper_mode_daylight">אור יום</string>

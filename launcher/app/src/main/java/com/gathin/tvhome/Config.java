@@ -47,7 +47,6 @@ final class Config {
     static final String WALLPAPER_MINUTES_KEY = "wallpaper_minutes";
     static final String WALLPAPER_DIM_KEY = "wallpaper_dim";
     static final String WALLPAPER_DIM_AUTO_KEY = "wallpaper_dim_auto";
-    static final String WALLPAPER_MOTION_KEY = "wallpaper_motion";
     /** Rotation interval when the order is chosen on the TV and the theme does not rotate. */
     static final int DEFAULT_ROTATION_MINUTES = 30;
     private static final String THEME_REVISION_NAME = "theme_revision";
@@ -137,8 +136,6 @@ final class Config {
     final int homeIdleClockMinutes;
     /** Dim each wallpaper by its own brightness (WallpaperLight.autoDim) instead of wallpaperDim. */
     final boolean wallpaperDimAuto;
-    /** Slow pan and zoom of the wallpaper while Home is visible (wallpaper_motion). */
-    final boolean wallpaperMotion;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
                    String liveTvAction, Map<String, String> launchActions, Map<String, String> appLabels,
@@ -149,9 +146,8 @@ final class Config {
                    int[] settingsKeycodes, boolean settingsKeyPanel, boolean wallpaperEnabled, File wallpaper, List<File> wallpapers,
                    int wallpaperRotationMinutes, int wallpaperDim, String wallpaperOrder, boolean overlayApplied,
                    int[] inputKeycodes, List<String> appKeys, boolean cinematicHome, boolean ambientGlow, int homeIdleClockMinutes,
-                   boolean wallpaperDimAuto, boolean wallpaperMotion) {
+                   boolean wallpaperDimAuto) {
         this.wallpaperDimAuto = wallpaperDimAuto;
-        this.wallpaperMotion = wallpaperMotion;
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.dockApps = Collections.unmodifiableList(dockApps);
@@ -335,8 +331,6 @@ final class Config {
         // "wallpaper_dim": "auto" in a theme, or Auto on the TV: each picture dimmed by its own brightness.
         boolean dimAuto = json != null && "auto".equals(string(json, "wallpaper_dim", ""));
         if (choices.contains(WALLPAPER_DIM_AUTO_KEY)) dimAuto = choices.getBoolean(WALLPAPER_DIM_AUTO_KEY, false);
-        boolean motion = json != null && bool(json, "wallpaper_motion", false);
-        motion = choices.getBoolean(WALLPAPER_MOTION_KEY, motion);
         List<File> wallpapers = new ArrayList<>();
         if (rotationMinutes > 0 && dir != null && wallpaperEnabled) {
             wallpapers.addAll(WallpaperRotation.visible(WallpaperRotation.images(new File(dir, "wallpapers")),
@@ -370,7 +364,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, wallpaperOrder, applied,
                 inputKeycodes, appKeys, cinematic, ambientGlow,
-                Math.max(0, idleClockMinutes), dimAuto, motion);
+                Math.max(0, idleClockMinutes), dimAuto);
     }
 
     private static void syncThemeChoices(SharedPreferences choices, File dir, File config) {
@@ -403,8 +397,7 @@ final class Config {
     static SharedPreferences.Editor clearOnTvChoices(SharedPreferences.Editor editor) {
         return editor.remove("columns").remove("animations").remove("advanced_effects")
                 .remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY).remove(WALLPAPER_ORDER_KEY)
-                .remove(WALLPAPER_MINUTES_KEY).remove(WALLPAPER_DIM_KEY).remove(WALLPAPER_DIM_AUTO_KEY)
-                .remove(WALLPAPER_MOTION_KEY);
+                .remove(WALLPAPER_MINUTES_KEY).remove(WALLPAPER_DIM_KEY).remove(WALLPAPER_DIM_AUTO_KEY);
     }
 
     static boolean hasOnTvChoices(SharedPreferences choices) {
@@ -412,7 +405,7 @@ final class Config {
                 || choices.contains("animations") || choices.contains("advanced_effects")
                 || choices.contains(WALLPAPER_CHOICE_KEY) || choices.contains(WALLPAPER_ORDER_KEY)
                 || choices.contains(WALLPAPER_MINUTES_KEY) || choices.contains(WALLPAPER_DIM_KEY)
-                || choices.contains(WALLPAPER_DIM_AUTO_KEY) || choices.contains(WALLPAPER_MOTION_KEY);
+                || choices.contains(WALLPAPER_DIM_AUTO_KEY);
     }
 
     private static String fileStamp(File file) {

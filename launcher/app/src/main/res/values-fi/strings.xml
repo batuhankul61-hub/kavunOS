@@ -120,7 +120,6 @@
     <string name="wallpaper_row_mode">Järjestys</string>
     <string name="wallpaper_row_interval">Vaihda välein</string>
     <string name="wallpaper_row_dim">Himmennys</string>
-    <string name="wallpaper_row_motion">Liike</string>
     <string name="wallpaper_row_dream">Näytönsäästäjä</string>
     <string name="wallpaper_row_dream_interval">Näytönsäästäjän kuva</string>
     <string name="wallpaper_mode_daylight">Päivänvalo</string>

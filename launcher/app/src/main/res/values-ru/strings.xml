@@ -122,7 +122,6 @@
     <string name="wallpaper_row_mode">Порядок</string>
     <string name="wallpaper_row_interval">Смена каждые</string>
     <string name="wallpaper_row_dim">Затемнение</string>
-    <string name="wallpaper_row_motion">Движение</string>
     <string name="wallpaper_row_dream">Заставка</string>
     <string name="wallpaper_row_dream_interval">Фото в заставке</string>
     <string name="wallpaper_mode_daylight">Дневной свет</string>

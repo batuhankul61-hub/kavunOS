@@ -90,7 +90,6 @@
     <string name="wallpaper_row_mode">顺序</string>
     <string name="wallpaper_row_interval">更换间隔</string>
     <string name="wallpaper_row_dim">调暗</string>
-    <string name="wallpaper_row_motion">动态</string>
     <string name="wallpaper_row_dream">屏幕保护程序</string>
     <string name="wallpaper_row_dream_interval">屏保照片时长</string>
     <string name="wallpaper_mode_daylight">日光</string>

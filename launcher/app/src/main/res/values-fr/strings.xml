@@ -115,7 +115,6 @@
     <string name="wallpaper_row_mode">Ordre</string>
     <string name="wallpaper_row_interval">Changer toutes les</string>
     <string name="wallpaper_row_dim">Assombrir</string>
-    <string name="wallpaper_row_motion">Mouvement</string>
     <string name="wallpaper_row_dream">Économiseur d\'écran</string>
     <string name="wallpaper_row_dream_interval">Photo de l\'économiseur</string>
     <string name="wallpaper_mode_daylight">Lumière du jour</string>

@@ -92,7 +92,6 @@
     <string name="wallpaper_row_mode">Reihenfolge</string>
     <string name="wallpaper_row_interval">Wechsel alle</string>
     <string name="wallpaper_row_dim">Abdunkeln</string>
-    <string name="wallpaper_row_motion">Bewegung</string>
     <string name="wallpaper_row_dream">Bildschirmschoner</string>
     <string name="wallpaper_row_dream_interval">Bild im Bildschirmschoner</string>
     <string name="wallpaper_mode_daylight">Tageslicht</string>

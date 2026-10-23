@@ -117,7 +117,6 @@
     <string name="wallpaper_row_mode">Kolejność</string>
     <string name="wallpaper_row_interval">Zmiana co</string>
     <string name="wallpaper_row_dim">Przyciemnienie</string>
-    <string name="wallpaper_row_motion">Ruch</string>
     <string name="wallpaper_row_dream">Wygaszacz ekranu</string>
     <string name="wallpaper_row_dream_interval">Zdjęcie w wygaszaczu</string>
     <string name="wallpaper_mode_daylight">Światło dnia</string>

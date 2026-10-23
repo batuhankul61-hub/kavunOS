@@ -97,7 +97,6 @@
     <string name="wallpaper_row_mode">Redosled</string>
     <string name="wallpaper_row_interval">Promena na</string>
     <string name="wallpaper_row_dim">Zatamnjenje</string>
-    <string name="wallpaper_row_motion">Pokret</string>
     <string name="wallpaper_row_dream">Čuvar ekrana</string>
     <string name="wallpaper_row_dream_interval">Slika u čuvaru ekrana</string>
     <string name="wallpaper_mode_daylight">Dnevno svetlo</string>

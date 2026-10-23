@@ -51,15 +51,13 @@ import java.util.concurrent.Executors;
  *
  * Built for slow TVs: one RecyclerView of plain views, no shadows except the focused tile, the app list
  * cached in memory across rebuilds, banners resolved off the main thread, and nothing animating once the
- * focus stops (the wallpaper drifts only after the remote has been idle for a while).
+ * focus stops: a Home left alone draws nothing.
  */
 public class MainActivity extends Activity {
 
     /** Sent by QuickSettingsActivity: open Launcher settings from here so Home rebuilds when they close. */
     static final String ACTION_LAUNCHER_SETTINGS = "com.gathin.tvhome.action.LAUNCHER_SETTINGS";
     private static final int LAUNCHER_SETTINGS_REQUEST = 42;
-    /** The remote untouched this long starts the wallpaper's slow drift (wallpaper_motion). */
-    private static final long IDLE_MS = 20_000;
     private static final float FOCUS_SCALE = 1.1f;
     static final String TOP_SHELF_KEY = "top_shelf";
 
@@ -92,8 +90,6 @@ public class MainActivity extends Activity {
     private final List<LinearLayout> menuRows = new ArrayList<>();
     private final List<Runnable> menuActions = new ArrayList<>();
     private int menuIndex;
-
-    private final Runnable goIdle = () -> wallpaperPlayer.setIdle(true);
 
     private final BroadcastReceiver packages = new BroadcastReceiver() {
         @Override
@@ -576,7 +572,6 @@ public class MainActivity extends Activity {
             return;
         }
         wallpaperPlayer.start();
-        restartIdle();
         if (returning) {
             returning = false;
             // Home settles back in: the tiles come up from a touch larger and fade in, on one hardware layer.
@@ -593,8 +588,6 @@ public class MainActivity extends Activity {
         super.onPause();
         stopMove();
         closeMenu();
-        handler.removeCallbacks(goIdle);
-        wallpaperPlayer.setIdle(false);
         wallpaperPlayer.stop();
         if (shelf != null) shelf.show(null);
     }
@@ -628,18 +621,6 @@ public class MainActivity extends Activity {
         setIntent(new Intent(Intent.ACTION_MAIN));
         startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST);
         return true;
-    }
-
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        restartIdle();
-    }
-
-    private void restartIdle() {
-        handler.removeCallbacks(goIdle);
-        wallpaperPlayer.setIdle(false);
-        handler.postDelayed(goIdle, IDLE_MS);
     }
 
     @Override

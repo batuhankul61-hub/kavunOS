@@ -139,7 +139,6 @@
     <string name="wallpaper_row_mode">Order</string>
     <string name="wallpaper_row_interval">Change every</string>
     <string name="wallpaper_row_dim">Dim</string>
-    <string name="wallpaper_row_motion">Motion</string>
     <string name="wallpaper_row_dream">Screensaver</string>
     <string name="wallpaper_row_dream_interval">Screensaver photo</string>
     <string name="wallpaper_mode_daylight">Daylight</string>

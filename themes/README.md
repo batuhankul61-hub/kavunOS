@@ -64,7 +64,6 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `wallpaper_order` | `shuffle`, `sequential` or `daylight` | How a collection advances. `shuffle` (the default, and what launchers did before this key existed) avoids repeating the current picture; `sequential` walks the folder in filename order and wraps at the end; `daylight` measures each picture's brightness and shows the darkest third at night, the middle third around sunrise and sunset (`latitude`/`longitude` in config.xml, else 07:00 and 19:00) and the brightest third by day. An unknown value falls back to `shuffle` |
 | `wallpaper_dim` | 0 to 90 | Black overlay over wallpaper images, in percent; 0 by default and no shade view at all |
 | `wallpaper_dim` | `"auto"` | Dim each picture by its own brightness: just enough for the clock and the dock to read, at most 60 % |
-| `wallpaper_motion` | bool | A slow push-in and sideways drift of the wallpaper, about a minute each way, while Home is visible (`false` by default); its hardware layer is let go while an app is in front |
 | `festival` | string | Turns on a festive skin: the network pill becomes a diya whose flame follows the connection, Inputs a temple bell, Settings a marigold, and the first Home of the day gets a petal shower. `dussehra` and `diwali` have built-in greetings |
 | `festival_until` | `YYYY-MM-DD` | Last day the festive skin shows; it switches itself off after that. A malformed date turns it off |
 | `greeting` | string | Replaces the time-of-day greeting while the festive skin is on |

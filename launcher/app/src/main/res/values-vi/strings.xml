@@ -100,7 +100,6 @@
     <string name="wallpaper_row_mode">Thứ tự</string>
     <string name="wallpaper_row_interval">Đổi sau mỗi</string>
     <string name="wallpaper_row_dim">Làm tối</string>
-    <string name="wallpaper_row_motion">Chuyển động</string>
     <string name="wallpaper_row_dream">Trình bảo vệ màn hình</string>
     <string name="wallpaper_row_dream_interval">Ảnh bảo vệ màn hình</string>
     <string name="wallpaper_mode_daylight">Ánh sáng ban ngày</string>

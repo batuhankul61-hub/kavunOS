@@ -133,7 +133,6 @@
     <string name="wallpaper_row_mode">Volgorde</string>
     <string name="wallpaper_row_interval">Wissel elke</string>
     <string name="wallpaper_row_dim">Dimmen</string>
-    <string name="wallpaper_row_motion">Beweging</string>
     <string name="wallpaper_row_dream">Schermbeveiliging</string>
     <string name="wallpaper_row_dream_interval">Foto in schermbeveiliging</string>
     <string name="wallpaper_mode_daylight">Daglicht</string>

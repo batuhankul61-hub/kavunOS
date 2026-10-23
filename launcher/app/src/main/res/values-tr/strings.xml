@@ -120,7 +120,6 @@
     <string name="wallpaper_row_mode">Sıra</string>
     <string name="wallpaper_row_interval">Değişim</string>
     <string name="wallpaper_row_dim">Karartma</string>
-    <string name="wallpaper_row_motion">Hareket</string>
     <string name="wallpaper_row_dream">Ekran koruyucu</string>
     <string name="wallpaper_row_dream_interval">Ekran koruyucu süresi</string>
     <string name="wallpaper_mode_daylight">Gün ışığı</string>

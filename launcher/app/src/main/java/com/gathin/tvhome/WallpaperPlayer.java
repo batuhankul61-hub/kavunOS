@@ -1,8 +1,5 @@
 package com.gathin.tvhome;
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -38,10 +35,7 @@ final class WallpaperPlayer {
     private final Context context;
     private final int fixedDim;
     private final boolean dimAuto;
-    private final boolean motion;
     private View shade;
-    private ObjectAnimator drift;
-    private boolean idle;
     private boolean active;
     private boolean closed;
     private boolean loading;
@@ -52,7 +46,6 @@ final class WallpaperPlayer {
         this.context = context.getApplicationContext();
         fixedDim = config.wallpaperDim;
         dimAuto = config.wallpaperDimAuto;
-        motion = config.wallpaperMotion;
         files = new ArrayList<>(config.wallpapers);
         interval = config.wallpaperRotationMinutes * 60_000L;
         bitmapConfig = config.wallpaperTrueColor ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
@@ -119,35 +112,15 @@ final class WallpaperPlayer {
     void start() {
         active = true;
         update();
-        if (idle) startDrift();
     }
 
     void stop() {
         active = false;
-        pauseDrift();
-    }
-
-    /**
-     * Home tells the player when the remote has been left alone. The drift redraws the screen every frame, which
-     * a slow TV feels while the focus moves, so it runs only while idle and stops on the first key.
-     */
-    void setIdle(boolean idle) {
-        this.idle = idle;
-        if (idle && active) startDrift();
-        else pauseDrift();
-    }
-
-    private void pauseDrift() {
-        if (drift == null || drift.isPaused()) return;
-        drift.pause();
-        // The drift's full-screen hardware layer (8 MB at 1080p) is not needed while it stands still.
-        image.setLayerType(View.LAYER_TYPE_NONE, null);
     }
 
     void close() {
         active = false;
         closed = true;
-        if (drift != null) drift.cancel();
         decoder.shutdownNow();
     }
 
@@ -217,32 +190,8 @@ final class WallpaperPlayer {
     }
 
     /**
-     * wallpaper_motion: a slow push in and sideways drift, back and forth, about a minute each way. It runs on
-     * a hardware layer, so each frame only re-composites the picture instead of redrawing it.
-     */
-    private void startDrift() {
-        if (!motion || closed || files.isEmpty()) return;
-        if (drift == null) {
-            image.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-            // At 1.06 the picture overhangs each edge by 3 %, so a 2.5 % sideways drift never shows a black edge.
-            drift = ObjectAnimator.ofPropertyValuesHolder(image,
-                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1.06f, 1.12f),
-                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.06f, 1.12f),
-                    PropertyValuesHolder.ofFloat(View.TRANSLATION_X, -width * 0.025f, width * 0.025f));
-            drift.setDuration(unscaled(context, 60_000));
-            drift.setRepeatMode(ValueAnimator.REVERSE);
-            drift.setRepeatCount(ValueAnimator.INFINITE);
-            drift.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
-            drift.start();
-        } else if (drift.isPaused()) {
-            image.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-            drift.resume();
-        }
-    }
-
-    /**
      * A duration that stays in real time when the TV's animator duration scale is changed (e.g. 0.5x for
-     * snappier menus): the slow wallpaper and screensaver motion should not speed up with it.
+     * snappier menus): the screensaver's slow motion should not speed up with it.
      */
     static long unscaled(Context context, long ms) {
         // ValueAnimator.getDurationScale() is API 33; the setting it mirrors is readable everywhere.

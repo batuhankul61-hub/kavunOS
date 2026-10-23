@@ -114,7 +114,6 @@
     <string name="wallpaper_row_mode">順序</string>
     <string name="wallpaper_row_interval">更換間隔</string>
     <string name="wallpaper_row_dim">調暗</string>
-    <string name="wallpaper_row_motion">動態</string>
     <string name="wallpaper_row_dream">螢幕保護程式</string>
     <string name="wallpaper_row_dream_interval">螢幕保護相片時間</string>
     <string name="wallpaper_mode_daylight">日光</string>

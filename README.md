@@ -379,7 +379,7 @@ The **TV** needs Android 8.0 (API 26) or newer: `minSdk` is a compile-time floor
 | **App library** | Optional: browse every installed app and add or remove Home shortcuts. See [the app library guide](docs/app-library.md) |
 | **Module cards** | Any TV app can offer its own tile; you approve each one once. See [`docs/modules.md`](docs/modules.md) |
 | **Clock screensaver** | A drifting clock over the glow, so nothing burns in |
-| **Wallpapers screen** | A tvOS-style page (Settings, or the Wallpapers tile in the app grid): a large preview, the collection as a grid without file names, and per picture Preview, Show only this one, Leave out of the rotation and Delete. Order (shuffle, in order, daylight, fixed), change interval, dim (automatic or fixed) and motion are set there. See [Wallpapers](themes/README.md#wallpapers) |
+| **Wallpapers screen** | A tvOS-style page (Settings, or the Wallpapers tile in the app grid): a large preview, the collection as a grid without file names, and per picture Preview, Show only this one, Leave out of the rotation and Delete. Order (shuffle, in order, daylight, fixed), change interval and dim (automatic or fixed) are set there. See [Wallpapers](themes/README.md#wallpapers) |
 | **Wallpaper screensaver** | Your collection with a slow push-in, a cross-fade and a corner clock; chosen on the Wallpapers screen |
 | **Add from phone** | Build-time option (`-PhoneUpload` / `PHONE_UPLOAD=1`): a QR code opens a page on the TV, served only while that panel is open, to add photos and manage the collection from a phone |
 | **Remote keys** | Keeps the Input, YouTube and gear buttons working after the stock launcher is gone |

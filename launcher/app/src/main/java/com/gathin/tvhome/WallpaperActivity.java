@@ -209,11 +209,6 @@ public final class WallpaperActivity extends TvScreen {
                 changed();
             });
         });
-        row(list, R.string.wallpaper_row_motion, () -> getString(motion() ? R.string.on : R.string.off), () -> sheet(
-                getString(R.string.wallpaper_row_motion), labels(R.string.off, R.string.on), motion() ? 1 : 0, i -> {
-                    choices.edit().putBoolean(Config.WALLPAPER_MOTION_KEY, i == 1).apply();
-                    changed();
-                }));
         row(list, R.string.wallpaper_row_dream, this::dreamLabel, () -> sheet(getString(R.string.wallpaper_row_dream),
                 labels(R.string.dream_wallpapers_name, R.string.dream_name), dreamIndex(), this::setDream));
         row(list, R.string.wallpaper_row_dream_interval, () -> seconds(dreamSeconds()), () -> {
@@ -235,7 +230,7 @@ public final class WallpaperActivity extends TvScreen {
         row(list, R.string.wallpaper_reset, null, () -> {
             choices.edit().remove(Config.WALLPAPER_CHOICE_KEY).remove(Config.WALLPAPER_ORDER_KEY)
                     .remove(Config.WALLPAPER_MINUTES_KEY).remove(Config.WALLPAPER_DIM_KEY)
-                    .remove(Config.WALLPAPER_DIM_AUTO_KEY).remove(Config.WALLPAPER_MOTION_KEY).apply();
+                    .remove(Config.WALLPAPER_DIM_AUTO_KEY).apply();
             changed();
         });
     }
@@ -311,10 +306,6 @@ public final class WallpaperActivity extends TvScreen {
 
     private boolean dimAuto() {
         return config.wallpaperDimAuto;
-    }
-
-    private boolean motion() {
-        return config.wallpaperMotion;
     }
 
     private String dimLabel() {

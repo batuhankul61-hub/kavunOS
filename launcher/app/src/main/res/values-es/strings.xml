@@ -132,7 +132,6 @@
     <string name="wallpaper_row_mode">Orden</string>
     <string name="wallpaper_row_interval">Cambiar cada</string>
     <string name="wallpaper_row_dim">Oscurecer</string>
-    <string name="wallpaper_row_motion">Movimiento</string>
     <string name="wallpaper_row_dream">Salvapantallas</string>
     <string name="wallpaper_row_dream_interval">Foto del salvapantallas</string>
     <string name="wallpaper_mode_daylight">Luz del día</string>

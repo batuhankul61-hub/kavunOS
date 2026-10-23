@@ -135,7 +135,6 @@
     <string name="wallpaper_row_mode">Ordem</string>
     <string name="wallpaper_row_interval">Trocar a cada</string>
     <string name="wallpaper_row_dim">Escurecer</string>
-    <string name="wallpaper_row_motion">Movimento</string>
     <string name="wallpaper_row_dream">Protetor de tela</string>
     <string name="wallpaper_row_dream_interval">Foto do protetor de tela</string>
     <string name="wallpaper_mode_daylight">Luz do dia</string>

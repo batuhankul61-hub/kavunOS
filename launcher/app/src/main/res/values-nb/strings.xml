@@ -132,7 +132,6 @@
     <string name="wallpaper_row_mode">Rekkefølge</string>
     <string name="wallpaper_row_interval">Bytt hver</string>
     <string name="wallpaper_row_dim">Demp</string>
-    <string name="wallpaper_row_motion">Bevegelse</string>
     <string name="wallpaper_row_dream">Skjermsparer</string>
     <string name="wallpaper_row_dream_interval">Bilde i skjermsparer</string>
     <string name="wallpaper_mode_daylight">Dagslys</string>

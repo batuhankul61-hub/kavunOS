@@ -89,7 +89,6 @@
     <string name="wallpaper_row_mode">ลำดับ</string>
     <string name="wallpaper_row_interval">เปลี่ยนทุก</string>
     <string name="wallpaper_row_dim">ลดความสว่าง</string>
-    <string name="wallpaper_row_motion">การเคลื่อนไหว</string>
     <string name="wallpaper_row_dream">โปรแกรมรักษาหน้าจอ</string>
     <string name="wallpaper_row_dream_interval">รูปในโปรแกรมรักษาหน้าจอ</string>
     <string name="wallpaper_mode_daylight">แสงกลางวัน</string>
