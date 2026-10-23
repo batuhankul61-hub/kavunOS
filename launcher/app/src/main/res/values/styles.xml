@@ -6,6 +6,12 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <!-- Control Center: transparent over the app below; it animates itself. -->
+    <style name="Theme.TvHome.Overlay" parent="android:Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
     <!-- The launcher's own pages (Settings, Wallpapers): they open and close with a soft zoom and fade. -->
     <style name="Theme.TvHome.Page">
         <item name="android:windowAnimationStyle">@style/PageAnimations</item>

@@ -15,6 +15,8 @@
     <!-- Lets the Wallpapers screen pick the TV's screensaver itself. Only adb can grant it
          (`pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS`); without it the screen opens the
          TV's screensaver settings instead. -->
+    <!-- Control Center: Close apps ends apps that are only cached in the background. -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <!-- Needed since Android 10 to read the Wi-Fi network name for the network pill. Never requested at
@@ -126,6 +128,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
+
+        <!-- Control Center: a panel from the right over any app, on the remote's spare button (HomeKeyService). -->
+        <activity
+            android:name=".ControlCenterActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.gathin.tvhome.controlcenter"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.TvHome.Overlay" />
 
         <!-- The Wallpapers screen. Its LEANBACK_LAUNCHER entry is the one tile of ours in the app grid
              (AppAdapter lets it through), and the TV's own app list shows it too. Its own task: in Home's

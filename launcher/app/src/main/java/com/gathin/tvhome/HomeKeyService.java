@@ -23,6 +23,21 @@ public class HomeKeyService extends AccessibilityService {
     /** Remote buttons that should open Settings (config.xml, settings_key_scancodes and settings_key_keycodes). */
     private int[] settingsScancodes = new int[0];
     private int[] settingsKeycodes = new int[0];
+    private int[] controlCenterKeycodes = new int[0];
+    private boolean controlCenterOnLongHome;
+    /** The current Home press turned into a hold that opened Control Center. */
+    private boolean homeHeld;
+    private static final long HOLD_MS = 450;
+    private final android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable openControlCenter = () -> {
+        homeHeld = true;
+        startActivity(new Intent(this, ControlCenterActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    };
+
+    private void goHome() {
+        startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).setPackage(getPackageName())
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
+    }
     private boolean settingsPanel;
     /** app_keys, the same map InputKeyService reads, for setups that run only this service. */
     private Map<Integer, String> appKeys = Collections.emptyMap();
@@ -32,6 +47,8 @@ public class HomeKeyService extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
         settingsScancodes = getResources().getIntArray(R.array.settings_key_scancodes);
+        controlCenterKeycodes = getResources().getIntArray(R.array.control_center_keycodes);
+        controlCenterOnLongHome = getResources().getBoolean(R.bool.control_center_long_home);
         // Keycodes and the panel choice can also come from a theme; theme.sh restarts this service.
         Config config = Config.load(this);
         settingsKeycodes = config.settingsKeycodes;
@@ -53,6 +70,31 @@ public class HomeKeyService extends AccessibilityService {
         String scanApp = appScancodes.get(event.getScanCode());
         if (scanApp != null) {
             if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) RemoteKeys.launch(this, scanApp);
+            return true;
+        }
+        // Home held down opens Control Center, as on tvOS. Accessibility services see no key repeats (the dispatcher
+        // makes those after the filter), so the hold is timed: the press is taken, and Control Center opens after
+        // HOLD_MS; let go sooner and it is an ordinary Home, opened here.
+        if (event.getKeyCode() == KeyEvent.KEYCODE_HOME && controlCenterOnLongHome) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (event.getRepeatCount() == 0) {
+                    homeHeld = false;
+                    handler.removeCallbacks(openControlCenter);
+                    handler.postDelayed(openControlCenter, HOLD_MS);
+                }
+                return true;
+            }
+            handler.removeCallbacks(openControlCenter);
+            if (!homeHeld && !event.isCanceled()) goHome();
+            homeHeld = false;
+            return true;
+        }
+        // Other buttons that open Control Center over whatever is on screen; pressed again it closes it.
+        for (int code : controlCenterKeycodes) {
+            if (event.getKeyCode() != code) continue;
+            if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                startActivity(new Intent(this, ControlCenterActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
             return true;
         }
         // The stock launcher handled the remote's Settings button; with it disabled the button does nothing.

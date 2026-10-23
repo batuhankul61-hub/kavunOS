@@ -173,6 +173,14 @@
     <!-- Keep asking a paired Bluetooth speaker to connect for ten minutes after the launcher starts, for
          speakers switched on after the TV. Android itself tries only once, right after boot. Needs Android 11
          or older; later versions refuse the call. -->
+    <!-- Home held down opens Control Center, as on tvOS (HomeKeyService); a short press stays Home. -->
+    <bool name="control_center_long_home">true</bool>
+    <!-- More remote buttons that open Control Center, by Android keycode (HomeKeyService). Only buttons the system
+         passes on: Xiaomi's policy takes BUTTON_5 (192, the four-squares button) for PatchWall before any
+         accessibility service sees it, so it cannot be used on those sticks. -->
+    <integer-array name="control_center_keycodes">
+    </integer-array>
+
     <bool name="bt_autoconnect">true</bool>
 
     <!-- Time-of-day backdrop behind everything: a dark gradient that follows the clock, with a warm

@@ -155,4 +155,13 @@
     <string name="settings_section_home">Home</string>
     <string name="settings_section_system">System</string>
     <string name="top_shelf">Top shelf</string>
+    <string name="cc_wifi">Wi-Fi</string>
+    <string name="cc_bluetooth">Bluetooth</string>
+    <string name="cc_close_apps">Close apps</string>
+    <string name="cc_screensaver">Screensaver</string>
+    <string name="cc_not_connected">Not connected</string>
+    <string name="cc_connected">Connected</string>
+    <string name="cc_connecting">Connecting…</string>
+    <string name="cc_freed">%1$s freed</string>
+    <string name="cc_memory">Free memory: %1$s of %2$s</string>
 </resources>

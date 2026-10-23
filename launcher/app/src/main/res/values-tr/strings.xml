@@ -136,4 +136,13 @@
     <string name="settings_section_home">Ana ekran</string>
     <string name="settings_section_system">Sistem</string>
     <string name="top_shelf">Üst raf</string>
+    <string name="cc_wifi">Wi-Fi</string>
+    <string name="cc_bluetooth">Bluetooth</string>
+    <string name="cc_close_apps">Uygulamaları kapat</string>
+    <string name="cc_screensaver">Ekran koruyucu</string>
+    <string name="cc_not_connected">Bağlı değil</string>
+    <string name="cc_connected">Bağlı</string>
+    <string name="cc_connecting">Bağlanıyor…</string>
+    <string name="cc_freed">%1$s boşaldı</string>
+    <string name="cc_memory">Boş bellek: %1$s / %2$s</string>
 </resources>

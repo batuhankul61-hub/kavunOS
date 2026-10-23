@@ -151,4 +151,13 @@
     <string name="settings_section_home">מסך הבית</string>
     <string name="settings_section_system">מערכת</string>
     <string name="top_shelf">מדף עליון</string>
+    <string name="cc_wifi">Wi-Fi</string>
+    <string name="cc_bluetooth">Bluetooth</string>
+    <string name="cc_close_apps">סגירת אפליקציות</string>
+    <string name="cc_screensaver">שומר מסך</string>
+    <string name="cc_not_connected">לא מחובר</string>
+    <string name="cc_connected">מחובר</string>
+    <string name="cc_connecting">מתחבר…</string>
+    <string name="cc_freed">התפנו %1$s</string>
+    <string name="cc_memory">זיכרון פנוי: %1$s מתוך %2$s</string>
 </resources>
