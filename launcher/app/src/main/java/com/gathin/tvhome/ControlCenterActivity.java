@@ -319,8 +319,31 @@ public final class ControlCenterActivity extends Activity {
             BluetoothReconnect.start(this);
             android.widget.Toast.makeText(this, R.string.cc_connecting, android.widget.Toast.LENGTH_SHORT).show();
         } else {
-            open(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+            bluetoothScreen();
         }
+    }
+
+    /**
+     * Android TV keeps Bluetooth under Remotes & accessories, a part of its settings that nothing outside can open,
+     * and many builds (Xiaomi's among them) have no ACTION_BLUETOOTH_SETTINGS screen. The pairing screen ("Add
+     * accessory") is the one that opens, then that intent, then the settings home.
+     */
+    private void bluetoothScreen() {
+        Intent[] tries = {
+                new Intent().setComponent(new ComponentName("com.android.tv.settings",
+                        "com.android.tv.settings.accessories.AddAccessoryActivity")),
+                new Intent(Settings.ACTION_BLUETOOTH_SETTINGS),
+                new Intent(Settings.ACTION_SETTINGS),
+        };
+        for (Intent intent : tries) {
+            try {
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                finish();
+                return;
+            } catch (ActivityNotFoundException | SecurityException ignored) {
+            }
+        }
+        android.widget.Toast.makeText(this, R.string.not_available, android.widget.Toast.LENGTH_SHORT).show();
     }
 
     /**
