@@ -92,6 +92,19 @@ TV_HOST=192.168.1.50 HOME_KEY_SERVICE=1 PHONE_UPLOAD=1 launcher/build-and-instal
 Betik derler, kurar, kavunOS'u ana ekran yapar; ana ekran ona geçmezse eski başlatıcıyı geri getirir.
 Gerekli JDK 17 ve Android SDK, Android Studio ile gelir.
 
+## Bilgisayarda geliştirme
+
+TV'ye her seferinde kurmak yerine bilgisayarda bir Android TV emülatöründe:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File launcher\dev.ps1 -Theme themes\scenes
+```
+
+İlk çalıştırmada sanal TV'yi (1080p, Android TV 11) oluşturur ve açar; sonra her seferinde derler, kurar ve
+kavunOS'u açar. Klavyedeki oklar, Enter ve Esc kumanda gibi çalışır. `-Logs` günlüğü izler, `-Fresh` sanal TV'yi
+sıfırlar. Gerekenler: Android SDK'da `emulator` ve `system-images;android-30;android-tv;x86`, Windows'ta
+"Windows Hypervisor Platform".
+
 ## Test edilen cihazlar
 
 - Xiaomi Mi TV Stick 4K (MiTV-AYFR0, Android 11) — temizleme listesi:
