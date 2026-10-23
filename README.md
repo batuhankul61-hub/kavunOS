@@ -1,7 +1,13 @@
-# kavunOS
+<p align="center">
+  <img src="docs/kavunos/logo.svg" alt="kavunOS logosu: koyu yeşil kare içinde kesik kavun dilimi" width="140">
+</p>
 
-**Eski Android TV'ler için hızlı, Apple TV tarzı bir ana ekran.**
-*A fast, Apple TV–style home screen for old Android TVs.*
+<h1 align="center">kavunOS</h1>
+
+<p align="center">
+  <b>Eski Android TV'ler için hızlı, Apple TV tarzı bir ana ekran.</b><br>
+  <i>A fast, Apple TV–style home screen for old Android TVs.</i>
+</p>
 
 kavunOS, [cleanyourtv](https://github.com/Gathin23/cleanyourtv) projesinin (Gathin, MIT lisansı) üzerine kurulmuştur.
 cleanyourtv'nin reklam ve gereksiz uygulama temizleme araçları ile başlatıcısı temel alınmış; ana ekran baştan,

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="512" height="512" role="img" aria-label="kavunOS">
+  <rect x="4" y="4" width="112" height="112" rx="26" fill="#13241A"/>
+  <path d="M16 50 A44 44 0 0 0 104 50 Z" fill="#7CC243"/>
+  <path d="M22 50 A38 38 0 0 0 98 50 Z" fill="#E9F5C8"/>
+  <path d="M26 50 A34 34 0 0 0 94 50 Z" fill="#F7A253"/>
+  <ellipse cx="46" cy="62" rx="2.6" ry="4.4" fill="#FFF1D9" transform="rotate(-25 46 62)"/>
+  <ellipse cx="60" cy="67" rx="2.6" ry="4.4" fill="#FFF1D9"/>
+  <ellipse cx="74" cy="62" rx="2.6" ry="4.4" fill="#FFF1D9" transform="rotate(25 74 62)"/>
+</svg>
