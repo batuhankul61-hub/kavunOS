@@ -80,6 +80,8 @@ public class MainActivity extends Activity {
     /** Config.wallpaperGeneration when this Home was built. */
     private int wallpaperGeneration;
     private int scrolled;
+    /** The tile that last had the focus, to give it back when the grid itself is focused. */
+    private int lastFocused;
     /** The tile being moved (held OK), or null. */
     private Holder moving;
     private boolean okReleased;
@@ -176,6 +178,13 @@ public class MainActivity extends Activity {
         grid.setItemViewCacheSize(columns * 2);
         adapter = new Adapter();
         grid.setAdapter(adapter);
+        // In touch mode (the emulator, a box with a mouse) RecyclerView takes the focus itself (it is focusable in
+        // touch mode), and the arrows then move nothing. It never should: the first arrow then leaves touch mode
+        // and lands on a tile, and should the grid get the focus anyway it hands it to the last tile that had it.
+        grid.setFocusableInTouchMode(false);
+        grid.setOnFocusChangeListener((v, has) -> {
+            if (has) focusTile(Math.min(lastFocused, Math.max(0, tiles.size() - 1)));
+        });
         grid.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
@@ -257,15 +266,23 @@ public class MainActivity extends Activity {
         if (position < 0 || position >= tiles.size()) return;
         grid.post(() -> {
             RecyclerView.ViewHolder holder = grid.findViewHolderForAdapterPosition(position);
-            if (holder != null) holder.itemView.requestFocus();
+            if (holder != null) focus((Holder) holder);
             else {
                 grid.scrollToPosition(position);
                 grid.post(() -> {
                     RecyclerView.ViewHolder h = grid.findViewHolderForAdapterPosition(position);
-                    if (h != null) h.itemView.requestFocus();
+                    if (h != null) focus((Holder) h);
                 });
             }
         });
+    }
+
+    /**
+     * requestFocusFromTouch, not requestFocus: in touch mode (the emulator, a box driven by a mouse) a tile cannot
+     * take the focus with requestFocus, so Home would come back with nothing selected and the first arrow spent.
+     */
+    private static void focus(Holder holder) {
+        holder.card.requestFocusFromTouch();
     }
 
     /** Back to the first row, first tile: Home pressed on Home, or Back from the grid. */
@@ -864,6 +881,7 @@ public class MainActivity extends Activity {
                         .translationZ(has ? dp(10) : 0f).setDuration(has ? 160 : 120)
                         .setInterpolator(new DecelerateInterpolator(1.6f)).start();
                 label.animate().alpha(has ? 1f : 0f).translationY(has ? dp(6) : 0f).setDuration(150).start();
+                if (has && holder.getBindingAdapterPosition() >= 0) lastFocused = holder.getBindingAdapterPosition();
                 if (has && shelf != null) {
                     int at = holder.getBindingAdapterPosition();
                     shelf.show(at >= 0 && at < columns && at < tiles.size() ? tiles.get(at) : null);

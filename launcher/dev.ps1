@@ -30,15 +30,26 @@ $avds = & $emulator -list-avds
 if ($avds -notcontains $avd) {
     'no' | & "$sdk\cmdline-tools\latest\bin\avdmanager.bat" create avd -n $avd -k $image -d tv_1080p 2>$null | Out-Null
     if ((& $emulator -list-avds) -notcontains $avd) { throw "could not create the virtual TV $avd" }
-    $ini = "$env:USERPROFILE\.android\avd\$avd.avd\config.ini"
-    Add-Content $ini "hw.ramSize=2048`nhw.keyboard=yes`nhw.gpu.enabled=yes`nhw.gpu.mode=auto"
     Write-Host "Created the virtual TV $avd"
+}
+
+# The keyboard is the remote (arrows, Enter, Esc), and the GPU keeps animations smooth. The emulator rewrites
+# config.ini with its own defaults on first start (hw.keyboard = no), so the values are set in place each time
+# before it starts.
+function Set-AvdOption([string]$key, [string]$value) {
+    $ini = "$env:USERPROFILE\.android\avd\$avd.avd\config.ini"
+    $lines = @(Get-Content $ini | Where-Object { $_ -notmatch "^\s*$([regex]::Escape($key))\s*=" })
+    Set-Content $ini ($lines + "$key = $value") -Encoding ascii
 }
 
 & $adb start-server 2>$null
 $running = (& $adb devices) -match '^emulator-\d+\s+device'
 if ($Fresh -and $running) { & $adb -e emu kill | Out-Null; Start-Sleep 3; $running = $false }
 if (-not $running) {
+    Set-AvdOption 'hw.keyboard' 'yes'
+    Set-AvdOption 'hw.gpu.enabled' 'yes'
+    Set-AvdOption 'hw.gpu.mode' 'auto'
+    Set-AvdOption 'hw.ramSize' '2048M'
     $emuArgs = @('-avd', $avd, '-netdelay', 'none', '-netspeed', 'full')
     if ($Fresh) { $emuArgs += '-wipe-data' }
     Start-Process $emulator -ArgumentList $emuArgs
@@ -53,6 +64,8 @@ if (-not $running) {
 $env:ANDROID_SERIAL = ((& $adb devices) -match '^emulator-\d+' | Select-Object -First 1) -replace '\s.*$', ''
 .\gradlew.bat installDebug -q --console=plain
 if ($LASTEXITCODE -ne 0) { throw 'build or install failed' }
+# As on a real TV: the stock launcher off (the virtual TV's own), so Home is kavunOS.
+& $adb shell pm disable-user --user 0 com.google.android.tvlauncher 2>$null | Out-Null
 & $adb shell cmd package set-home-activity com.kavunos.tv/.MainActivity | Out-Null
 & $adb shell cmd notification allow_listener com.kavunos.tv/com.kavunos.tv.MediaListener 2>$null | Out-Null
 & $adb shell am start -n com.kavunos.tv/.MainActivity | Out-Null
