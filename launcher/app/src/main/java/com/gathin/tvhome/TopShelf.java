@@ -22,7 +22,7 @@ import android.widget.TextView;
 final class TopShelf {
 
     static final PathInterpolator EASE = new PathInterpolator(0.2f, 0f, 0f, 1f);
-    private static final int WASH_W = 24, WASH_H = 14;
+    private static final int WASH_W = 16, WASH_H = 8;
 
     private final FrameLayout view;
     private final ImageView[] layers = new ImageView[2];
@@ -41,10 +41,10 @@ final class TopShelf {
                     ViewGroup.LayoutParams.MATCH_PARENT));
             layers[i] = layer;
         }
-        // Darker at the top for the clock, fading out at the bottom into the wallpaper.
+        // A little darker at the very top for the clock.
         View shade = new View(context);
         shade.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{0x99000000, 0x40000000, 0x00000000}));
+                new int[]{0x66000000, 0x00000000, 0x00000000}));
         view.addView(shade, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         title = new TextView(context);
@@ -89,19 +89,60 @@ final class TopShelf {
         title.animate().alpha(1f).translationY(0f).setStartDelay(60).setDuration(380).setInterpolator(EASE).start();
     }
 
-    /** The tile's artwork (or icon) drawn at 24x14: stretched over the shelf it is a soft wash of its colours. */
+    /**
+     * A soft wash of the tile's colours: its artwork (or icon) averaged down to a few cells, so no logo survives,
+     * deepened a little, and fading to transparent towards the bottom. Stretched over the shelf with filtering it
+     * becomes a smooth gradient that melts into the wallpaper.
+     */
     private static Bitmap wash(HomeApps.Tile tile) {
-        Bitmap bitmap = Bitmap.createBitmap(WASH_W, WASH_H, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawColor(0xFF1C1C1E);
+        Bitmap cells = Bitmap.createBitmap(WASH_W, WASH_H, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(cells);
+        canvas.drawColor(0xFF2C2C2E);
         Drawable art = tile.banner != null ? tile.banner : tile.icon;
         if (art != null) {
             Drawable copy = art.getConstantState() != null ? art.getConstantState().newDrawable().mutate() : art;
             copy.setBounds(0, 0, WASH_W, WASH_H);
             copy.draw(canvas);
         }
-        // Calm it: bright banners (white logos) would otherwise glare across half the screen.
-        canvas.drawColor(0x4D000000);
-        return bitmap;
+        int[] px = new int[WASH_W * WASH_H];
+        cells.getPixels(px, 0, WASH_W, 0, 0, WASH_W, WASH_H);
+        cells.recycle();
+        // Average into a 4x2 grid of colours: enough for a left-right and top-bottom shift, no shapes.
+        int[] grid = new int[8];
+        for (int gy = 0; gy < 2; gy++) {
+            for (int gx = 0; gx < 4; gx++) {
+                long r = 0, g = 0, b = 0, n = 0;
+                for (int y = gy * WASH_H / 2; y < (gy + 1) * WASH_H / 2; y++) {
+                    for (int x = gx * WASH_W / 4; x < (gx + 1) * WASH_W / 4; x++) {
+                        int c = px[y * WASH_W + x];
+                        r += (c >> 16) & 0xFF;
+                        g += (c >> 8) & 0xFF;
+                        b += c & 0xFF;
+                        n++;
+                    }
+                }
+                // Deepen: bright banners (white logos) would otherwise glare across the screen.
+                grid[gy * 4 + gx] = deepen((int) (r / n), (int) (g / n), (int) (b / n));
+            }
+        }
+        // 4 wide, 6 tall: the two colour rows, then the lower rows fade out to nothing.
+        int[] alpha = {255, 255, 235, 170, 80, 0};
+        Bitmap out = Bitmap.createBitmap(4, alpha.length, Bitmap.Config.ARGB_8888);
+        for (int y = 0; y < alpha.length; y++) {
+            for (int x = 0; x < 4; x++) {
+                int c = grid[(y == 0 ? 0 : 1) * 4 + x];
+                out.setPixel(x, y, (alpha[y] << 24) | (c & 0xFFFFFF));
+            }
+        }
+        return out;
+    }
+
+    /** Darker and a touch more saturated, so a colour reads as atmosphere rather than as a flat panel. */
+    private static int deepen(int r, int g, int b) {
+        float[] hsv = new float[3];
+        android.graphics.Color.RGBToHSV(r, g, b, hsv);
+        hsv[1] = Math.min(1f, hsv[1] * 1.25f);
+        hsv[2] = Math.min(hsv[2], 0.62f) * 0.85f;
+        return android.graphics.Color.HSVToColor(hsv);
     }
 }
