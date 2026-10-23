@@ -26,7 +26,7 @@ tvOS'tan esinlenerek yeniden yazılmıştır. Orijinal projenin belgeleri [CLEAN
   Gizlenenler Ayarlar → Gizli uygulamalar'dan geri getirilir.
 - **Duvar kâğıtları:** karışık, sıralı, günün saatine göre ya da sabit; otomatik karartma; telefondan
   duvar kâğıdı ekleme; duvar kâğıtlarıyla ekran koruyucu.
-- **Inter yazı tipi**, 24 dil (Türkçe ve İbranice dahil sağdan sola düzen).
+- **Inter yazı tipi**, Türkçe dahil 23 dil.
 
 ## Hız
 

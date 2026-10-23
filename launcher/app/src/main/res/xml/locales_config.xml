@@ -16,8 +16,6 @@
     <locale android:name="sr-Latn" />
     <locale android:name="pl" />
     <locale android:name="ar" />
-    <!-- Android uses the legacy iw qualifier for Hebrew resources. -->
-    <locale android:name="iw" />
     <locale android:name="tr" />
     <locale android:name="pt" />
     <locale android:name="fi" />

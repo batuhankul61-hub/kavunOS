@@ -20,7 +20,6 @@ subtle tint. Updating an existing app does not mark it as new.
   the existing Inputs dropdown resources and stays over the selected card.
 - Back closes the menu first, then the library. Down from the last Home row or
   Right from the final app reaches the library pill; Up returns to the last row.
-  Hebrew mirrors the horizontal direction, so Left from the final app reaches it.
 
 Every checked app can be removed from Home, including the theme’s default apps.
 It stays installed and remains in the library, where one press adds it back.

@@ -379,7 +379,7 @@ The **TV** needs Android 8.0 (API 26) or newer: `minSdk` is a compile-time floor
 | **Configure** | Dock order, hidden apps, Live TV app, 4 to 7 tiles per row, reduced motion. All in [`config.xml`](launcher/app/src/main/res/values/config.xml) |
 | **Settings on the TV** | Hold OK on the Settings pill for Launcher settings: tiles per row, animations, advanced effects |
 | **Themes** | Background, wallpaper and layout from a `config.json` pushed over Wi-Fi, no rebuild. Five ship in [`themes/`](themes/) |
-| **24 languages** | Follows the TV's language, with a fully mirrored right-to-left layout for Hebrew |
+| **23 languages** | Follows the TV's language |
 | **App library** | Optional: browse every installed app and add or remove Home shortcuts. See [the app library guide](docs/app-library.md) |
 | **Module cards** | Any TV app can offer its own tile; you approve each one once. See [`docs/modules.md`](docs/modules.md) |
 | **Clock screensaver** | A drifting clock over the glow, so nothing burns in |
@@ -425,14 +425,11 @@ and a wallpaper.
 <summary><b>Languages</b></summary>
 
 English, German, Spanish, Catalan, French, Russian, Serbian (Latin), Polish, Czech, Italian, Portuguese,
-Turkish, Arabic, Hebrew, Simplified Chinese, Traditional Chinese (Taiwan), Thai, Finnish, Vietnamese,
+Turkish, Arabic, Simplified Chinese, Traditional Chinese (Taiwan), Thai, Finnish, Vietnamese,
 Bangla, Indonesian, Norwegian Bokmål, Dutch and Uzbek (Latin). The launcher follows the TV's language. Android 13+ can set it for the launcher
 alone: `tools/tv.py 'cmd locale set-app-locales com.kavunos.tv --locales ca'`.
 
-Hebrew mirrors the layout: menu buttons on the left, date and clock on the right with the greeting above,
-dock and app rows starting on the right with matching remote navigation, the input selector's icons and
-labels on the right, and dates with the month prefix ב (for example, 19 באוקטובר). The Clock screensaver
-right-aligns its date and time. Russian includes the module-card screens and the VPN-off badge. Other
+Russian includes the module-card screens and the VPN-off badge. Other
 languages keep their original layouts.
 
 </details>
