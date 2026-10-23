@@ -76,7 +76,10 @@ class ExampleListsTest(unittest.TestCase):
         example_tvs = sorted(r.split("|")[2].strip() for r in example_rows)
         self.assertEqual(readme_tvs, example_tvs, "the TV column differs between the two tables")
 
-    @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT"), "counts are fixed up on merge; strict on main only")
+    # cleanyourtv's stat strip (its README, now CLEANYOURTV.md, and docs/stats.png). kavunOS's README has no such
+    # strip and the original stays as it was published, so this only runs where that README is maintained.
+    @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT") and (ROOT / "README.md").read_text(
+        encoding="utf-8").find("TV models") >= 0, "cleanyourtv's stat strip is not in this README")
     def test_readme_counts(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         n = len(folders())
