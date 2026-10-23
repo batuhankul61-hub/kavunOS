@@ -12,6 +12,19 @@ tvOS'tan esinlenerek yeniden yazılmıştır. Orijinal projenin belgeleri [CLEAN
 1. **Hız.** Zayıf bir TV çubuğunda bile her tuşa anında tepki vermesi.
 2. **Estetik.** Apple'ın modern tasarım anlayışı: sade, cam görünümlü, yumuşak geçişli.
 
+## Görüntüler
+
+| | |
+|---|---|
+| ![Ana ekran: tam ekran duvar kâğıdı, alçakta ilk sıra, sağ üstte saat](docs/kavunos/home.jpg) | ![Önizleme kartı: Spotify'da çalan şarkı, kapağı ve durumu](docs/kavunos/card.jpg) |
+| *Ana ekran* | *Önizleme kartı* |
+| ![Basılı tutma menüsü: Taşı, Uygulama bilgisi, Ana ekrandan gizle, Kaldır](docs/kavunos/menu.jpg) | ![Taşıma modu: kalkan ve hafif eğilen uygulama, üstte ipucu](docs/kavunos/move.jpg) |
+| *Basılı tutma menüsü* | *Taşıma modu* |
+| ![Aşağı kaydırılmış uygulama ızgarası, kararmış duvar kâğıdı](docs/kavunos/grid.jpg) | |
+| *Tüm uygulamalar* | |
+
+Görüntülerdeki duvar kâğıdı depodaki ücretsiz [scenes](themes/scenes) temasından.
+
 ## Özellikler
 
 - **tvOS tarzı ana ekran:** tam ekran duvar kâğıdı, alçakta duran ilk sıra, sağ üstte saat. Aşağı inildikçe
