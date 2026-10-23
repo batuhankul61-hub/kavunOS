@@ -7,6 +7,8 @@ param(
     [int]$Runs = 3
 )
 $ErrorActionPreference = 'Stop'
+# Pipe plain UTF-8 to tv.py --batch; the default prepends a BOM that corrupts the first command.
+$OutputEncoding = New-Object System.Text.UTF8Encoding $false
 if (-not $TvHost) { throw 'pass -TvHost <tv ip> or set $env:TV_HOST' }
 $env:TV_HOST = $TvHost
 $repo = Split-Path -Parent $PSScriptRoot
@@ -17,11 +19,22 @@ function Tv([string]$cmd) { & $py -I $tv $cmd }
 
 function Median([double[]]$xs) { $s = $xs | Sort-Object; $s[[int][math]::Floor(($s.Count - 1) / 2)] }
 
-# Cold start: process killed, Home started fresh. The accessibility service is restored afterwards.
+# Restart: process killed, Home started again. A force-stop unbinds the launcher's accessibility services, and a
+# moment later Android may also drop them from the setting, so it is read once here, before any restart. Writing
+# the same value back does not rebind them (the remote's Home button then falls through to the system): the
+# setting is cleared, left a moment, and written again until they are bound. Through stdin: Windows PowerShell
+# drops the inner double quotes from a native argument.
+function TvBatch([string]$cmd) { $cmd | & $py -I $tv --batch }
+$a11y = ((Tv 'settings get secure enabled_accessibility_services') | Select-Object -Last 1).Trim()
 $cold = @()
 for ($i = 0; $i -lt $Runs; $i++) {
-    $out = Tv "a=`$(settings get secure enabled_accessibility_services); am force-stop $pkg; sleep 2; am start -W -n $pkg/.MainActivity | grep TotalTime; settings put secure enabled_accessibility_services `"`$a`"; settings put secure accessibility_enabled 1; sleep 3"
-    $cold += [double](($out -join ' ') -replace '[^0-9]', '')
+    $out = TvBatch "am force-stop $pkg; sleep 2; am start -W -n $pkg/.MainActivity | grep TotalTime; sleep 3"
+    $cold += [double]((($out | Select-String '^TotalTime') -join ' ') -replace '[^0-9]', '')
+}
+if ($a11y -and $a11y -ne 'null') {
+    TvBatch ("for t in 1 2 3 4 5; do dumpsys accessibility | grep -q 'Bound services:{Service' && break; " +
+        "settings put secure enabled_accessibility_services `"`"; sleep 2; " +
+        "settings put secure enabled_accessibility_services '$a11y'; settings put secure accessibility_enabled 1; sleep 3; done") | Out-Null
 }
 
 # Return to Home from another app (the everyday case).
@@ -48,3 +61,6 @@ $apk = Tv "ls -l `$(pm path $pkg | sed 's/package://')"
 $gfx | ForEach-Object { "frames          : $($_.Trim())" }
 $mem | ForEach-Object { "memory          : $($_.Trim())" }
 "apk             : $((($apk -join ' ') -split '\s+')[4]) bytes"
+# The restarts above must leave the Home button service running; say so loudly if they did not.
+$bound = Tv 'dumpsys accessibility | grep Bound'
+if ("$bound" -notmatch 'Service\[') { Write-Warning 'An accessibility service is enabled but not bound: toggle it in the TV settings or rerun the install script.' }
