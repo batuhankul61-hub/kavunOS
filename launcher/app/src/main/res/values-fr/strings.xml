@@ -129,4 +129,6 @@
     <string name="home_settings_tile">Réglages</string>
     <string name="settings_section_home">Accueil</string>
     <string name="settings_section_system">Système</string>
+    <string name="language">Langue</string>
+    <string name="language_system">Système</string>
 </resources>

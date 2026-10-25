@@ -98,6 +98,10 @@ public final class LauncherSettingsActivity extends TvScreen {
         });
         row(list, R.string.hidden_apps, () -> String.valueOf(HomeApps.hiddenByUser(this).size()), this::hiddenApps);
         section(list, getString(R.string.settings_section_system));
+        row(list, R.string.language, () -> {
+            String chosen = Language.chosen(this);
+            return chosen.isEmpty() ? getString(R.string.language_system) : Language.name(chosen);
+        }, this::language);
         row(list, R.string.home_settings, null, () -> {
             Toast.makeText(this, R.string.home_settings_help, Toast.LENGTH_LONG).show();
             open(new Intent(Settings.ACTION_HOME_SETTINGS));
@@ -148,6 +152,21 @@ public final class LauncherSettingsActivity extends TvScreen {
         sheet(getString(R.string.hidden_apps_pick), labels, -1, i -> {
             HomeApps.setHidden(this, hidden.get(i), false);
             changed();
+        });
+    }
+
+    /** The launcher's own language, for TVs that never tell apps theirs; the first choice follows the TV. */
+    private void language() {
+        List<String> tags = Language.available(this);
+        tags.add(0, "");
+        List<String> labels = new ArrayList<>();
+        for (String tag : tags) labels.add(tag.isEmpty() ? getString(R.string.language_system) : Language.name(tag));
+        sheet(getString(R.string.language), labels, Math.max(0, tags.indexOf(Language.chosen(this))), i -> {
+            if (tags.get(i).equals(Language.chosen(this))) return;
+            choices.edit().putString(Language.KEY, tags.get(i)).apply();
+            // Home's own tiles carry their names; Home itself rebuilds when it sees the new language.
+            HomeApps.invalidate();
+            recreate();
         });
     }
 

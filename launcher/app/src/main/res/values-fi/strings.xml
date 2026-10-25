@@ -134,4 +134,6 @@
     <string name="home_settings_tile">Asetukset</string>
     <string name="settings_section_home">Aloitusnäyttö</string>
     <string name="settings_section_system">Järjestelmä</string>
+    <string name="language">Kieli</string>
+    <string name="language_system">Järjestelmä</string>
 </resources>

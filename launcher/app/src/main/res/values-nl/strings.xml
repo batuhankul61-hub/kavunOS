@@ -147,4 +147,6 @@
     <string name="home_settings_tile">Instellingen</string>
     <string name="settings_section_home">Startscherm</string>
     <string name="settings_section_system">Systeem</string>
+    <string name="language">Taal</string>
+    <string name="language_system">Systeem</string>
 </resources>

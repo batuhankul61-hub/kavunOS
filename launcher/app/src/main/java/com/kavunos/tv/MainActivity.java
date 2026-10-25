@@ -79,6 +79,8 @@ public class MainActivity extends Activity {
     private boolean returning;
     /** Config.wallpaperGeneration when this Home was built. */
     private int wallpaperGeneration;
+    /** Language.chosen when this Home was built. */
+    private String language;
     private int scrolled;
     /** The tile that last had the focus, to give it back when the grid itself is focused. */
     private int lastFocused;
@@ -102,9 +104,16 @@ public class MainActivity extends Activity {
     };
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        Language.apply(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         wallpaperGeneration = Config.wallpaperGeneration;
+        language = Language.chosen(this);
         config = Config.load(this);
         if (getResources().getBoolean(R.bool.bt_autoconnect)) BluetoothReconnect.start(this);
         density = getResources().getDisplayMetrics().density;
@@ -583,8 +592,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Wallpapers changed on the Wallpapers screen or from a phone: rebuild.
-        if (wallpaperGeneration != Config.wallpaperGeneration) {
+        // Wallpapers changed on the Wallpapers screen or from a phone, or the language in Settings: rebuild.
+        if (wallpaperGeneration != Config.wallpaperGeneration || !language.equals(Language.chosen(this))) {
             recreate();
             return;
         }

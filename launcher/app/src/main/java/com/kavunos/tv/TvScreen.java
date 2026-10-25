@@ -1,6 +1,7 @@
 package com.kavunos.tv;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,6 +50,12 @@ abstract class TvScreen extends Activity {
 
     protected interface Pick {
         void at(int index);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        Language.apply(this);
     }
 
     protected void initScreen() {
@@ -119,6 +127,13 @@ abstract class TvScreen extends Activity {
             head.setPadding(dp(18), dp(4), dp(18), dp(10));
             card.addView(head);
         }
+        // A long list (the languages) scrolls inside the card; the focus carries it along.
+        ScrollView scroll = new ScrollView(this);
+        scroll.setVerticalScrollBarEnabled(false);
+        LinearLayout options = new LinearLayout(this);
+        options.setOrientation(LinearLayout.VERTICAL);
+        scroll.addView(options);
+        card.addView(scroll);
         View focus = null;
         for (int i = 0; i < labels.size(); i++) {
             int index = i;
@@ -133,7 +148,7 @@ abstract class TvScreen extends Activity {
                 closeOverlay();
                 pick.at(index);
             });
-            card.addView(option, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(50)));
+            options.addView(option, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(50)));
             if (i == current || focus == null) focus = option;
         }
         openOverlay(card, focus);
@@ -159,8 +174,10 @@ abstract class TvScreen extends Activity {
         scrim.setBackgroundColor(isCard ? 0x99000000 : Color.BLACK);
         scrim.setClickable(true);
         if (isCard) {
-            scrim.addView(content, new FrameLayout.LayoutParams((Integer) content.getTag(),
-                    ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((Integer) content.getTag(),
+                    ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+            params.topMargin = params.bottomMargin = dp(40);
+            scrim.addView(content, params);
         } else {
             scrim.addView(content, match());
         }

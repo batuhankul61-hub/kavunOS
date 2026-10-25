@@ -136,4 +136,6 @@
     <string name="home_settings_tile">Настройки</string>
     <string name="settings_section_home">Главный экран</string>
     <string name="settings_section_system">Система</string>
+    <string name="language">Язык</string>
+    <string name="language_system">Системный</string>
 </resources>

@@ -146,4 +146,6 @@
     <string name="home_settings_tile">Innstillinger</string>
     <string name="settings_section_home">Startskjerm</string>
     <string name="settings_section_system">System</string>
+    <string name="language">Språk</string>
+    <string name="language_system">System</string>
 </resources>

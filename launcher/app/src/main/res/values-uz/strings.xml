@@ -146,4 +146,6 @@
     <string name="home_settings_tile">Sozlamalar</string>
     <string name="settings_section_home">Bosh ekran</string>
     <string name="settings_section_system">Tizim</string>
+    <string name="language">Til</string>
+    <string name="language_system">Tizim</string>
 </resources>

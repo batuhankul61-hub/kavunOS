@@ -128,4 +128,6 @@
     <string name="home_settings_tile">設定</string>
     <string name="settings_section_home">主畫面</string>
     <string name="settings_section_system">系統</string>
+    <string name="language">語言</string>
+    <string name="language_system">跟隨系統</string>
 </resources>

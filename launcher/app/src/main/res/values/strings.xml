@@ -176,4 +176,7 @@
     <string name="hidden_apps">Hidden apps</string>
     <string name="hidden_apps_none">No hidden apps</string>
     <string name="hidden_apps_pick">Choose an app to show it again</string>
+    <!-- Settings: the launcher's own language; "System" follows the TV. -->
+    <string name="language">Language</string>
+    <string name="language_system">System</string>
 </resources>

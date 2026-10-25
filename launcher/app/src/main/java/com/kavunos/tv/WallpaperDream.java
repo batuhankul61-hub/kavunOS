@@ -2,6 +2,7 @@ package com.kavunos.tv;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,6 +50,11 @@ public class WallpaperDream extends DreamService {
     private long showMs;
 
     private final Runnable next = this::showNext;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(Language.wrap(base));
+    }
 
     @Override
     public void onAttachedToWindow() {

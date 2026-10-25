@@ -146,4 +146,6 @@
     <string name="home_settings_tile">Ajustes</string>
     <string name="settings_section_home">Inicio</string>
     <string name="settings_section_system">Sistema</string>
+    <string name="language">Idioma</string>
+    <string name="language_system">Sistema</string>
 </resources>

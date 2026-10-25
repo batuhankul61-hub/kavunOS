@@ -145,4 +145,6 @@
     <string name="home_settings_tile">Setelan</string>
     <string name="settings_section_home">Layar utama</string>
     <string name="settings_section_system">Sistem</string>
+    <string name="language">Bahasa</string>
+    <string name="language_system">Sistem</string>
 </resources>

@@ -131,4 +131,6 @@
     <string name="home_settings_tile">Ustawienia</string>
     <string name="settings_section_home">Ekran główny</string>
     <string name="settings_section_system">System</string>
+    <string name="language">Język</string>
+    <string name="language_system">Systemowy</string>
 </resources>

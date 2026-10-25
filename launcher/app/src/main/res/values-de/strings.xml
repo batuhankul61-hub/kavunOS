@@ -106,4 +106,6 @@
     <string name="home_settings_tile">Einstellungen</string>
     <string name="settings_section_home">Startbildschirm</string>
     <string name="settings_section_system">System</string>
+    <string name="language">Sprache</string>
+    <string name="language_system">System</string>
 </resources>

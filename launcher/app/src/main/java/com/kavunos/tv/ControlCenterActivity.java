@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.res.ColorStateList;
@@ -52,6 +53,12 @@ public final class ControlCenterActivity extends Activity {
     private TextView memory;
     private boolean closingApps;
     private boolean closing;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        Language.apply(this);
+    }
 
     @Override
     protected void onCreate(Bundle state) {

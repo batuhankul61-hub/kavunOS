@@ -134,4 +134,6 @@
     <string name="home_settings_tile">সেটিংস</string>
     <string name="settings_section_home">হোম</string>
     <string name="settings_section_system">সিস্টেম</string>
+    <string name="language">ভাষা</string>
+    <string name="language_system">সিস্টেম</string>
 </resources>

@@ -169,4 +169,6 @@
     <string name="race_live">%1$s · canlı</string>
     <string name="race_finished">Damalı bayrak</string>
     <string name="last_opened">Son açılma: %1$s</string>
+    <string name="language">Dil</string>
+    <string name="language_system">Sistem dili</string>
 </resources>

@@ -135,4 +135,6 @@
     <string name="home_settings_tile">Nastavení</string>
     <string name="settings_section_home">Domovská obrazovka</string>
     <string name="settings_section_system">Systém</string>
+    <string name="language">Jazyk</string>
+    <string name="language_system">Systémový</string>
 </resources>

@@ -133,4 +133,6 @@
     <string name="home_settings_tile">الإعدادات</string>
     <string name="settings_section_home">الشاشة الرئيسية</string>
     <string name="settings_section_system">النظام</string>
+    <string name="language">اللغة</string>
+    <string name="language_system">لغة النظام</string>
 </resources>

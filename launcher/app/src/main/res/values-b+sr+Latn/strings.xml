@@ -111,4 +111,6 @@
     <string name="home_settings_tile">Podešavanja</string>
     <string name="settings_section_home">Početni ekran</string>
     <string name="settings_section_system">Sistem</string>
+    <string name="language">Jezik</string>
+    <string name="language_system">Sistemski</string>
 </resources>

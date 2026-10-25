@@ -103,4 +103,6 @@
     <string name="home_settings_tile">การตั้งค่า</string>
     <string name="settings_section_home">หน้าหลัก</string>
     <string name="settings_section_system">ระบบ</string>
+    <string name="language">ภาษา</string>
+    <string name="language_system">ตามระบบ</string>
 </resources>

@@ -140,4 +140,6 @@
     <string name="home_settings_tile">Impostazioni</string>
     <string name="settings_section_home">Home</string>
     <string name="settings_section_system">Sistema</string>
+    <string name="language">Lingua</string>
+    <string name="language_system">Sistema</string>
 </resources>
