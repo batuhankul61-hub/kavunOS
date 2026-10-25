@@ -73,7 +73,21 @@ Ana ekran boşta beklerken hiçbir şey çizmez; animasyonlar yalnızca bir tuş
 ## Kurulum
 
 TV'de **Android 7.1 (API 25) veya üstü** gerekir. TV'de geliştirici seçeneklerini ve ağ üzerinden hata ayıklamayı açın (ayrıntılar
-[CLEANYOURTV.md](CLEANYOURTV.md#quick-start) içinde). Sonra Windows'ta:
+[CLEANYOURTV.md](CLEANYOURTV.md#quick-start) içinde). TV ile bilgisayar aynı ağda olmalı; USB gerekmez.
+
+### Tek tıkla (Windows)
+
+[Sürümler](https://github.com/batuhankul61-hub/kavunOS/releases) sayfasından `kavunOS-kur.cmd` dosyasını indirip çift
+tıklayın. TV'yi ağda kendisi bulur, son sürümü kurar ve ana ekran yapar; TV'de çıkan hata ayıklama izni sorusunda
+"Her zaman izin ver"i işaretleyip onaylayın. JDK, Android SDK ya da derleme gerekmez; Python yoksa kendisi kurar.
+TV bulunamazsa IP adresini sorar. Başka bir bilgisayarda derlenmiş kavunOS kurulu bir TV'de:
+`kavunOS-kur.cmd -Reinstall` (o kurulumun ayarları silinir).
+
+PowerShell'den aynısı: `launcher\install.ps1 -TvHost 192.168.1.50 -HomeKeyService`
+
+### Kaynaktan derleyerek
+
+Windows'ta:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File launcher\build-and-install.ps1 -TvHost 192.168.1.50 -HomeKeyService -PhoneUpload
@@ -90,7 +104,7 @@ TV_HOST=192.168.1.50 HOME_KEY_SERVICE=1 PHONE_UPLOAD=1 launcher/build-and-instal
 - `-PhoneUpload`: telefondan duvar kâğıdı eklemeyi açar; ağ izni yalnızca bu seçenekle eklenir.
 
 Betik derler, kurar, kavunOS'u ana ekran yapar; ana ekran ona geçmezse eski başlatıcıyı geri getirir.
-Gerekli JDK 17 ve Android SDK, Android Studio ile gelir.
+Gerekli JDK 17 ve Android SDK, Android Studio ile gelir. Sürümdeki APK'da telefondan ekleme açıktır.
 
 ### Bilgisayarsız kurulum (APK)
 
