@@ -1,5 +1,6 @@
 package com.kavunos.tv;
 
+import androidx.core.content.res.ResourcesCompat;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -228,7 +229,7 @@ abstract class TvScreen extends Activity {
         view.setText(value);
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
         if (color != 0) view.setTextColor(color);
-        view.setTypeface(getResources().getFont(font));
+        view.setTypeface(ResourcesCompat.getFont(this, font));
         view.setIncludeFontPadding(false);
         return view;
     }

@@ -72,7 +72,7 @@ Ana ekran boşta beklerken hiçbir şey çizmez; animasyonlar yalnızca bir tuş
 
 ## Kurulum
 
-TV'de geliştirici seçeneklerini ve ağ üzerinden hata ayıklamayı açın (ayrıntılar
+TV'de **Android 7.1 (API 25) veya üstü** gerekir. TV'de geliştirici seçeneklerini ve ağ üzerinden hata ayıklamayı açın (ayrıntılar
 [CLEANYOURTV.md](CLEANYOURTV.md#quick-start) içinde). Sonra Windows'ta:
 
 ```powershell

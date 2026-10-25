@@ -1,5 +1,6 @@
 package com.kavunos.tv;
 
+import androidx.core.content.res.ResourcesCompat;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -409,7 +410,7 @@ public final class ControlCenterActivity extends Activity {
     private void style(TextView view, int sp, int color, int font) {
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
         if (color != 0) view.setTextColor(color);
-        view.setTypeface(getResources().getFont(font));
+        view.setTypeface(ResourcesCompat.getFont(this, font));
         view.setIncludeFontPadding(false);
     }
 

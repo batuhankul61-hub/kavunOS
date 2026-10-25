@@ -1,5 +1,6 @@
 package com.kavunos.tv;
 
+import androidx.core.content.res.ResourcesCompat;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.SharedPreferences;
@@ -166,7 +167,7 @@ public class WallpaperDream extends DreamService {
         time.setFormat12Hour("h:mm");
         time.setTextSize(TypedValue.COMPLEX_UNIT_SP, 84);
         time.setTextColor(0xF2FFFFFF);
-        time.setTypeface(getResources().getFont(R.font.inter_light));
+        time.setTypeface(ResourcesCompat.getFont(this, R.font.inter_light));
         time.setIncludeFontPadding(false);
         time.setShadowLayer(dp(12), 0, 0, 0x66000000);
         box.addView(time);
@@ -175,7 +176,7 @@ public class WallpaperDream extends DreamService {
         date.setFormat12Hour("EEEE, d MMMM");
         date.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         date.setTextColor(0xCCFFFFFF);
-        date.setTypeface(getResources().getFont(R.font.inter_regular));
+        date.setTypeface(ResourcesCompat.getFont(this, R.font.inter_regular));
         date.setShadowLayer(dp(8), 0, 0, 0x66000000);
         date.setPadding(dp(4), dp(4), dp(4), 0);
         box.addView(date);

@@ -6,12 +6,14 @@
 #        launcher\dev.ps1 -Fresh     wipe the virtual TV first (a clean first start)
 #        launcher\dev.ps1 -Logs      afterwards, follow kavunOS's log (Ctrl+C to stop)
 #        launcher\dev.ps1 -Theme themes\scenes   also push a theme (config.json and wallpapers)
+#        launcher\dev.ps1 -Api 25   an Android 7.1 TV instead (the oldest kavunOS supports); one virtual TV runs at a time
 #
-# Needs: the Android SDK emulator and system-images;android-30;android-tv;x86, and Windows Hypervisor Platform.
+# Needs: the Android SDK emulator and system-images;android-<Api>;android-tv;x86, and Windows Hypervisor Platform.
 param(
     [switch]$Fresh,
     [switch]$Logs,
-    [string]$Theme = ''
+    [string]$Theme = '',
+    [int]$Api = 30
 )
 if ($Theme) { $Theme = (Resolve-Path $Theme).Path }
 # Windows PowerShell 5.1 turns any stderr line of a native tool (adb, avdmanager) into an error, so failures are
@@ -21,11 +23,12 @@ Set-Location $PSScriptRoot
 $sdk = if ($env:ANDROID_HOME) { $env:ANDROID_HOME } else { "$env:LOCALAPPDATA\Android\Sdk" }
 $adb = "$sdk\platform-tools\adb.exe"
 $emulator = "$sdk\emulator\emulator.exe"
-$avd = 'kavunOS_TV'
-$image = 'system-images;android-30;android-tv;x86'
+# Android TV 11 by default, the same Android as the Mi TV Stick 4K.
+$avd = if ($Api -eq 30) { 'kavunOS_TV' } else { "kavunOS_TV$Api" }
+$image = "system-images;android-$Api;android-tv;x86"
 if (-not (Test-Path $emulator)) { throw "no emulator: run  $sdk\cmdline-tools\latest\bin\sdkmanager.bat emulator `"$image`"" }
 
-# The virtual TV: 1080p Android TV 11, the same Android as the Mi TV Stick 4K.
+# The virtual TV, 1080p.
 $avds = & $emulator -list-avds
 if ($avds -notcontains $avd) {
     'no' | & "$sdk\cmdline-tools\latest\bin\avdmanager.bat" create avd -n $avd -k $image -d tv_1080p 2>$null | Out-Null
@@ -65,7 +68,9 @@ $env:ANDROID_SERIAL = ((& $adb devices) -match '^emulator-\d+' | Select-Object -
 .\gradlew.bat installDebug -q --console=plain
 if ($LASTEXITCODE -ne 0) { throw 'build or install failed' }
 # As on a real TV: the stock launcher off (the virtual TV's own), so Home is kavunOS.
-& $adb shell pm disable-user --user 0 com.google.android.tvlauncher 2>$null | Out-Null
+foreach ($stock in @('com.google.android.tvlauncher', 'com.google.android.leanbacklauncher')) {
+    & $adb shell pm disable-user --user 0 $stock 2>$null | Out-Null
+}
 & $adb shell cmd package set-home-activity com.kavunos.tv/.MainActivity | Out-Null
 & $adb shell cmd notification allow_listener com.kavunos.tv/com.kavunos.tv.MediaListener 2>$null | Out-Null
 & $adb shell am start -n com.kavunos.tv/.MainActivity | Out-Null

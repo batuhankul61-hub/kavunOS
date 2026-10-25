@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.File;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -81,8 +79,7 @@ final class WallpaperStats {
         String lat = context.getString(R.string.latitude), lon = context.getString(R.string.longitude);
         if (!lat.isEmpty() && !lon.isEmpty()) {
             try {
-                int[] times = Sun.riseAndSet(LocalDate.now(), Double.parseDouble(lat), Double.parseDouble(lon),
-                        ZoneId.systemDefault());
+                int[] times = Sun.riseAndSetToday(Double.parseDouble(lat), Double.parseDouble(lon));
                 if (times != null) {
                     sunrise = times[0];
                     sunset = times[1];

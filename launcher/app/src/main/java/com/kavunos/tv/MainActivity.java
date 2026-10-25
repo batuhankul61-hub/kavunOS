@@ -1,5 +1,6 @@
 package com.kavunos.tv;
 
+import androidx.core.content.res.ResourcesCompat;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
@@ -205,7 +206,7 @@ public class MainActivity extends Activity {
         clock.setFormat24Hour("HH:mm");
         clock.setFormat12Hour("h:mm");
         clock.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        clock.setTypeface(getResources().getFont(R.font.inter_medium));
+        clock.setTypeface(ResourcesCompat.getFont(this, R.font.inter_medium));
         clock.setTextColor(0xF2FFFFFF);
         clock.setShadowLayer(dp(8), 0, 0, 0x55000000);
         FrameLayout.LayoutParams clockParams = new FrameLayout.LayoutParams(
@@ -216,7 +217,7 @@ public class MainActivity extends Activity {
         moveHint = new TextView(this);
         moveHint.setText(R.string.home_move_hint);
         moveHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        moveHint.setTypeface(getResources().getFont(R.font.inter_medium));
+        moveHint.setTypeface(ResourcesCompat.getFont(this, R.font.inter_medium));
         moveHint.setTextColor(Color.WHITE);
         moveHint.setPadding(dp(20), dp(10), dp(20), dp(10));
         GradientDrawable pill = new GradientDrawable();
@@ -448,7 +449,7 @@ public class MainActivity extends Activity {
         TextView text = new TextView(this);
         text.setText(label);
         text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
-        text.setTypeface(getResources().getFont(R.font.inter_medium));
+        text.setTypeface(ResourcesCompat.getFont(this, R.font.inter_medium));
         text.setSingleLine(true);
         text.setPadding(dp(14), 0, 0, 0);
         row.addView(text);
@@ -852,7 +853,7 @@ public class MainActivity extends Activity {
             card.addView(icon, iconParams);
             TextView inner = new TextView(MainActivity.this);
             inner.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
-            inner.setTypeface(getResources().getFont(R.font.inter_medium));
+            inner.setTypeface(ResourcesCompat.getFont(MainActivity.this, R.font.inter_medium));
             inner.setTextColor(0xE6FFFFFF);
             inner.setSingleLine(true);
             inner.setGravity(Gravity.CENTER);
@@ -864,7 +865,7 @@ public class MainActivity extends Activity {
 
             TextView label = new TextView(MainActivity.this);
             label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            label.setTypeface(getResources().getFont(R.font.inter_semibold));
+            label.setTypeface(ResourcesCompat.getFont(MainActivity.this, R.font.inter_semibold));
             label.setTextColor(Color.WHITE);
             label.setShadowLayer(dp(6), 0, 0, 0x66000000);
             label.setSingleLine(true);

@@ -14,8 +14,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 
 /**
@@ -76,8 +74,7 @@ public class SkyView extends View {
         String lon = getContext().getString(R.string.longitude);
         if (lat.isEmpty() || lon.isEmpty()) return null;
         try {
-            return Sun.riseAndSet(LocalDate.now(), Double.parseDouble(lat), Double.parseDouble(lon),
-                    ZoneId.systemDefault());
+            return Sun.riseAndSetToday(Double.parseDouble(lat), Double.parseDouble(lon));
         } catch (NumberFormatException e) {
             return null;
         }

@@ -1,5 +1,6 @@
 package com.kavunos.tv;
 
+import androidx.core.content.res.ResourcesCompat;
 import android.content.Context;
 import android.graphics.Outline;
 import android.graphics.drawable.GradientDrawable;
@@ -151,7 +152,7 @@ final class TopShelf {
         TextView t = new TextView(context);
         t.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
         t.setTextColor(color);
-        t.setTypeface(context.getResources().getFont(font));
+        t.setTypeface(ResourcesCompat.getFont(context, font));
         t.setSingleLine(true);
         t.setEllipsize(android.text.TextUtils.TruncateAt.END);
         t.setIncludeFontPadding(false);
