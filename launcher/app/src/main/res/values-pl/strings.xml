@@ -26,9 +26,9 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN wyłączony</string>
     <string name="home_settings">Domyślny ekran główny</string>
-    <string name="home_settings_help">Wybierz oryginalny ekran główny, aby przestać używać CleanYourTV jako domyślnego, albo wybierz CleanYourTV, aby wrócić. Oryginalny launcher musi być włączony, a telewizor musi udostępniać wybór ekranu głównego. Jeśli został wyłączony, najpierw użyj skryptu przywracania.</string>
+    <string name="home_settings_help">Wybierz oryginalny ekran główny, aby przestać używać kavunOS jako domyślnego, albo wybierz kavunOS, aby wrócić. Oryginalny launcher musi być włączony, a telewizor musi udostępniać wybór ekranu głównego. Jeśli został wyłączony, najpierw użyj skryptu przywracania.</string>
     <string name="input_key_service_description">Otwiera wybór wejścia po naciśnięciu przycisku Input na pilocie.</string>
-    <string name="home_key_name">Przycisk Home</string>
+    <string name="home_key_name">kavunOS: Przycisk Home</string>
     <string name="home_key_description">Sprawia, że przycisk Home na pilocie otwiera ten ekran główny.</string>
     <string name="card_prompt_title">Nowa karta z aplikacji %1$s</string>
     <string name="card_prompt_body">Aplikacja %1$s może pokazać kartę na ekranie głównym. Jeśli zostawisz ją ukrytą, zwykły kafelek aplikacji się nie zmieni.</string>
@@ -124,7 +124,7 @@
     <string name="wallpaper_dim_percent">%1$d%%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Wróć do ustawień motywu</string>
-    <string name="dream_wallpapers_name">Tapety CleanYourTV</string>
+    <string name="dream_wallpapers_name">Tapety kavunOS</string>
     <string name="dream_wallpapers_short">Tapety</string>
     <string name="dream_other">Inny</string>
     <string name="phone_page_on_tv">Na telewizorze</string>

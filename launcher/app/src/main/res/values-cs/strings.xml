@@ -23,7 +23,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN vypnutá</string>
     <string name="home_settings">Výchozí domovská obrazovka</string>
-    <string name="home_settings_help">Vyberte původní domovskou obrazovku, pokud už nechcete CleanYourTV používat jako domovskou, nebo CleanYourTV, pokud se k ní chcete vrátit. Původní launcher musí být zapnutý a televize musí nabízet výběr domovské obrazovky. Pokud byl vypnutý, spusťte nejdřív skript pro obnovení.</string>
+    <string name="home_settings_help">Vyberte původní domovskou obrazovku, pokud už nechcete kavunOS používat jako domovskou, nebo kavunOS, pokud se k ní chcete vrátit. Původní launcher musí být zapnutý a televize musí nabízet výběr domovské obrazovky. Pokud byl vypnutý, spusťte nejdřív skript pro obnovení.</string>
     <string name="launcher_settings">Nastavení domovské obrazovky</string>
     <string name="columns_label">Aplikací v řádku</string>
     <string name="animations_state">Animace: %1$s</string>
@@ -37,7 +37,7 @@
     <string name="off">Vypnuto</string>
     <string name="enable">Zapnout</string>
     <string name="input_key_service_description">Po stisknutí tlačítka Input na ovladači otevře výběr vstupu.</string>
-    <string name="home_key_name">Tlačítko Domů</string>
+    <string name="home_key_name">kavunOS: Tlačítko Domů</string>
     <string name="home_key_description">Tlačítko Domů na ovladači otevře tuto domovskou obrazovku.</string>
     <string name="card_prompt_title">Nová karta z aplikace %1$s</string>
     <string name="card_prompt_body">Aplikace %1$s může na domovské obrazovce zobrazit kartu. Když ji necháte skrytou, běžná dlaždice aplikace zůstane beze změny.</string>
@@ -128,7 +128,7 @@
     <string name="wallpaper_dim_percent">%1$d %%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Zpět na nastavení motivu</string>
-    <string name="dream_wallpapers_name">Tapety CleanYourTV</string>
+    <string name="dream_wallpapers_name">Tapety kavunOS</string>
     <string name="dream_wallpapers_short">Tapety</string>
     <string name="dream_other">Jiný</string>
     <string name="phone_page_on_tv">V televizi</string>

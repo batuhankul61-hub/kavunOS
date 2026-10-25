@@ -92,6 +92,17 @@ TV_HOST=192.168.1.50 HOME_KEY_SERVICE=1 PHONE_UPLOAD=1 launcher/build-and-instal
 Betik derler, kurar, kavunOS'u ana ekran yapar; ana ekran ona geçmezse eski başlatıcıyı geri getirir.
 Gerekli JDK 17 ve Android SDK, Android Studio ile gelir.
 
+### Bilgisayarsız kurulum (APK)
+
+1. [Sürümler](https://github.com/batuhankul61-hub/kavunOS/releases) sayfasından `kavunOS.apk` dosyasını USB
+   belleğe indirip TV'nin dosya yöneticisiyle kurun ("bilinmeyen kaynaklar" izni istenebilir).
+2. TV'nin uygulamalarından **kavunOS**'u açın. Duvar kâğıtları hazır gelir; açılan kurulum ekranı son ayarı
+   gösterir: *Ayarlar → Erişilebilirlik → kavunOS: Ana ekran tuşu → Etkinleştir*.
+3. Bundan sonra kumandanın Home tuşu kavunOS'u açar ve TV açılışta kavunOS ile başlar.
+
+Bu yolda TV'nin kendi ana ekranı kapatılmaz (o yalnızca bilgisayarla yapılabilir); Android 10 ve üstünde açılışta
+kavunOS'u kendiliğinden öne getirmek de engellendiği için orada bilgisayarla kurulum önerilir.
+
 ## Bilgisayarda geliştirme
 
 TV'ye her seferinde kurmak yerine bilgisayarda bir Android TV emülatöründe:

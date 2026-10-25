@@ -27,7 +27,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN বন্ধ</string>
     <string name="home_settings">ডিফল্ট হোম বেছে নিন</string>
-    <string name="home_settings_help">CleanYourTV-কে আর হোম হিসেবে ব্যবহার না করতে আপনার আগের হোম বেছে নিন, আবার ফিরতে CleanYourTV বেছে নিন। আগের লঞ্চারটি চালু থাকতে হবে এবং আপনার টিভিতে হোম বেছে নেওয়ার ব্যবস্থা থাকতে হবে; সেটি বন্ধ করা থাকলে আগে রিস্টোর স্ক্রিপ্ট চালান।</string>
+    <string name="home_settings_help">kavunOS-কে আর হোম হিসেবে ব্যবহার না করতে আপনার আগের হোম বেছে নিন, আবার ফিরতে kavunOS বেছে নিন। আগের লঞ্চারটি চালু থাকতে হবে এবং আপনার টিভিতে হোম বেছে নেওয়ার ব্যবস্থা থাকতে হবে; সেটি বন্ধ করা থাকলে আগে রিস্টোর স্ক্রিপ্ট চালান।</string>
     <string name="launcher_settings">লঞ্চার সেটিংস</string>
     <string name="columns_label">প্রতি সারিতে অ্যাপ</string>
     <string name="animations_state">অ্যানিমেশন: %1$s</string>
@@ -45,7 +45,7 @@
     <string name="off">বন্ধ</string>
     <string name="enable">চালু করুন</string>
     <string name="input_key_service_description">রিমোটের ইনপুট বোতাম চাপলে ইনপুট বদলানোর তালিকা খোলে।</string>
-    <string name="home_key_name">হোম বোতাম</string>
+    <string name="home_key_name">kavunOS: হোম বোতাম</string>
     <string name="home_key_description">রিমোটের হোম বোতাম দিয়ে এই লঞ্চার খোলে।</string>
     <string name="card_prompt_title">%1$s থেকে নতুন কার্ড</string>
     <string name="card_prompt_body">%1$s আপনার হোম স্ক্রিনে একটি কার্ড দেখাতে পারে। লুকিয়ে রাখলে অ্যাপের সাধারণ টাইল যেমন আছে তেমনই থাকবে।</string>
@@ -127,7 +127,7 @@
     <string name="wallpaper_dim_percent">%1$d%%</string>
     <string name="wallpaper_every_seconds">%1$d সে</string>
     <string name="wallpaper_reset">থিমের সেটিংসে ফিরুন</string>
-    <string name="dream_wallpapers_name">CleanYourTV ওয়ালপেপার</string>
+    <string name="dream_wallpapers_name">kavunOS ওয়ালপেপার</string>
     <string name="dream_wallpapers_short">ওয়ালপেপার</string>
     <string name="dream_other">অন্য</string>
     <string name="phone_page_on_tv">টিভিতে</string>

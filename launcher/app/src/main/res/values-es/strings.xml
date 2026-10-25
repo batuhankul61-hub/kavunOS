@@ -60,7 +60,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN apagada</string>
     <string name="home_settings">Elegir inicio predeterminado</string>
-    <string name="home_settings_help">Elige tu inicio original para dejar de usar CleanYourTV como inicio, o CleanYourTV para volver a él. El lanzador original tiene que estar activado y el televisor debe ofrecer un selector de inicio; si estaba desactivado, usa antes el script de restauración.</string>
+    <string name="home_settings_help">Elige tu inicio original para dejar de usar kavunOS como inicio, o kavunOS para volver a él. El lanzador original tiene que estar activado y el televisor debe ofrecer un selector de inicio; si estaba desactivado, usa antes el script de restauración.</string>
     <string name="rows_below_dock_label">Filas debajo del dock</string>
     <string name="wallpaper_label">Fondo</string>
     <string name="wallpaper_state">Fondo: %1$s</string>
@@ -72,7 +72,7 @@
     <string name="quick_apps">Aplicaciones</string>
     <string name="quick_apps_hint">Reactivar</string>
     <string name="input_key_service_description">Abre el selector de entradas al pulsar el botón Entrada del mando.</string>
-    <string name="home_key_name">Botón Inicio</string>
+    <string name="home_key_name">kavunOS: Botón Inicio</string>
     <string name="home_key_description">Hace que el botón Inicio del mando abra este lanzador.</string>
     <string name="card_prompt_title">Nueva tarjeta de %1$s</string>
     <string name="card_prompt_body">%1$s puede mostrar una tarjeta en tu pantalla de inicio. Si la mantienes oculta, el icono normal de la aplicación queda como está.</string>
@@ -139,7 +139,7 @@
     <string name="wallpaper_dim_percent">%1$d %%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Volver a los ajustes del tema</string>
-    <string name="dream_wallpapers_name">Fondos de CleanYourTV</string>
+    <string name="dream_wallpapers_name">Fondos de kavunOS</string>
     <string name="dream_wallpapers_short">Fondos</string>
     <string name="dream_other">Otro</string>
     <string name="phone_page_on_tv">En la TV</string>

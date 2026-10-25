@@ -81,6 +81,8 @@ public class MainActivity extends Activity {
     /** Config.wallpaperGeneration when this Home was built. */
     private int wallpaperGeneration;
     private int scrolled;
+    /** SetupActivity was shown in this Home's lifetime (once per start, until dismissed or done). */
+    private boolean setupShown;
     /** The tile that last had the focus, to give it back when the grid itself is focused. */
     private int lastFocused;
     /** The tile being moved (held OK), or null. */
@@ -105,6 +107,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // A plain APK install: the bundled wallpapers and default look, once, before the config is read.
+        FirstRun.prepare(this);
         wallpaperGeneration = Config.wallpaperGeneration;
         config = Config.load(this);
         if (getResources().getBoolean(R.bool.bt_autoconnect)) BluetoothReconnect.start(this);
@@ -590,6 +594,12 @@ public class MainActivity extends Activity {
             return;
         }
         wallpaperPlayer.start();
+        // Opened from the app list after a plain install, with the Home button still on the TV's launcher.
+        if (!setupShown && !FirstRun.homeReady(this)
+                && !FirstRun.prefs(this).getBoolean(FirstRun.SETUP_DISMISSED, false)) {
+            setupShown = true;
+            startActivity(new Intent(this, SetupActivity.class));
+        }
         if (returning) {
             returning = false;
             // Home settles back in: the tiles come up from a touch larger and fade in, on one hardware layer.

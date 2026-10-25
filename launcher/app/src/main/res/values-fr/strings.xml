@@ -28,7 +28,7 @@
     <string name="home_settings">Accueil par défaut</string>
     <string name="home_settings_help">Choisissez un écran d\'accueil dans les paramètres système, puis appuyez sur Accueil.</string>
     <string name="input_key_service_description">Le bouton Source de la télécommande ouvre le choix des sources.</string>
-    <string name="home_key_name">Bouton Accueil</string>
+    <string name="home_key_name">kavunOS: Bouton Accueil</string>
     <string name="home_key_description">Le bouton Accueil de la télécommande ouvre ce launcher.</string>
     <string name="card_prompt_title">Nouvelle carte de %1$s</string>
     <string name="card_prompt_body">%1$s peut afficher une carte sur votre écran d\'accueil. Si vous la masquez, la tuile habituelle de l\'appli reste inchangée.</string>
@@ -122,7 +122,7 @@
     <string name="wallpaper_dim_percent">%1$d %%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Revenir aux réglages du thème</string>
-    <string name="dream_wallpapers_name">Fonds d\'écran CleanYourTV</string>
+    <string name="dream_wallpapers_name">Fonds d\'écran kavunOS</string>
     <string name="dream_wallpapers_short">Fonds d\'écran</string>
     <string name="dream_other">Autre</string>
     <string name="phone_page_on_tv">Sur la TV</string>

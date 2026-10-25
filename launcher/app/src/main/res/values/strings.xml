@@ -28,7 +28,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN off</string>
     <string name="home_settings">Choose default home</string>
-    <string name="home_settings_help">Select your original home to stop using CleanYourTV as Home, or CleanYourTV to switch back. The original launcher must be enabled and your TV must provide a home picker; use the restore script first if it was disabled.</string>
+    <string name="home_settings_help">Select your original home to stop using kavunOS as Home, or kavunOS to switch back. The original launcher must be enabled and your TV must provide a home picker; use the restore script first if it was disabled.</string>
     <string name="launcher_settings">Launcher settings</string>
     <string name="columns_label">Apps per row</string>
     <string name="rows_below_dock_label">Rows below dock</string>
@@ -52,7 +52,7 @@
     <string name="off">Off</string>
     <string name="enable">Enable</string>
     <string name="input_key_service_description">Opens the input switcher when the remote\'s Input button is pressed.</string>
-    <string name="home_key_name">Home button</string>
+    <string name="home_key_name">kavunOS: Home button</string>
     <string name="home_key_description">Makes the remote\'s Home button open this launcher.</string>
     <string name="card_prompt_title">New card from %1$s</string>
     <string name="card_prompt_body">%1$s can show a card on your home screen. Keeping it hidden leaves the app\'s normal tile as it is.</string>
@@ -146,7 +146,7 @@
     <string name="wallpaper_dim_percent">%1$d%%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Back to theme settings</string>
-    <string name="dream_wallpapers_name">CleanYourTV wallpapers</string>
+    <string name="dream_wallpapers_name">kavunOS wallpapers</string>
     <string name="dream_wallpapers_short">Wallpapers</string>
     <string name="dream_other">Other</string>
     <string name="phone_page_on_tv">On the TV</string>
@@ -176,4 +176,11 @@
     <string name="hidden_apps">Hidden apps</string>
     <string name="hidden_apps_none">No hidden apps</string>
     <string name="hidden_apps_pick">Choose an app to show it again</string>
+    <string name="setup_title">Welcome to kavunOS</string>
+    <string name="setup_body">One setting is left so the remote\'s Home button opens kavunOS:\n\n1. Open Settings, then Accessibility.\n2. Choose \"kavunOS: Home button\", tick Enable and press OK.\n\nAndroid warns about every accessibility service; this one only listens for remote buttons. Then press Back. The TV will also start on kavunOS.</string>
+    <string name="setup_open_accessibility">Open Settings</string>
+    <string name="setup_choose_home">Choose default home instead</string>
+    <string name="setup_later">Not now</string>
+    <string name="setup_ready">kavunOS is ready: the Home button opens it now.</string>
+    <string name="input_key_name">kavunOS: Input button</string>
 </resources>

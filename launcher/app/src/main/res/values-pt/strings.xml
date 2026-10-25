@@ -29,7 +29,7 @@
     <string name="home_settings">Tela inicial padrão</string>
     <string name="home_settings_help">Escolha uma tela inicial nas configurações do sistema e pressione Home.</string>
     <string name="input_key_service_description">Abre o seletor de entradas quando o botão Input do controle é pressionado.</string>
-    <string name="home_key_name">Botão Home</string>
+    <string name="home_key_name">kavunOS: Botão Home</string>
     <string name="home_key_description">Faz o botão Home do controle abrir este launcher.</string>
     <string name="card_prompt_title">Novo cartão de %1$s</string>
     <string name="card_prompt_body">%1$s pode mostrar um cartão na sua tela inicial. Mantê-lo oculto deixa o bloco normal do app como está.</string>
@@ -142,7 +142,7 @@
     <string name="wallpaper_dim_percent">%1$d%%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Voltar às configurações do tema</string>
-    <string name="dream_wallpapers_name">Papéis de parede CleanYourTV</string>
+    <string name="dream_wallpapers_name">Papéis de parede kavunOS</string>
     <string name="dream_wallpapers_short">Papéis de parede</string>
     <string name="dream_other">Outro</string>
     <string name="phone_page_on_tv">Na TV</string>

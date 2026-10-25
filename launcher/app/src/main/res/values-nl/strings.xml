@@ -26,7 +26,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN uit</string>
     <string name="home_settings">Standaard startscherm kiezen</string>
-    <string name="home_settings_help">Kies je oorspronkelijke startscherm om CleanYourTV niet meer als Home te gebruiken, of CleanYourTV om terug te schakelen. De oorspronkelijke launcher moet ingeschakeld zijn en je tv moet een keuzescherm voor het startscherm hebben; gebruik eerst het herstelscript als hij uitgeschakeld is.</string>
+    <string name="home_settings_help">Kies je oorspronkelijke startscherm om kavunOS niet meer als Home te gebruiken, of kavunOS om terug te schakelen. De oorspronkelijke launcher moet ingeschakeld zijn en je tv moet een keuzescherm voor het startscherm hebben; gebruik eerst het herstelscript als hij uitgeschakeld is.</string>
     <string name="launcher_settings">Launcher-instellingen</string>
     <string name="columns_label">Apps per rij</string>
     <string name="rows_below_dock_label">Rijen onder het dock</string>
@@ -50,7 +50,7 @@
     <string name="off">Uit</string>
     <string name="enable">Inschakelen</string>
     <string name="input_key_service_description">Opent de ingangskeuze als je op de Input-knop van de afstandsbediening drukt.</string>
-    <string name="home_key_name">Home-knop</string>
+    <string name="home_key_name">kavunOS: Home-knop</string>
     <string name="home_key_description">Laat de Home-knop van de afstandsbediening deze launcher openen.</string>
     <string name="card_prompt_title">Nieuwe kaart van %1$s</string>
     <string name="card_prompt_body">%1$s kan een kaart op je startscherm tonen. Als je hem verborgen houdt, blijft de gewone tegel van de app zoals hij is.</string>
@@ -140,7 +140,7 @@
     <string name="wallpaper_dim_percent">%1$d%%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Terug naar thema-instellingen</string>
-    <string name="dream_wallpapers_name">CleanYourTV-achtergronden</string>
+    <string name="dream_wallpapers_name">kavunOS-achtergronden</string>
     <string name="dream_wallpapers_short">Achtergronden</string>
     <string name="dream_other">Andere</string>
     <string name="phone_page_on_tv">Op de tv</string>

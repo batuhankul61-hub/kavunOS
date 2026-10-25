@@ -26,9 +26,9 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN متوقف</string>
     <string name="home_settings">الشاشة الرئيسية الافتراضية</string>
-    <string name="home_settings_help">اختر الشاشة الرئيسية الأصلية لإيقاف استخدام CleanYourTV افتراضيًا، أو اختر CleanYourTV للعودة. يجب أن يكون المشغّل الأصلي مفعّلًا وأن يدعم التلفاز اختيار الشاشة الرئيسية. إذا عُطّل، استخدم برنامج الاستعادة أولًا.</string>
+    <string name="home_settings_help">اختر الشاشة الرئيسية الأصلية لإيقاف استخدام kavunOS افتراضيًا، أو اختر kavunOS للعودة. يجب أن يكون المشغّل الأصلي مفعّلًا وأن يدعم التلفاز اختيار الشاشة الرئيسية. إذا عُطّل، استخدم برنامج الاستعادة أولًا.</string>
     <string name="input_key_service_description">يفتح قائمة المدخلات عند الضغط على زر المدخلات في جهاز التحكم.</string>
-    <string name="home_key_name">زر الرئيسية</string>
+    <string name="home_key_name">kavunOS: زر الرئيسية</string>
     <string name="home_key_description">يجعل زر الرئيسية في جهاز التحكم يفتح هذه الشاشة.</string>
     <string name="card_prompt_title">بطاقة جديدة من %1$s</string>
     <string name="card_prompt_body">يمكن لتطبيق %1$s عرض بطاقة على شاشتك الرئيسية. إبقاؤها مخفية يترك مربّع التطبيق العادي كما هو.</string>
@@ -126,7 +126,7 @@
     <string name="wallpaper_dim_percent">%1$d%%</string>
     <string name="wallpaper_every_seconds">%1$d ث</string>
     <string name="wallpaper_reset">العودة إلى إعدادات السمة</string>
-    <string name="dream_wallpapers_name">خلفيات CleanYourTV</string>
+    <string name="dream_wallpapers_name">خلفيات kavunOS</string>
     <string name="dream_wallpapers_short">الخلفيات</string>
     <string name="dream_other">أخرى</string>
     <string name="phone_page_on_tv">على التلفزيون</string>

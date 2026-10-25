@@ -26,9 +26,9 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN Kapalı</string>
     <string name="home_settings">Varsayılan ana ekran</string>
-    <string name="home_settings_help">CleanYourTV yerine özgün ana ekranı seçin; geri dönmek için CleanYourTV seçin. Özgün başlatıcı etkin olmalı ve TV ana ekran seçicisini desteklemelidir. Devre dışıysa önce geri yükleme betiğini kullanın.</string>
+    <string name="home_settings_help">kavunOS yerine özgün ana ekranı seçin; geri dönmek için kavunOS seçin. Özgün başlatıcı etkin olmalı ve TV ana ekran seçicisini desteklemelidir. Devre dışıysa önce geri yükleme betiğini kullanın.</string>
     <string name="input_key_service_description">Uzaktan kumandanın Giriş tuşuna basıldığında giriş seçiciyi açar.</string>
-    <string name="home_key_name">Ana ekran tuşu</string>
+    <string name="home_key_name">kavunOS: Ana ekran tuşu</string>
     <string name="home_key_description">Uzaktan kumandanın ana ekran tuşunun bu başlatıcıyı açmasını sağlar.</string>
     <string name="card_prompt_title">%1$s uygulamasından yeni kart</string>
     <string name="card_prompt_body">%1$s ana ekranınızda bir kart gösterebilir. Gizli tutarsanız uygulamanın normal kutucuğu olduğu gibi kalır.</string>
@@ -127,7 +127,7 @@
     <string name="wallpaper_dim_percent">%%%1$d</string>
     <string name="wallpaper_every_seconds">%1$d sn</string>
     <string name="wallpaper_reset">Tema ayarlarına dön</string>
-    <string name="dream_wallpapers_name">CleanYourTV duvar kâğıtları</string>
+    <string name="dream_wallpapers_name">kavunOS duvar kâğıtları</string>
     <string name="dream_wallpapers_short">Duvar kâğıtları</string>
     <string name="dream_other">Başka</string>
     <string name="phone_page_on_tv">TV\'deki görseller</string>
@@ -157,4 +157,11 @@
     <string name="hidden_apps">Gizli uygulamalar</string>
     <string name="hidden_apps_none">Gizli uygulama yok</string>
     <string name="hidden_apps_pick">Yeniden göstermek için bir uygulama seçin</string>
+    <string name="setup_title">kavunOS\'a hoş geldiniz</string>
+    <string name="setup_body">Kumandanın Home tuşunun kavunOS\'u açması için tek bir ayar kaldı:\n\n1. Ayarlar\'ı, sonra Erişilebilirlik\'i açın.\n2. \"kavunOS: Ana ekran tuşu\"nu seçin, Etkinleştir\'i işaretleyip Tamam\'a basın.\n\nAndroid her erişilebilirlik servisi için uyarı gösterir; bu servis yalnızca kumanda tuşlarını dinler. Sonra Geri\'ye basın. TV açılışta da kavunOS ile başlayacak.</string>
+    <string name="setup_open_accessibility">Ayarlar\'ı aç</string>
+    <string name="setup_choose_home">Varsayılan ana ekranı seç</string>
+    <string name="setup_later">Şimdilik geç</string>
+    <string name="setup_ready">kavunOS hazır: Home tuşu artık kavunOS\'u açıyor.</string>
+    <string name="input_key_name">kavunOS: Giriş tuşu</string>
 </resources>

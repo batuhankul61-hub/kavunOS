@@ -27,9 +27,9 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN отключён</string>
     <string name="home_settings">Главный экран по умолчанию</string>
-    <string name="home_settings_help">Выберите исходный главный экран, чтобы перестать использовать CleanYourTV по умолчанию, или CleanYourTV, чтобы вернуться. Исходный экран должен быть включён, а телевизор должен поддерживать выбор главного экрана. Если он отключён, сначала запустите скрипт восстановления.</string>
+    <string name="home_settings_help">Выберите исходный главный экран, чтобы перестать использовать kavunOS по умолчанию, или kavunOS, чтобы вернуться. Исходный экран должен быть включён, а телевизор должен поддерживать выбор главного экрана. Если он отключён, сначала запустите скрипт восстановления.</string>
     <string name="input_key_service_description">Открывает список источников при нажатии кнопки выбора источника на пульте.</string>
-    <string name="home_key_name">Кнопка «Домой»</string>
+    <string name="home_key_name">kavunOS: Кнопка «Домой»</string>
     <string name="home_key_description">Кнопка «Домой» на пульте открывает этот главный экран.</string>
     <string name="card_prompt_title">Новая карточка от %1$s</string>
     <string name="card_prompt_body">%1$s может показывать карточку на главном экране. Если оставить её скрытой, обычная плитка приложения не изменится.</string>
@@ -129,7 +129,7 @@
     <string name="wallpaper_dim_percent">%1$d%%</string>
     <string name="wallpaper_every_seconds">%1$d с</string>
     <string name="wallpaper_reset">Вернуть настройки темы</string>
-    <string name="dream_wallpapers_name">Обои CleanYourTV</string>
+    <string name="dream_wallpapers_name">Обои kavunOS</string>
     <string name="dream_wallpapers_short">Обои</string>
     <string name="dream_other">Другая</string>
     <string name="phone_page_on_tv">На телевизоре</string>

@@ -24,7 +24,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN pois päältä</string>
     <string name="home_settings">Valitse oletuskotinäkymä</string>
-    <string name="home_settings_help">Valitse alkuperäinen kotinäkymä, jos haluat lopettaa CleanYourTV:n käytön kotinäkymänä, tai CleanYourTV palataksesi siihen. Alkuperäisen käynnistimen on oltava käytössä ja television on tarjottava kotinäkymän valinta. Jos käynnistin on poistettu käytöstä, aja ensin palautusskripti.</string>
+    <string name="home_settings_help">Valitse alkuperäinen kotinäkymä, jos haluat lopettaa kavunOS:n käytön kotinäkymänä, tai kavunOS palataksesi siihen. Alkuperäisen käynnistimen on oltava käytössä ja television on tarjottava kotinäkymän valinta. Jos käynnistin on poistettu käytöstä, aja ensin palautusskripti.</string>
     <string name="launcher_settings">Käynnistimen asetukset</string>
     <string name="columns_label">Sovelluksia rivillä</string>
     <string name="animations_state">Animaatiot: %1$s</string>
@@ -42,7 +42,7 @@
     <string name="off">Pois</string>
     <string name="enable">Ota käyttöön</string>
     <string name="input_key_service_description">Avaa lähteen valinnan, kun kaukosäätimen lähdepainiketta painetaan.</string>
-    <string name="home_key_name">Koti-painike</string>
+    <string name="home_key_name">kavunOS: Koti-painike</string>
     <string name="home_key_description">Kaukosäätimen Koti-painike avaa tämän käynnistimen.</string>
     <string name="card_prompt_title">Uusi kortti sovellukselta %1$s</string>
     <string name="card_prompt_body">%1$s voi näyttää kortin kotinäkymässäsi. Jos pidät sen piilossa, sovelluksen tavallinen ruutu pysyy ennallaan.</string>
@@ -127,7 +127,7 @@
     <string name="wallpaper_dim_percent">%1$d %%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Palaa teeman asetuksiin</string>
-    <string name="dream_wallpapers_name">CleanYourTV-taustakuvat</string>
+    <string name="dream_wallpapers_name">kavunOS-taustakuvat</string>
     <string name="dream_wallpapers_short">Taustakuvat</string>
     <string name="dream_other">Muu</string>
     <string name="phone_page_on_tv">Televisiossa</string>

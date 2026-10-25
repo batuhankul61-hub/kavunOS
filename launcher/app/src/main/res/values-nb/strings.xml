@@ -26,7 +26,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN er av</string>
     <string name="home_settings">Velg standard startskjerm</string>
-    <string name="home_settings_help">Velg den opprinnelige startskjermen for å slutte å bruke CleanYourTV, eller velg CleanYourTV for å bytte tilbake. Den opprinnelige startskjermen må være aktivert, og TV-en må støtte valg av startskjerm. Kjør tilbakeføringsskriptet først hvis den ble deaktivert.</string>
+    <string name="home_settings_help">Velg den opprinnelige startskjermen for å slutte å bruke kavunOS, eller velg kavunOS for å bytte tilbake. Den opprinnelige startskjermen må være aktivert, og TV-en må støtte valg av startskjerm. Kjør tilbakeføringsskriptet først hvis den ble deaktivert.</string>
     <string name="launcher_settings">Innstillinger for startskjermen</string>
     <string name="columns_label">Apper per rad</string>
     <string name="rows_below_dock_label">Rader under favorittraden</string>
@@ -50,7 +50,7 @@
     <string name="off">Av</string>
     <string name="enable">Aktiver</string>
     <string name="input_key_service_description">Åpner inngangsvelgeren når du trykker på kildeknappen på fjernkontrollen.</string>
-    <string name="home_key_name">Hjem-knapp</string>
+    <string name="home_key_name">kavunOS: Hjem-knapp</string>
     <string name="home_key_description">Lar Hjem-knappen på fjernkontrollen åpne denne startskjermen.</string>
     <string name="card_prompt_title">Nytt kort fra %1$s</string>
     <string name="card_prompt_body">%1$s kan vise et kort på startskjermen. Hvis du holder det skjult, vises appens vanlige flis som før.</string>
@@ -139,7 +139,7 @@
     <string name="wallpaper_dim_percent">%1$d %%</string>
     <string name="wallpaper_every_seconds">%1$d s</string>
     <string name="wallpaper_reset">Tilbake til temainnstillingene</string>
-    <string name="dream_wallpapers_name">CleanYourTV-bakgrunner</string>
+    <string name="dream_wallpapers_name">kavunOS-bakgrunner</string>
     <string name="dream_wallpapers_short">Bakgrunner</string>
     <string name="dream_other">Annen</string>
     <string name="phone_page_on_tv">På TV-en</string>

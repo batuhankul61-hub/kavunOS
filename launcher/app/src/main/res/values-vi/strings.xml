@@ -25,7 +25,7 @@
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN tắt</string>
     <string name="home_settings">Chọn màn hình chính mặc định</string>
-    <string name="home_settings_help">Chọn màn hình chính gốc để thôi dùng CleanYourTV, hoặc chọn CleanYourTV để dùng lại. Launcher gốc phải đang bật và TV phải có mục chọn màn hình chính; nếu launcher gốc đã bị tắt, hãy chạy script khôi phục trước.</string>
+    <string name="home_settings_help">Chọn màn hình chính gốc để thôi dùng kavunOS, hoặc chọn kavunOS để dùng lại. Launcher gốc phải đang bật và TV phải có mục chọn màn hình chính; nếu launcher gốc đã bị tắt, hãy chạy script khôi phục trước.</string>
     <string name="launcher_settings">Cài đặt launcher</string>
     <string name="columns_label">Số ứng dụng mỗi hàng</string>
     <string name="animations_state">Hiệu ứng: %1$s</string>
@@ -43,7 +43,7 @@
     <string name="off">Tắt</string>
     <string name="enable">Bật</string>
     <string name="input_key_service_description">Mở bảng chọn nguồn vào khi bấm nút Input trên remote.</string>
-    <string name="home_key_name">Nút Home</string>
+    <string name="home_key_name">kavunOS: Nút Home</string>
     <string name="home_key_description">Cho nút Home trên remote mở launcher này.</string>
     <string name="card_prompt_title">Thẻ mới từ %1$s</string>
     <string name="card_prompt_body">%1$s có thể hiện một thẻ trên màn hình chính. Nếu vẫn ẩn, ô ứng dụng của nó giữ nguyên như cũ.</string>
@@ -107,7 +107,7 @@
     <string name="wallpaper_dim_percent">%1$d%%</string>
     <string name="wallpaper_every_seconds">%1$d giây</string>
     <string name="wallpaper_reset">Về cài đặt chủ đề</string>
-    <string name="dream_wallpapers_name">Hình nền CleanYourTV</string>
+    <string name="dream_wallpapers_name">Hình nền kavunOS</string>
     <string name="dream_wallpapers_short">Hình nền</string>
     <string name="dream_other">Khác</string>
     <string name="phone_page_on_tv">Trên TV</string>
