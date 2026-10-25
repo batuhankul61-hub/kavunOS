@@ -11,8 +11,8 @@ android {
         applicationId providers.gradleProperty('launcherApplicationId').getOrElse('com.kavunos.tv')
         minSdk 25
         targetSdk 34
-        versionCode 6
-        versionName '2.5'
+        versionCode 7
+        versionName '1.0'
     }
 
     buildTypes {
