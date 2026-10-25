@@ -92,6 +92,9 @@ TV_HOST=192.168.1.50 HOME_KEY_SERVICE=1 PHONE_UPLOAD=1 launcher/build-and-instal
 Betik derler, kurar, kavunOS'u ana ekran yapar; ana ekran ona geçmezse eski başlatıcıyı geri getirir.
 Gerekli JDK 17 ve Android SDK, Android Studio ile gelir.
 
+kavunOS TV'nin sistem dilini izler; TV İngilizceyse kavunOS da İngilizcedir. TV İngilizce kalsın ama kavunOS
+Türkçe olsun isterseniz APK'yı `launcher` klasöründe `./gradlew assembleRelease -PdefaultLanguage=tr` ile derleyin.
+
 ## Bilgisayarda geliştirme
 
 TV'ye her seferinde kurmak yerine bilgisayarda bir Android TV emülatöründe:

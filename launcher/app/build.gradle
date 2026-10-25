@@ -32,6 +32,22 @@ android {
     buildTypes.each { it.resValue 'bool', 'phone_upload', phoneUpload.toString() }
     if (phoneUpload) sourceSets.release.manifest.srcFile 'src/phoneUpload/AndroidManifest.xml'
 
+    // Opt-in default language (-PdefaultLanguage=tr): the launcher follows the TV's system language, so on a TV set
+    // to English it is English. This makes the chosen translation the fallback, used whenever the TV's language has
+    // no translation of its own (English included).
+    def defaultLanguage = providers.gradleProperty('defaultLanguage').getOrElse('')
+    if (defaultLanguage) {
+        def translation = file("src/main/res/values-$defaultLanguage/strings.xml")
+        if (!translation.exists()) throw new GradleException("defaultLanguage=$defaultLanguage: no $translation")
+        def generated = layout.buildDirectory.dir('generated/defaultLanguage/res').get().asFile
+        copy {
+            from translation
+            into new File(generated, 'values')
+        }
+        // A build type's resources override main's, so the copy replaces the English strings/values.
+        buildTypes.each { sourceSets[it.name].res.srcDir generated }
+    }
+
     packagingOptions {
         resources {
             // Kotlin metadata pulled in by AndroidX's dependencies. This launcher is plain Java and never reads it;

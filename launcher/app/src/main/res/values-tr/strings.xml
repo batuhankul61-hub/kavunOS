@@ -157,4 +157,16 @@
     <string name="hidden_apps">Gizli uygulamalar</string>
     <string name="hidden_apps_none">Gizli uygulama yok</string>
     <string name="hidden_apps_pick">Yeniden göstermek için bir uygulama seçin</string>
+    <string name="rows_below_dock_label">Dock altındaki satırlar</string>
+    <string name="quick_picture">Görüntü</string>
+    <string name="quick_network">Ağ</string>
+    <string name="quick_apps">Uygulamalar</string>
+    <string name="quick_apps_hint">Yeniden etkinleştir</string>
+    <string name="race_kicker">%1$d. yarış · %2$s · %3$s</string>
+    <string name="race_kicker_no_place">%1$d. yarış · %2$s</string>
+    <string name="race_next">%1$s: %2$s sonra</string>
+    <string name="race_lights_out">Start %1$s sonra</string>
+    <string name="race_live">%1$s · canlı</string>
+    <string name="race_finished">Damalı bayrak</string>
+    <string name="last_opened">Son açılma: %1$s</string>
 </resources>
