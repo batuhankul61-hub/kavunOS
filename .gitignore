@@ -11,6 +11,8 @@ backup/
 
 # Generated install bundles and JVM crash reports stay out of contributions.
 *.apk
+# ...except the release APK at the top, so the source ZIP can be installed as is (kavunOS-kur.cmd).
+!/kavunOS.apk
 *.aab
 launcher/hs_err_pid*.log
 launcher/replay_pid*.log

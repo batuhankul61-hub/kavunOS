@@ -83,6 +83,9 @@ tıklayın. TV'yi ağda kendisi bulur, son sürümü kurar ve ana ekran yapar; T
 TV bulunamazsa IP adresini sorar. Başka bir bilgisayarda derlenmiş kavunOS kurulu bir TV'de:
 `kavunOS-kur.cmd -Reinstall` (o kurulumun ayarları silinir).
 
+Kaynak kodu ZIP olarak indirdiyseniz: ZIP'i açın, en üstteki `kavunOS-kur.cmd`'ye çift tıklayın; yanındaki
+`kavunOS.apk`'yı kurar.
+
 PowerShell'den aynısı: `launcher\install.ps1 -TvHost 192.168.1.50 -HomeKeyService`
 
 ### Kaynaktan derleyerek
